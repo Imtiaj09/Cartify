@@ -16,15 +16,15 @@ const routes: Routes = [
     path: '',
     component: AdminLayoutComponent,
     children: [
-      { path: 'dashboard', component: DashboardComponent },
-      { path: 'orders', component: OrderManagementComponent },
-      { path: 'customers', component: CustomersComponent },
-      { path: 'categories', component: CategoriesComponent },
-      { path: 'transactions', component: TransactionsComponent },
-      { path: 'add-product', component: AddProductComponent },
-      { path: 'admin-role', component: AdminRoleComponent },
-      { path: 'control-authority', component: ControlAuthorityComponent },
-      { path: 'users', component: UsersComponent },
+      { path: 'dashboard', component: DashboardComponent, data: { title: 'Dashboard' } },
+      { path: 'orders', component: OrderManagementComponent, data: { title: 'Order Management' } },
+      { path: 'customers', component: CustomersComponent, data: { title: 'Customers' } },
+      { path: 'categories', component: CategoriesComponent, data: { title: 'Categories' } },
+      { path: 'transactions', component: TransactionsComponent, data: { title: 'Transactions' } },
+      { path: 'add-product', component: AddProductComponent, data: { title: 'Add Product' } },
+      { path: 'admin-role', component: AdminRoleComponent, data: { title: 'Admin Role' } },
+      { path: 'control-authority', component: ControlAuthorityComponent, data: { title: 'Control Authority' } },
+      { path: 'users', component: UsersComponent, data: { title: 'Users' } },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   }

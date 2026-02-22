@@ -30,6 +30,28 @@
   transition: background-color 0.2s, color 0.2s;
 }
 
+/* Keep sidebar link content on a single line and avoid flex shrink/wrapping. */
+.sidebar .nav-link,
+.sidebar .your-shop-link {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.sidebar .nav-link span,
+.sidebar .your-shop-link span {
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  flex-shrink: 0;
+}
+
+.sidebar .nav-link i,
+.sidebar .your-shop-link i {
+  flex-shrink: 0;
+}
+
 .nav-link i {
   font-size: 1.1rem;
 }
