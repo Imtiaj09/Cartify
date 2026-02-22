@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
+import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
+import { BaseChartDirective, Label } from 'ng2-charts';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,87 +11,78 @@ export class DashboardComponent {
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
   // Line Chart Configuration
-  public lineChartData: ChartConfiguration<'line'>['data'] = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    datasets: [
-      {
-        data: [10, 12, 8, 14, 11, 13, 9],
-        label: 'Revenue',
-        fill: true,
-        tension: 0.4,
-        borderColor: '#50a571',
-        backgroundColor: 'rgba(80, 165, 113, 0.1)',
-        pointBackgroundColor: '#50a571',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: '#50a571'
-      }
-    ]
-  };
-
-  public lineChartOptions: ChartOptions<'line'> = {
+  public lineChartData: ChartDataSets[] = [
+    {
+      data: [10, 12, 8, 14, 11, 13, 9],
+      label: 'Revenue',
+      fill: true,
+      lineTension: 0.4,
+      borderColor: '#50a571',
+      backgroundColor: 'rgba(80, 165, 113, 0.1)',
+      pointBackgroundColor: '#50a571',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: '#50a571'
+    }
+  ];
+  public lineChartLabels: Label[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  public lineChartType: ChartType = 'line';
+  public lineChartLegend = false;
+  public lineChartOptions: ChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: {
-        grid: {
-          display: false
-        }
-      },
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: '#e9ecef'
-        },
-        ticks: {
-          callback: function(value) {
-            return value + 'k';
+      xAxes: [
+        {
+          gridLines: {
+            display: false
           }
         }
-      }
+      ],
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true
+          },
+          gridLines: {
+            color: '#e9ecef'
+          }
+        }
+      ]
     },
-    plugins: {
-      legend: {
-        display: false
-      },
-      tooltip: {
-        callbacks: {
-          label: function(context) {
-            return context.dataset.label + ': ' + context.parsed.y + 'k';
-          }
-        }
-      }
+    legend: {
+      display: false
     }
   };
 
   // Bar Chart Configuration
-  public barChartData: ChartConfiguration<'bar'>['data'] = {
-    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'],
-    datasets: [
-      {
-        data: [6, 7, 8, 6, 7, 8, 9, 10, 8, 7, 6, 8, 9, 10, 11],
-        label: 'Users',
-        backgroundColor: '#50a571',
-        borderRadius: 5
-      }
-    ]
-  };
-
-  public barChartOptions: ChartOptions<'bar'> = {
+  public barChartData: ChartDataSets[] = [
+    {
+      data: [6, 7, 8, 6, 7, 8, 9, 10, 8, 7, 6, 8, 9, 10, 11],
+      label: 'Users',
+      backgroundColor: '#50a571'
+    }
+  ];
+  public barChartLabels: Label[] = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'];
+  public barChartType: ChartType = 'bar';
+  public barChartLegend = false;
+  public barChartOptions: ChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: {
-        display: false
-      },
-      y: {
-        display: false
-      }
+      xAxes: [
+        {
+          display: false
+        }
+      ],
+      yAxes: [
+        {
+          display: false
+        }
+      ]
     },
-    plugins: {
-      legend: {
-        display: false
-      }
+    legend: {
+      display: false
     }
   };
 }

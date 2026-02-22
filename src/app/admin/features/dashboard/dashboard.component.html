@@ -114,9 +114,11 @@
           </div>
           <div style="height: 300px;">
             <canvas baseChart
-              [data]="lineChartData"
+              [datasets]="lineChartData"
+              [labels]="lineChartLabels"
               [options]="lineChartOptions"
-              [type]="'line'">
+              [legend]="lineChartLegend"
+              [chartType]="lineChartType">
             </canvas>
           </div>
         </div>
@@ -134,9 +136,11 @@
           <small class="text-muted">Users per minute</small>
           <div style="height: 50px;" class="my-3">
             <canvas baseChart
-              [data]="barChartData"
+              [datasets]="barChartData"
+              [labels]="barChartLabels"
               [options]="barChartOptions"
-              [type]="'bar'">
+              [legend]="barChartLegend"
+              [chartType]="barChartType">
             </canvas>
           </div>
 
