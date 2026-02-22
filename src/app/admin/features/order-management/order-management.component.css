@@ -74,3 +74,147 @@
   width: 100%;
   text-align: left;
 }
+
+.erp-input {
+  border: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  background-color: transparent;
+  box-shadow: none !important;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.erp-input:hover {
+  border-bottom-color: #ced4da;
+  background-color: #ffffff;
+}
+
+.erp-input:focus {
+  border-color: transparent;
+  border-bottom-color: #50a571;
+  background-color: #ffffff;
+}
+
+.price-input-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  min-width: 170px;
+}
+
+.price-symbol {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.price-input {
+  max-width: 120px;
+  min-width: 90px;
+}
+
+.price-input::-webkit-outer-spin-button,
+.price-input::-webkit-inner-spin-button,
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.price-input[type=number],
+.quantity-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.manual-order-modal {
+  max-width: 1160px;
+}
+
+.manual-order-left {
+  border-right: 1px solid #e9ecef;
+}
+
+.manual-order-right {
+  background-color: #f8f9fa;
+}
+
+.manual-section {
+  border: 1px solid #e9ecef;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background-color: #ffffff;
+}
+
+.section-title {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #495057;
+}
+
+.manual-product-table thead th {
+  font-weight: 600;
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+.manual-product-table tbody td {
+  vertical-align: middle;
+}
+
+.quantity-input {
+  max-width: 84px;
+}
+
+.totals-list {
+  background-color: #ffffff;
+}
+
+.totals-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #edf0f2;
+}
+
+.totals-row:last-child {
+  border-bottom: 0;
+}
+
+.payment-terms-dropdown .btn {
+  text-align: left;
+}
+
+.totals-row .text-muted {
+  font-size: 0.8rem;
+}
+
+.meta-card {
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 0.75rem;
+  padding: 0.85rem;
+}
+
+.meta-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #495057;
+}
+
+.edit-btn {
+  color: #6c757d !important;
+}
+
+.edit-btn:hover {
+  color: #50a571 !important;
+}
+
+@media (max-width: 991.98px) {
+  .manual-order-left {
+    border-right: 0;
+    border-bottom: 1px solid #e9ecef;
+  }
+}

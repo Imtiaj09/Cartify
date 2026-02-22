@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { ChartsModule } from 'ng2-charts';
 
 import { AdminRoutingModule } from './admin-routing.module';
@@ -33,6 +34,7 @@ import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
     CommonModule,
     AdminRoutingModule,
     RouterModule,
+    FormsModule, // Add FormsModule here
     ChartsModule
   ]
 })
