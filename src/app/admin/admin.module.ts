@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router'; // Import RouterModule
+import { NgChartsModule } from 'ng2-charts';
 
 import { AdminRoutingModule } from './admin-routing.module';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
@@ -29,7 +31,9 @@ import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
   ],
   imports: [
     CommonModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    RouterModule, // <-- This line fixes the error
+    NgChartsModule
   ]
 })
 export class AdminModule { }

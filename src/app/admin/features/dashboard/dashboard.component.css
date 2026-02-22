@@ -1,0 +1,44 @@
+.card {
+  border: 1px solid #e9ecef;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.bg-success-soft {
+  background-color: rgba(80, 165, 113, 0.1);
+}
+
+.text-success {
+  color: #50a571 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+.text-primary {
+  color: #0d6efd !important;
+}
+
+.report-metrics .metric {
+  padding-bottom: 0.5rem;
+  border-bottom: 3px solid transparent;
+}
+
+.report-metrics .metric.active {
+  border-bottom-color: #50a571;
+}
+
+.report-metrics .metric.active h6,
+.report-metrics .metric.active small {
+  color: #50a571;
+}
+
+.progress-bar.bg-purple {
+  background-color: #6f42c1;
+}
+
+.form-check-input:checked {
+  background-color: #50a571;
+  border-color: #50a571;
+}
