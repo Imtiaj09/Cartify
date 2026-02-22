@@ -1,0 +1,132 @@
+<div class="d-flex">
+  <!-- Sidebar -->
+  <nav class="sidebar vh-100">
+    <div class="d-flex flex-column h-100">
+      <!-- Sidebar Header -->
+      <div class="sidebar-header d-flex align-items-center justify-content-between p-3">
+        <a href="#" class="text-decoration-none">
+          <h5 class="logo-text mb-0">
+            <i class="bi bi-shield-check-fill me-2"></i>DEALPORT
+          </h5>
+        </a>
+        <button class="btn btn-sm">
+          <i class="bi bi-list fs-5"></i>
+        </button>
+      </div>
+
+      <!-- Sidebar Navigation -->
+      <ul class="nav flex-column flex-grow-1 px-3">
+        <li class="nav-item-header mt-3 mb-2">
+          <small class="text-muted text-uppercase">Main menu</small>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" routerLink="/admin/dashboard" routerLinkActive="active">
+            <i class="bi bi-house-door me-3"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" routerLink="/admin/orders" routerLinkActive="active">
+            <i class="bi bi-cart-check me-3"></i>
+            <span>Order Management</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" routerLink="/admin/customers" routerLinkActive="active">
+            <i class="bi bi-people me-3"></i>
+            <span>Customers</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" routerLink="/admin/categories" routerLinkActive="active">
+            <i class="bi bi-tags me-3"></i>
+            <span>Categories</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" routerLink="/admin/transactions" routerLinkActive="active">
+            <i class="bi bi-credit-card me-3"></i>
+            <span>Transaction</span>
+          </a>
+        </li>
+
+        <li class="nav-item-header mt-4 mb-2">
+          <small class="text-muted text-uppercase">Product</small>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" routerLink="/admin/add-product" routerLinkActive="active">
+            <i class="bi bi-plus-circle me-3"></i>
+            <span>Add Products</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" href="#">
+            <i class="bi bi-box-seam me-3"></i>
+            <span>Product List</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" href="#">
+            <i class="bi bi-star me-3"></i>
+            <span>Product Reviews</span>
+          </a>
+        </li>
+
+        <li class="nav-item-header mt-4 mb-2">
+          <small class="text-muted text-uppercase">Admin</small>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" routerLink="/admin/admin-role" routerLinkActive="active">
+            <i class="bi bi-person-badge me-3"></i>
+            <span>Admin role</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" routerLink="/admin/control-authority" routerLinkActive="active">
+            <i class="bi bi-gear me-3"></i>
+            <span>Control Authority</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link d-flex align-items-center" routerLink="/admin/users" routerLinkActive="active">
+            <i class="bi bi-people-fill me-3"></i>
+            <span>Users</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer p-3 mt-auto">
+        <a routerLink="/shop/home" class="your-shop-link d-flex align-items-center text-decoration-none">
+          <i class="bi bi-shop me-2"></i>
+          <span>Your Shop</span>
+          <i class="bi bi-box-arrow-up-right ms-auto"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content flex-grow-1">
+    <!-- Header -->
+    <header class="header d-flex align-items-center justify-content-between p-3">
+      <h4 class="mb-0">Dashboard</h4>
+      <div class="d-flex align-items-center">
+        <div class="input-group me-3">
+          <span class="input-group-text bg-transparent border-end-0">
+            <i class="bi bi-search"></i>
+          </span>
+          <input type="text" class="form-control border-start-0" placeholder="Search...">
+        </div>
+        <a href="#" class="text-muted me-3"><i class="bi bi-bell fs-5"></i></a>
+        <a href="#" class="text-muted me-3"><i class="bi bi-brightness-high fs-5"></i></a>
+        <img src="https://via.placeholder.com/40" class="rounded-circle" alt="User Avatar">
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <main class="content-area p-4">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

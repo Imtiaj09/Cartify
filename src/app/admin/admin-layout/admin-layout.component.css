@@ -1,0 +1,81 @@
+:host {
+  display: block;
+}
+
+.sidebar {
+  width: 260px;
+  background-color: #ffffff;
+  border-right: 1px solid #e9ecef;
+  transition: width 0.3s;
+}
+
+.logo-text {
+  color: #50a571;
+  font-weight: bold;
+}
+
+.logo-text .bi {
+  color: #50a571;
+}
+
+.nav-item-header {
+  font-size: 0.75rem;
+}
+
+.nav-link {
+  color: #6c757d;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 0.25rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.nav-link i {
+  font-size: 1.1rem;
+}
+
+.nav-link:hover {
+  background-color: #f8f9fa;
+  color: #50a571;
+}
+
+.nav-link.active {
+  background-color: #50a571;
+  color: #ffffff;
+}
+
+.nav-link.active i {
+  color: #ffffff;
+}
+
+.sidebar-footer {
+  border-top: 1px solid #e9ecef;
+}
+
+.your-shop-link {
+  color: #6c757d;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.your-shop-link:hover {
+  background-color: #f8f9fa;
+  color: #50a571;
+}
+
+.main-content {
+  background-color: #f4f7fa;
+}
+
+.header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.header .input-group .form-control {
+  box-shadow: none;
+}
+
+.content-area {
+  min-height: calc(100vh - 70px); /* Adjust based on header height */
+}
