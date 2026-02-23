@@ -30,7 +30,9 @@ interface ManualOrderProduct {
 export class OrderManagementComponent implements OnInit {
 
   public orders: Order[] = [];
+  public selectedOrderIds: Set<number> = new Set();
   public openDropdownId: number | null = null;
+  public isEditMode = false;
 
   public isAddOrderModalOpen: boolean = false;
   public isPaymentTermsMenuOpen: boolean = false;
@@ -79,6 +81,7 @@ export class OrderManagementComponent implements OnInit {
   };
 
   private isSubtotalManuallyEdited = false;
+  private editingOrderId: number | null = null;
 
   public newOrderId: any;
   public orderDate: string = new Date().toISOString().split('T')[0];
@@ -132,7 +135,114 @@ export class OrderManagementComponent implements OnInit {
     this.saveOrdersToLocalStorage();
   }
 
+  toggleSelection(orderId: number): void {
+    if (this.selectedOrderIds.has(orderId)) {
+      this.selectedOrderIds.delete(orderId);
+      return;
+    }
+
+    this.selectedOrderIds.add(orderId);
+  }
+
+  toggleAllSelection(): void {
+    const visibleOrderIds = this.getVisibleOrders().map(order => order.id);
+    if (visibleOrderIds.length === 0) {
+      this.selectedOrderIds.clear();
+      return;
+    }
+
+    const areAllSelected = visibleOrderIds.every(orderId => this.selectedOrderIds.has(orderId));
+    if (areAllSelected) {
+      visibleOrderIds.forEach(orderId => this.selectedOrderIds.delete(orderId));
+      return;
+    }
+
+    visibleOrderIds.forEach(orderId => this.selectedOrderIds.add(orderId));
+  }
+
+  isSelected(orderId: number): boolean {
+    return this.selectedOrderIds.has(orderId);
+  }
+
+  areAllVisibleOrdersSelected(): boolean {
+    const visibleOrders = this.getVisibleOrders();
+    return visibleOrders.length > 0 && visibleOrders.every(order => this.selectedOrderIds.has(order.id));
+  }
+
+  hasPartialSelection(): boolean {
+    const visibleOrderIds = this.getVisibleOrders().map(order => order.id);
+    if (visibleOrderIds.length === 0) {
+      return false;
+    }
+
+    const selectedVisibleCount = visibleOrderIds.filter(orderId => this.selectedOrderIds.has(orderId)).length;
+    return selectedVisibleCount > 0 && selectedVisibleCount < visibleOrderIds.length;
+  }
+
+  deleteSelectedOrders(): void {
+    if (this.selectedOrderIds.size === 0) {
+      return;
+    }
+
+    this.orders = this.orders.filter(order => !this.selectedOrderIds.has(order.id));
+    this.selectedOrderIds.clear();
+    this.openDropdownId = null;
+    this.saveOrdersToLocalStorage();
+  }
+
+  editSelectedOrder(): void {
+    if (this.selectedOrderIds.size !== 1) {
+      return;
+    }
+
+    const [selectedOrderId] = Array.from(this.selectedOrderIds);
+    const orderToEdit = this.orders.find(order => order.id === selectedOrderId);
+    if (!orderToEdit) {
+      return;
+    }
+
+    this.resetManualOrderPricing();
+    this.closeAllMetadataEditors();
+
+    const fallbackProduct = this.manualProducts[0] ?? {
+      name: 'Custom Order',
+      sku: 'N/A',
+      image: 'https://via.placeholder.com/40',
+      quantity: 1,
+      unitPrice: 0
+    };
+
+    this.manualProducts = [
+      {
+        ...fallbackProduct,
+        name: orderToEdit.productName,
+        image: orderToEdit.productImage,
+        quantity: 1,
+        unitPrice: this.toNumber(orderToEdit.price)
+      }
+    ];
+
+    this.newOrderId = orderToEdit.id;
+    this.editingOrderId = orderToEdit.id;
+    this.customerName = orderToEdit.customerName || 'Guest';
+    this.orderDate = this.formatDateForInput(orderToEdit.date);
+    this.selectedPaymentTerm = orderToEdit.paymentMethod as PaymentTerm;
+
+    this.subtotal = this.toNumber(orderToEdit.price);
+    this.discount = 0;
+    this.shipping = 0;
+    this.taxRate = 0;
+    this.syncTotals();
+
+    this.isEditMode = true;
+    this.isAddOrderModalOpen = true;
+    this.isPaymentTermsMenuOpen = false;
+    this.openDropdownId = null;
+  }
+
   openAddOrderModal(): void {
+    this.isEditMode = false;
+    this.editingOrderId = null;
     this.resetManualOrderPricing();
     this.closeAllMetadataEditors();
     this.isAddOrderModalOpen = true;
@@ -143,6 +253,8 @@ export class OrderManagementComponent implements OnInit {
   closeAddOrderModal(): void {
     this.isAddOrderModalOpen = false;
     this.isPaymentTermsMenuOpen = false;
+    this.isEditMode = false;
+    this.editingOrderId = null;
     this.closeAllMetadataEditors();
   }
 
@@ -244,12 +356,31 @@ export class OrderManagementComponent implements OnInit {
     this.finalTotal = this.calculateFinalTotal();
   }
 
+  private getVisibleOrders(): Order[] {
+    return this.orders;
+  }
+
+  private formatDateForInput(dateStr: string): string {
+    const parsedDate = new Date(dateStr);
+    if (Number.isNaN(parsedDate.getTime())) {
+      return new Date().toISOString().split('T')[0];
+    }
+
+    const year = parsedDate.getFullYear();
+    const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(parsedDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   private formatDate(dateStr: string): string {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   }
 
   createOrder(): void {
+    const targetOrderId = this.isEditMode && this.editingOrderId !== null ? this.editingOrderId : this.newOrderId;
+    const existingOrderIndex = this.orders.findIndex(order => order.id === targetOrderId);
+    const fallbackStatus = existingOrderIndex >= 0 ? this.orders[existingOrderIndex].status : 'Pending';
     const newOrder: Order = {
       id: this.newOrderId,
       customerName: this.customerName || 'Guest',
@@ -258,9 +389,17 @@ export class OrderManagementComponent implements OnInit {
       date: this.formatDate(this.orderDate),
       price: this.finalTotal,
       paymentMethod: this.selectedPaymentTerm,
-      status: 'Pending'
+      status: this.isEditMode ? fallbackStatus : 'Pending'
     };
-    this.orders.unshift(newOrder);
+
+    if (this.isEditMode && existingOrderIndex >= 0) {
+      this.orders[existingOrderIndex] = newOrder;
+      this.selectedOrderIds = new Set([newOrder.id]);
+    } else {
+      this.orders.unshift(newOrder);
+      this.selectedOrderIds.clear();
+    }
+
     this.closeAddOrderModal();
     this.saveOrdersToLocalStorage();
   }
