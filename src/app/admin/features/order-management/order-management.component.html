@@ -184,6 +184,10 @@
           <div class="row g-0">
             <!-- Left: Product & Payment Details -->
             <div class="col-lg-8 p-4 manual-order-left">
+              <div class="mb-3">
+                <label class="form-label small text-muted">Order ID</label>
+                <input type="number" class="form-control form-control-sm" [(ngModel)]="newOrderId">
+              </div>
               <div class="manual-section mb-4">
                 <h6 class="section-title">Product</h6>
                 <div class="input-group mb-3">
@@ -384,6 +388,13 @@
 
               <div class="meta-card mb-3">
                 <div class="meta-card-header">
+                  <h6 class="mb-0">Order Date</h6>
+                </div>
+                <input type="date" class="form-control form-control-sm mt-2 erp-input" [(ngModel)]="orderDate">
+              </div>
+
+              <div class="meta-card mb-3">
+                <div class="meta-card-header">
                   <h6 class="mb-0">Contact Information</h6>
                   <button type="button" class="btn btn-link p-0 text-muted edit-btn" (click)="toggleMetadataEdit('contact', $event)">
                     <i class="bi" [ngClass]="isEditingMetadata.contact ? 'bi-check2' : 'bi-pencil'"></i>
@@ -484,7 +495,7 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" (click)="closeAddOrderModal()">Cancel</button>
-          <button type="button" class="btn btn-success px-4" (click)="closeAddOrderModal()">Create Order</button>
+          <button type="button" class="btn btn-success px-4" (click)="createOrder()">Create Order</button>
         </div>
       </div>
     </div>

@@ -80,6 +80,10 @@ export class OrderManagementComponent implements OnInit {
 
   private isSubtotalManuallyEdited = false;
 
+  public newOrderId: any;
+  // Add new property for the Order Date
+  public orderDate: string = new Date().toISOString().split('T')[0];
+
   constructor() { }
 
   ngOnInit(): void {
@@ -123,6 +127,7 @@ export class OrderManagementComponent implements OnInit {
     this.closeAllMetadataEditors();
     this.isAddOrderModalOpen = true;
     this.isPaymentTermsMenuOpen = false;
+    this.newOrderId = Math.floor(10000 + Math.random() * 90000);
   }
 
   closeAddOrderModal(): void {
@@ -227,5 +232,26 @@ export class OrderManagementComponent implements OnInit {
   private syncTotals(): void {
     this.estimatedTaxAmount = this.calculateEstimatedTaxAmount();
     this.finalTotal = this.calculateFinalTotal();
+  }
+
+  // Add helper method to format date
+  private formatDate(dateStr: string): string {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  createOrder(): void {
+    const newOrder: Order = {
+      id: this.newOrderId, // Uses the ID from the input we added previously
+      customerName: this.customerName || 'Guest',
+      productName: this.manualProducts.length > 0 ? this.manualProducts[0].name : 'Custom Order',
+      productImage: this.manualProducts.length > 0 ? this.manualProducts[0].image : 'https://via.placeholder.com/40',
+      date: this.formatDate(this.orderDate), // Uses the new Date input
+      price: this.finalTotal,
+      paymentMethod: this.selectedPaymentTerm,
+      status: 'Pending'
+    };
+    this.orders.unshift(newOrder); // Adds to top of table
+    this.closeAddOrderModal();
   }
 }
