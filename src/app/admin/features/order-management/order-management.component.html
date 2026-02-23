@@ -80,9 +80,21 @@
             <span class="input-group-text bg-transparent"><i class="bi bi-search"></i></span>
             <input type="text" class="form-control border-start-0" placeholder="Search Order report...">
           </div>
-          <button class="btn btn-outline-secondary square-btn"><i class="bi bi-funnel"></i></button>
-          <button class="btn btn-outline-secondary square-btn"><i class="bi bi-download"></i></button>
-          <button class="btn btn-outline-secondary square-btn"><i class="bi bi-printer"></i></button>
+          <button type="button"
+            class="btn btn-outline-secondary square-btn"
+            [disabled]="selectedOrderIds.size !== 1"
+            (click)="editSelectedOrder()">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button type="button"
+            class="btn btn-outline-secondary square-btn"
+            [disabled]="selectedOrderIds.size === 0"
+            (click)="deleteSelectedOrders()">
+            <i class="bi bi-trash"></i>
+          </button>
+          <button type="button" class="btn btn-outline-secondary square-btn"><i class="bi bi-file-text"></i></button>
+          <button type="button" class="btn btn-outline-secondary square-btn"><i class="bi bi-download"></i></button>
+          <button type="button" class="btn btn-outline-secondary square-btn"><i class="bi bi-printer"></i></button>
         </div>
       </div>
 
@@ -91,6 +103,14 @@
         <table class="table table-hover align-middle">
           <thead class="table-light">
             <tr>
+              <th scope="col" class="text-center" style="width: 44px;">
+                <input type="checkbox"
+                  class="form-check-input"
+                  [checked]="areAllVisibleOrdersSelected()"
+                  [indeterminate]="hasPartialSelection()"
+                  (change)="toggleAllSelection()"
+                  aria-label="Select all orders">
+              </th>
               <th scope="col">NO.</th>
               <th scope="col">Order Id</th>
               <th scope="col">Product</th>
@@ -102,6 +122,13 @@
           </thead>
           <tbody>
             <tr *ngFor="let order of orders; let i = index">
+              <td class="text-center">
+                <input type="checkbox"
+                  class="form-check-input"
+                  [checked]="isSelected(order.id)"
+                  (change)="toggleSelection(order.id)"
+                  [attr.aria-label]="'Select order #' + order.id">
+              </td>
               <td>{{ i + 1 }}</td>
               <td class="fw-bold">#{{ order.id }}</td>
               <td>
@@ -174,8 +201,8 @@
       <div class="modal-content border-0 shadow-lg">
         <div class="modal-header">
           <div>
-            <h5 class="modal-title fw-semibold" id="manualOrderModalLabel">Manual Order</h5>
-            <small class="text-muted">Create and manage custom orders from the dashboard</small>
+            <h5 class="modal-title fw-semibold" id="manualOrderModalLabel">{{ isEditMode ? 'Edit Order' : 'Manual Order' }}</h5>
+            <small class="text-muted">{{ isEditMode ? 'Update the selected order from the dashboard' : 'Create and manage custom orders from the dashboard' }}</small>
           </div>
           <button type="button" class="btn-close" aria-label="Close" (click)="closeAddOrderModal()"></button>
         </div>
@@ -495,7 +522,7 @@
 
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" (click)="closeAddOrderModal()">Cancel</button>
-          <button type="button" class="btn btn-success px-4" (click)="createOrder()">Create Order</button>
+          <button type="button" class="btn btn-success px-4" (click)="createOrder()">{{ isEditMode ? 'Update Order' : 'Create Order' }}</button>
         </div>
       </div>
     </div>
