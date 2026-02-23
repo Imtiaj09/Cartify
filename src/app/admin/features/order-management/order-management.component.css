@@ -212,9 +212,41 @@
   color: #50a571 !important;
 }
 
+/* --- Mobile Responsiveness Fixes --- */
 @media (max-width: 991.98px) {
-  .manual-order-left {
-    border-right: 0;
+  /* 1. Fix Modal Stacking */
+  .manual-order-left,
+  .manual-order-right {
+    width: 100% !important;
+    padding: 1rem !important;
+    border-right: none !important;
     border-bottom: 1px solid #e9ecef;
   }
+  /* 2. Fix Totals Section Squashing */
+  .totals-row {
+    flex-direction: column; /* Stack label and input on very small screens */
+    align-items: flex-start !important;
+    gap: 0.5rem;
+  }
+
+  .totals-row .price-input-wrap {
+    width: 100%; /* Full width inputs on mobile */
+    justify-content: space-between;
+  }
+
+  .erp-input {
+    text-align: left !important; /* Align text left for readability */
+  }
+}
+
+/* 3. Fix Main Table Overflow */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+}
+
+/* Prevent table text from wrapping awkwardly */
+.table th, .table td {
+  white-space: nowrap;
+  vertical-align: middle;
 }

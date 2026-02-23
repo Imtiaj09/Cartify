@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <!-- Top Action Bar -->
-  <div class="d-flex justify-content-end mb-4">
+  <div class="d-flex justify-content-end flex-wrap mb-4">
     <button class="btn btn-success me-2" type="button" (click)="openAddOrderModal()">
       <i class="bi bi-plus-circle me-1"></i> Add Order
     </button>
@@ -75,7 +75,7 @@
           <button type="button" class="btn btn-outline-secondary">Pending</button>
           <button type="button" class="btn btn-outline-secondary">Canceled</button>
         </div>
-        <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+        <div class="d-flex flex-wrap align-items-center gap-2 mt-2 mt-md-0">
           <div class="input-group">
             <span class="input-group-text bg-transparent"><i class="bi bi-search"></i></span>
             <input type="text" class="form-control border-start-0" placeholder="Search Order report...">
@@ -181,7 +181,7 @@
         </div>
 
         <div class="modal-body p-0">
-          <div class="row g-0">
+          <div class="row g-0 flex-column flex-lg-row">
             <!-- Left: Product & Payment Details -->
             <div class="col-lg-8 p-4 manual-order-left">
               <div class="mb-3">

@@ -81,20 +81,29 @@ export class OrderManagementComponent implements OnInit {
   private isSubtotalManuallyEdited = false;
 
   public newOrderId: any;
-  // Add new property for the Order Date
   public orderDate: string = new Date().toISOString().split('T')[0];
 
   constructor() { }
 
   ngOnInit(): void {
-    this.orders = [
-      { id: 89742, customerName: 'John Doe', productName: 'Classic T-Shirt', productImage: 'https://via.placeholder.com/40', date: 'Oct 26, 2023', price: 25.00, paymentMethod: 'Visa', status: 'Delivered' },
-      { id: 89743, customerName: 'Jane Smith', productName: 'Running Shoes', productImage: 'https://via.placeholder.com/40', date: 'Oct 25, 2023', price: 120.50, paymentMethod: 'Mastercard', status: 'Pending' },
-      { id: 89744, customerName: 'Mike Johnson', productName: 'Leather Wallet', productImage: 'https://via.placeholder.com/40', date: 'Oct 24, 2023', price: 45.00, paymentMethod: 'Visa', status: 'Shipped' },
-      { id: 89745, customerName: 'Emily Davis', productName: 'Denim Jeans', productImage: 'https://via.placeholder.com/40', date: 'Oct 23, 2023', price: 89.99, paymentMethod: 'Mastercard', status: 'Cancelled' },
-      { id: 89746, customerName: 'Robert Brown', productName: 'Sunglasses', productImage: 'https://via.placeholder.com/40', date: 'Oct 22, 2023', price: 75.00, paymentMethod: 'Visa', status: 'Delivered' },
-    ];
+    const storedOrders = localStorage.getItem('admin_orders');
+    if (storedOrders) {
+      this.orders = JSON.parse(storedOrders);
+    } else {
+      this.orders = [
+        { id: 89742, customerName: 'John Doe', productName: 'Classic T-Shirt', productImage: 'https://via.placeholder.com/40', date: 'Oct 26, 2023', price: 25.00, paymentMethod: 'Visa', status: 'Delivered' },
+        { id: 89743, customerName: 'Jane Smith', productName: 'Running Shoes', productImage: 'https://via.placeholder.com/40', date: 'Oct 25, 2023', price: 120.50, paymentMethod: 'Mastercard', status: 'Pending' },
+        { id: 89744, customerName: 'Mike Johnson', productName: 'Leather Wallet', productImage: 'https://via.placeholder.com/40', date: 'Oct 24, 2023', price: 45.00, paymentMethod: 'Visa', status: 'Shipped' },
+        { id: 89745, customerName: 'Emily Davis', productName: 'Denim Jeans', productImage: 'https://via.placeholder.com/40', date: 'Oct 23, 2023', price: 89.99, paymentMethod: 'Mastercard', status: 'Cancelled' },
+        { id: 89746, customerName: 'Robert Brown', productName: 'Sunglasses', productImage: 'https://via.placeholder.com/40', date: 'Oct 22, 2023', price: 75.00, paymentMethod: 'Visa', status: 'Delivered' },
+      ];
+      this.saveOrdersToLocalStorage();
+    }
     this.resetManualOrderPricing();
+  }
+
+  private saveOrdersToLocalStorage(): void {
+    localStorage.setItem('admin_orders', JSON.stringify(this.orders));
   }
 
   @HostListener('document:click', ['$event'])
@@ -120,6 +129,7 @@ export class OrderManagementComponent implements OnInit {
   updateStatus(order: Order, newStatus: 'Delivered' | 'Pending' | 'Shipped' | 'Cancelled'): void {
     order.status = newStatus;
     this.openDropdownId = null;
+    this.saveOrdersToLocalStorage();
   }
 
   openAddOrderModal(): void {
@@ -234,7 +244,6 @@ export class OrderManagementComponent implements OnInit {
     this.finalTotal = this.calculateFinalTotal();
   }
 
-  // Add helper method to format date
   private formatDate(dateStr: string): string {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -242,16 +251,17 @@ export class OrderManagementComponent implements OnInit {
 
   createOrder(): void {
     const newOrder: Order = {
-      id: this.newOrderId, // Uses the ID from the input we added previously
+      id: this.newOrderId,
       customerName: this.customerName || 'Guest',
       productName: this.manualProducts.length > 0 ? this.manualProducts[0].name : 'Custom Order',
       productImage: this.manualProducts.length > 0 ? this.manualProducts[0].image : 'https://via.placeholder.com/40',
-      date: this.formatDate(this.orderDate), // Uses the new Date input
+      date: this.formatDate(this.orderDate),
       price: this.finalTotal,
       paymentMethod: this.selectedPaymentTerm,
       status: 'Pending'
     };
-    this.orders.unshift(newOrder); // Adds to top of table
+    this.orders.unshift(newOrder);
     this.closeAddOrderModal();
+    this.saveOrdersToLocalStorage();
   }
 }

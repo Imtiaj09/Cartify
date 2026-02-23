@@ -6,7 +6,8 @@
   width: 260px;
   background-color: #ffffff;
   border-right: 1px solid #e9ecef;
-  transition: width 0.3s;
+  transition: transform 0.3s ease-in-out;
+  flex-shrink: 0;
 }
 
 .logo-text {
@@ -28,28 +29,6 @@
   border-radius: 6px;
   margin-bottom: 0.25rem;
   transition: background-color 0.2s, color 0.2s;
-}
-
-/* Keep sidebar link content on a single line and avoid flex shrink/wrapping. */
-.sidebar .nav-link,
-.sidebar .your-shop-link {
-  display: flex;
-  align-items: center;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-}
-
-.sidebar .nav-link span,
-.sidebar .your-shop-link span {
-  white-space: nowrap;
-  word-break: normal;
-  overflow-wrap: normal;
-  flex-shrink: 0;
-}
-
-.sidebar .nav-link i,
-.sidebar .your-shop-link i {
-  flex-shrink: 0;
 }
 
 .nav-link i {
@@ -87,6 +66,7 @@
 
 .main-content {
   background-color: #f4f7fa;
+  width: 100%;
 }
 
 .header {
@@ -100,4 +80,29 @@
 
 .content-area {
   min-height: calc(100vh - 70px); /* Adjust based on header height */
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 991.98px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1050;
+    transform: translateX(-100%);
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  }
+  .sidebar.show {
+    transform: translateX(0);
+  }
+  .sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+  }
 }

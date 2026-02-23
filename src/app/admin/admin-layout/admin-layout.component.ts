@@ -10,21 +10,36 @@ import { filter, map } from 'rxjs/operators';
 export class AdminLayoutComponent implements OnInit {
 
   pageTitle: string = 'Dashboard';
+  isSidebarOpen: boolean = false;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
+    // 1. Set title immediately on load (Fixes Refresh Bug)
+    this.updateTitleFromRoute();
+
+    // 2. Update title on subsequent navigation
     this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd),
-      map(() => {
-        let child = this.activatedRoute.firstChild;
-        while (child?.firstChild) {
-          child = child.firstChild;
-        }
-        return child?.snapshot.data['title'] || this.pageTitle;
-      })
-    ).subscribe((title: string) => {
-      this.pageTitle = title;
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.updateTitleFromRoute();
     });
+  }
+
+  private updateTitleFromRoute(): void {
+    let child = this.activatedRoute.firstChild;
+    while (child?.firstChild) {
+      child = child.firstChild;
+    }
+    // Use 'title' from route data, or fallback to 'Dashboard'
+    this.pageTitle = child?.snapshot.data['title'] || 'Dashboard';
+  }
+
+  toggleSidebar(): void {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  closeSidebar(): void {
+    this.isSidebarOpen = false;
   }
 }
