@@ -1,0 +1,167 @@
+/* Card Styles */
+.card {
+  border-radius: 12px;
+}
+
+.shadow-sm {
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.04) !important;
+}
+
+/* Category Cards */
+.category-card {
+  width: 160px;
+  transition: transform 0.2s;
+}
+
+.category-card:hover {
+  transform: translateY(-3px);
+}
+
+.category-scroll::-webkit-scrollbar {
+  height: 6px;
+  display: none; /* Hide scrollbar for cleaner look with arrow */
+}
+
+.category-scroll {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.icon-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arrow-btn {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+/* Filter Tabs */
+.nav-pills .nav-link.active {
+  background-color: #50a571 !important;
+}
+
+.nav-link {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  color: #50a571;
+}
+
+/* Search & Buttons */
+.input-group .form-control:focus {
+  box-shadow: none;
+  border-color: #ced4da;
+}
+
+.square-btn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* Table Styles */
+.table thead th {
+  background-color: #eefbe7; /* Matched with Customers page */
+  font-weight: 600;
+  color: #198754; /* Matched with Customers page */
+  white-space: nowrap;
+}
+
+.form-check-input:checked {
+  background-color: #50a571;
+  border-color: #50a571;
+}
+
+/* Pagination */
+.pagination-nums .btn-success {
+  background-color: #aaddbb; /* Matched with Customers page */
+  border-color: #aaddbb; /* Matched with Customers page */
+  color: #155724; /* Matched with Customers page */
+}
+
+/* Text Colors */
+.text-success {
+  color: #50a571 !important;
+}
+
+.text-muted {
+  color: #8898aa !important;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 991.98px) {
+  /* Category Cards */
+  .category-card {
+    width: 140px;
+  }
+
+  /* Allow horizontal scrolling for categories on mobile */
+  .category-scroll {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 10px;
+  }
+
+  /* Hide arrow button on mobile */
+  .arrow-btn {
+    display: none !important;
+  }
+
+  /* Filter Tabs & Search */
+  .card-body.d-flex {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+
+  .nav-pills {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .nav-item {
+    white-space: nowrap;
+  }
+
+  .input-group {
+    width: 100%;
+  }
+
+  /* Table Responsiveness */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent table text from wrapping awkwardly */
+  .table th, .table td {
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  /* Pagination */
+  .card-footer .d-flex {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pagination-nums {
+    order: -1; /* Move numbers to top on mobile if needed, or keep standard flow */
+  }
+}

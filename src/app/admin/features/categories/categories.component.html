@@ -1,1 +1,116 @@
-<p>categories works!</p>
+<div class="container-fluid p-4">
+  <!-- Top Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="fw-bold mb-0">Discover</h4>
+    <div class="d-flex gap-2">
+      <button class="btn btn-success">
+        <i class="bi bi-plus-circle me-1"></i> Add Product
+      </button>
+      <button class="btn btn-outline-secondary">
+        <i class="bi bi-three-dots-vertical"></i> More Action
+      </button>
+    </div>
+  </div>
+
+  <!-- Category Cards -->
+  <div class="d-flex align-items-center mb-4">
+    <div class="d-flex overflow-auto pb-3 gap-3 category-scroll flex-grow-1">
+      <div class="card border-0 shadow-sm category-card flex-shrink-0" *ngFor="let category of categories">
+        <div class="card-body text-center">
+          <div class="icon-circle bg-light text-success mx-auto mb-3">
+            <i class="bi {{ category.icon }} fs-4"></i>
+          </div>
+          <h6 class="fw-bold mb-1">{{ category.name }}</h6>
+          <small class="text-muted">{{ category.itemCount }} Items</small>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-light shadow-sm rounded-circle ms-3 d-none d-md-flex align-items-center justify-content-center arrow-btn">
+      <i class="bi bi-arrow-right"></i>
+    </button>
+  </div>
+
+  <!-- Filter Tabs & Search -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link active bg-success" href="#">All Product (145)</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-muted" href="#">Featured Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-muted" href="#">On Sale</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-muted" href="#">Out of Stock</a>
+        </li>
+      </ul>
+      <div class="d-flex align-items-center gap-2">
+        <div class="input-group">
+          <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+          <input type="text" class="form-control border-start-0" placeholder="Search...">
+        </div>
+        <button class="btn btn-outline-secondary square-btn"><i class="bi bi-funnel"></i></button>
+        <button class="btn btn-outline-secondary square-btn"><i class="bi bi-plus-lg"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="bg-light">
+            <tr class="text-success">
+              <th class="py-3 ps-4 border-0" style="width: 50px;">
+                <input class="form-check-input" type="checkbox">
+              </th>
+              <th class="py-3 border-0">No.</th>
+              <th class="py-3 border-0">Product</th>
+              <th class="py-3 border-0">Created Date</th>
+              <th class="py-3 border-0">Order</th>
+              <th class="py-3 border-0 text-end pe-4">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of products; let i = index">
+              <td class="ps-4">
+                <input class="form-check-input" type="checkbox">
+              </td>
+              <td class="fw-bold text-muted">#{{ i + 1 }}</td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <img [src]="product.image" class="rounded me-2" width="40" height="40" alt="Product">
+                  <span class="fw-bold">{{ product.name }}</span>
+                </div>
+              </td>
+              <td>{{ product.createdDate }}</td>
+              <td>{{ product.orderCount }}</td>
+              <td class="text-end pe-4">
+                <button class="btn btn-link text-secondary p-0 me-3"><i class="bi bi-pencil"></i></button>
+                <button class="btn btn-link text-secondary p-0"><i class="bi bi-trash"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Pagination -->
+    <div class="card-footer bg-white border-0 py-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Previous</button>
+        <div class="pagination-nums">
+          <button class="btn btn-success btn-sm me-1">1</button>
+          <button class="btn btn-outline-light text-dark btn-sm me-1">2</button>
+          <button class="btn btn-outline-light text-dark btn-sm me-1">3</button>
+          <span class="me-1">...</span>
+          <button class="btn btn-outline-light text-dark btn-sm">12</button>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm">Next <i class="bi bi-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
