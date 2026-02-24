@@ -1,0 +1,88 @@
+/* Card Styles */
+.card {
+  border-radius: 12px;
+}
+
+.shadow-sm {
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.04) !important;
+}
+
+/* Badge Styles */
+.badge.bg-light.text-success {
+  background-color: #e6f6e6 !important; /* Custom light green */
+  color: #28a745 !important;
+  font-weight: normal;
+}
+
+/* Chart Tab Buttons */
+.btn-outline-success {
+  color: #28a745;
+  border-color: #e6f6e6;
+  background-color: #e6f6e6;
+  font-weight: 500;
+}
+.btn-outline-success.active {
+  background-color: #d1e7dd;
+  border-color: #d1e7dd;
+  color: #198754;
+}
+
+/* Table Header Customization */
+.table thead th {
+  background-color: #eefbe7; /* The light green header bg */
+  font-weight: 600;
+  color: #198754; /* Bootstrap success color */
+  white-space: nowrap; /* Prevent header wrapping */
+}
+
+/* Status Dot */
+.dot {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.text-warning {
+  color: #ffc107 !important;
+}
+.bg-warning {
+  background-color: #ffc107 !important;
+}
+
+/* Pagination */
+.pagination-nums .btn-success {
+  background-color: #aaddbb;
+  border-color: #aaddbb;
+  color: #155724;
+}
+
+/* Text Colors */
+.text-muted {
+  color: #8898aa !important;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 991.98px) {
+  /* Stack columns on smaller screens */
+  .col-lg-3, .col-lg-9 {
+    width: 100%;
+  }
+
+  /* Adjust chart height for mobile */
+  .card-body canvas {
+    max-height: 200px;
+  }
+
+  /* Ensure table is scrollable horizontally */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent table text from wrapping awkwardly */
+  .table th, .table td {
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+}
