@@ -92,9 +92,28 @@
             (click)="deleteSelectedOrders()">
             <i class="bi bi-trash"></i>
           </button>
-          <button type="button" class="btn btn-outline-secondary square-btn"><i class="bi bi-file-text"></i></button>
-          <button type="button" class="btn btn-outline-secondary square-btn"><i class="bi bi-download"></i></button>
-          <button type="button" class="btn btn-outline-secondary square-btn"><i class="bi bi-printer"></i></button>
+          <button type="button"
+            class="btn btn-outline-secondary square-btn"
+            [disabled]="selectedOrderIds.size !== 1"
+            (click)="viewReport()"
+            aria-label="View cash memo report">
+            <i class="bi bi-file-text"></i>
+          </button>
+          <button type="button"
+            class="btn btn-outline-secondary square-btn"
+            [disabled]="selectedOrderIds.size !== 1 || isReportDownloading"
+            (click)="downloadOrder()"
+            [attr.aria-label]="isReportDownloading ? 'Generating PDF' : 'Download cash memo PDF'">
+            <span *ngIf="isReportDownloading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <i *ngIf="!isReportDownloading" class="bi bi-download"></i>
+          </button>
+          <button type="button"
+            class="btn btn-outline-secondary square-btn"
+            [disabled]="selectedOrderIds.size !== 1"
+            (click)="printOrder()"
+            aria-label="Print cash memo">
+            <i class="bi bi-printer"></i>
+          </button>
         </div>
       </div>
 
@@ -188,6 +207,155 @@
       </div>
     </div>
   </div>
+
+  <!-- Digital Cash Memo Modal -->
+  <div class="modal fade"
+    tabindex="-1"
+    [class.show]="isReportModalOpen"
+    [style.display]="isReportModalOpen ? 'block' : 'none'"
+    [attr.aria-hidden]="!isReportModalOpen"
+    aria-labelledby="cashMemoModalLabel"
+    (click)="closeReportModal()">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable cash-memo-modal" (click)="$event.stopPropagation()">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header">
+          <div>
+            <h5 class="modal-title fw-semibold" id="cashMemoModalLabel">Digital Cash Memo</h5>
+            <small class="text-muted">Invoice snapshot for the selected order</small>
+          </div>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeReportModal()"></button>
+        </div>
+
+        <div class="modal-body cash-memo-modal-body">
+          <ng-container *ngIf="reportData as report; else noReportSelected">
+            <div class="cash-memo-print-area" id="cashMemoPrintable">
+              <article class="cash-memo-sheet">
+                <header class="cash-memo-header">
+                  <div>
+                    <p class="cash-memo-brand mb-1">Cartify</p>
+                    <h4 class="mb-1">Digital Cash Memo</h4>
+                    <small class="text-muted">Professional order invoice report</small>
+                  </div>
+                  <div class="text-end">
+                    <div class="memo-status-chip"
+                      [ngClass]="{
+                        'status-delivered': report.order.status === 'Delivered',
+                        'status-pending': report.order.status === 'Pending',
+                        'status-shipped': report.order.status === 'Shipped',
+                        'status-cancelled': report.order.status === 'Cancelled'
+                      }">
+                      {{ report.order.status }}
+                    </div>
+                    <p class="mb-0 mt-2 small text-muted">Order ID: <span class="fw-semibold text-dark">#{{ report.order.id }}</span></p>
+                    <p class="mb-0 small text-muted">Order Date: <span class="fw-semibold text-dark">{{ report.order.date }}</span></p>
+                  </div>
+                </header>
+
+                <section class="cash-memo-grid">
+                  <div class="cash-memo-block">
+                    <h6>Customer & Contact</h6>
+                    <p><span>Customer:</span> {{ report.customerName }}</p>
+                    <p><span>Email:</span> {{ report.email }}</p>
+                    <p><span>Phone:</span> {{ report.phone }}</p>
+                  </div>
+                  <div class="cash-memo-block">
+                    <h6>Addresses</h6>
+                    <p><span>Shipping:</span> {{ report.shippingAddress }}</p>
+                    <p><span>Billing:</span> {{ report.billingAddress }}</p>
+                  </div>
+                </section>
+
+                <section class="cash-memo-section">
+                  <h6 class="cash-memo-section-title">Order Details</h6>
+                  <div class="table-responsive">
+                    <table class="table table-sm align-middle memo-items-table mb-0">
+                      <thead>
+                        <tr>
+                          <th scope="col">Product</th>
+                          <th scope="col" class="text-center">Quantity</th>
+                          <th scope="col" class="text-end">Unit Price</th>
+                          <th scope="col" class="text-end">Row Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of report.items">
+                          <td>{{ item.productName }}</td>
+                          <td class="text-center">{{ item.quantity }}</td>
+                          <td class="text-end">${{ item.unitPrice | number:'1.2-2' }}</td>
+                          <td class="text-end fw-semibold">${{ item.rowTotal | number:'1.2-2' }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+
+                <section class="cash-memo-totals">
+                  <h6 class="cash-memo-section-title">Payment & Totals</h6>
+                  <div class="memo-total-row">
+                    <span>Subtotal</span>
+                    <span>${{ report.subtotal | number:'1.2-2' }}</span>
+                  </div>
+                  <div class="memo-total-row">
+                    <span>Discount</span>
+                    <span>- ${{ report.discount | number:'1.2-2' }}</span>
+                  </div>
+                  <div class="memo-total-row">
+                    <span>Shipping</span>
+                    <span>${{ report.shipping | number:'1.2-2' }}</span>
+                  </div>
+                  <div class="memo-total-row">
+                    <span>Tax</span>
+                    <span>${{ report.tax | number:'1.2-2' }}</span>
+                  </div>
+                  <div class="memo-total-row grand-total">
+                    <span>Final Total</span>
+                    <span>${{ report.finalTotal | number:'1.2-2' }}</span>
+                  </div>
+                </section>
+
+                <section class="cash-memo-grid metadata-grid">
+                  <div class="cash-memo-block">
+                    <h6>Metadata</h6>
+                    <p><span>Market:</span> {{ report.market }}</p>
+                    <p><span>Tags:</span> {{ report.tags }}</p>
+                    <p><span>Payment Terms:</span> {{ report.paymentTerms }}</p>
+                  </div>
+                  <div class="cash-memo-block">
+                    <h6>Notes</h6>
+                    <p class="memo-notes">{{ report.notes }}</p>
+                  </div>
+                </section>
+              </article>
+            </div>
+          </ng-container>
+          <ng-template #noReportSelected>
+            <div class="alert alert-light border text-muted mb-0">
+              Select exactly one order and click Report to generate the cash memo.
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" (click)="closeReportModal()">Close</button>
+          <button type="button"
+            class="btn btn-outline-primary"
+            [disabled]="selectedOrderIds.size !== 1"
+            (click)="printOrder()">
+            <i class="bi bi-printer me-1"></i> Print
+          </button>
+          <button type="button"
+            class="btn btn-success"
+            [disabled]="selectedOrderIds.size !== 1 || isReportDownloading"
+            (click)="downloadOrder()">
+            <span *ngIf="isReportDownloading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+            <i *ngIf="!isReportDownloading" class="bi bi-download me-1"></i>
+            {{ isReportDownloading ? 'Generating PDF...' : 'Download PDF' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="isReportModalOpen"></div>
 
   <!-- Manual Order Modal -->
   <div class="modal fade"

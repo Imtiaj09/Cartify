@@ -212,6 +212,174 @@
   color: #50a571 !important;
 }
 
+.cash-memo-modal {
+  max-width: 1080px;
+}
+
+.cash-memo-modal-body {
+  background: #f4f6f9;
+}
+
+.cash-memo-print-area {
+  padding: 0.35rem;
+}
+
+.cash-memo-sheet {
+  background-color: #ffffff;
+  border: 1px solid #dfe4ea;
+  border-radius: 0.9rem;
+  padding: 1.4rem;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+  color: #2f3542;
+}
+
+.cash-memo-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px dashed #d7dde6;
+}
+
+.cash-memo-brand {
+  color: #198754;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.memo-status-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 108px;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.memo-status-chip.status-delivered {
+  color: #0f5132;
+  background: #d1e7dd;
+}
+
+.memo-status-chip.status-pending {
+  color: #664d03;
+  background: #fff3cd;
+}
+
+.memo-status-chip.status-shipped {
+  color: #055160;
+  background: #cff4fc;
+}
+
+.memo-status-chip.status-cancelled {
+  color: #842029;
+  background: #f8d7da;
+}
+
+.cash-memo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.cash-memo-block {
+  border: 1px solid #e7ecf2;
+  border-radius: 0.75rem;
+  background: #fbfcfe;
+  padding: 0.85rem 0.95rem;
+}
+
+.cash-memo-block h6 {
+  margin-bottom: 0.6rem;
+  color: #495057;
+}
+
+.cash-memo-block p {
+  margin-bottom: 0.45rem;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.cash-memo-block p:last-child {
+  margin-bottom: 0;
+}
+
+.cash-memo-block p span {
+  color: #667085;
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+.cash-memo-section {
+  margin-bottom: 1rem;
+}
+
+.cash-memo-section-title {
+  margin-bottom: 0.65rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.memo-items-table thead th {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #6b7280;
+}
+
+.memo-items-table tbody td {
+  white-space: normal;
+}
+
+.cash-memo-totals {
+  border: 1px solid #e7ecf2;
+  border-radius: 0.75rem;
+  padding: 0.85rem 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.memo-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px dashed #eceff3;
+}
+
+.memo-total-row:last-child {
+  border-bottom: 0;
+}
+
+.memo-total-row.grand-total {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #198754;
+  padding-top: 0.6rem;
+}
+
+.memo-notes {
+  margin-bottom: 0;
+  white-space: pre-line;
+  color: #4b5563;
+}
+
+.metadata-grid .cash-memo-block {
+  height: 100%;
+}
+
 /* --- Mobile Responsiveness Fixes --- */
 @media (max-width: 991.98px) {
   /* 1. Fix Modal Stacking */
@@ -237,6 +405,14 @@
   .erp-input {
     text-align: left !important; /* Align text left for readability */
   }
+
+  .cash-memo-header {
+    flex-direction: column;
+  }
+
+  .cash-memo-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* 3. Fix Main Table Overflow */
@@ -249,4 +425,41 @@
 .table th, .table td {
   white-space: nowrap;
   vertical-align: middle;
+}
+
+@media print {
+  ::ng-deep body.printing-cash-memo * {
+    visibility: hidden !important;
+  }
+
+  ::ng-deep body.printing-cash-memo .cash-memo-print-area,
+  ::ng-deep body.printing-cash-memo .cash-memo-print-area * {
+    visibility: visible !important;
+  }
+
+  ::ng-deep body.printing-cash-memo .cash-memo-print-area {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+  }
+
+  ::ng-deep body.printing-cash-memo .cash-memo-sheet {
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0.6rem !important;
+  }
+
+  .memo-items-table thead th,
+  .memo-items-table tbody td,
+  .cash-memo-block p {
+    white-space: normal !important;
+  }
 }

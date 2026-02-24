@@ -1,4 +1,5 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
+import html2canvas from 'html2canvas';
 
 export interface Order {
   id: number;
@@ -22,6 +23,50 @@ interface ManualOrderProduct {
   unitPrice: number;
 }
 
+interface CashMemoLineItem {
+  productName: string;
+  quantity: number;
+  unitPrice: number;
+  rowTotal: number;
+}
+
+interface CashMemoReport {
+  order: Order;
+  customerName: string;
+  email: string;
+  phone: string;
+  shippingAddress: string;
+  billingAddress: string;
+  items: CashMemoLineItem[];
+  subtotal: number;
+  discount: number;
+  shipping: number;
+  tax: number;
+  finalTotal: number;
+  market: string;
+  tags: string;
+  paymentTerms: string;
+  notes: string;
+}
+
+interface JsPdfDocument {
+  internal: {
+    pageSize: {
+      getWidth: () => number;
+      getHeight: () => number;
+    };
+  };
+  addImage: (imageData: string, format: 'PNG', x: number, y: number, width: number, height: number) => void;
+  addPage: () => void;
+  save: (fileName: string) => void;
+}
+
+type JsPdfConstructor = new (
+  orientation: 'p' | 'portrait' | 'l' | 'landscape',
+  unit: 'mm' | 'pt' | 'px' | 'cm' | 'in',
+  format: 'a4' | string | number[]
+) => JsPdfDocument;
+
 @Component({
   selector: 'app-order-management',
   templateUrl: './order-management.component.html',
@@ -33,6 +78,9 @@ export class OrderManagementComponent implements OnInit {
   public selectedOrderIds: Set<number> = new Set();
   public openDropdownId: number | null = null;
   public isEditMode = false;
+  public isReportModalOpen = false;
+  public reportData: CashMemoReport | null = null;
+  public isReportDownloading = false;
 
   public isAddOrderModalOpen: boolean = false;
   public isPaymentTermsMenuOpen: boolean = false;
@@ -82,6 +130,7 @@ export class OrderManagementComponent implements OnInit {
 
   private isSubtotalManuallyEdited = false;
   private editingOrderId: number | null = null;
+  private jsPdfLoaderPromise: Promise<void> | null = null;
 
   public newOrderId: any;
   public orderDate: string = new Date().toISOString().split('T')[0];
@@ -270,8 +319,103 @@ export class OrderManagementComponent implements OnInit {
 
   @HostListener('document:keydown.escape')
   closeModalOnEscape(): void {
+    if (this.isReportModalOpen) {
+      this.closeReportModal();
+    }
+
     if (this.isAddOrderModalOpen) {
       this.closeAddOrderModal();
+    }
+  }
+
+  @HostListener('window:afterprint')
+  onAfterPrint(): void {
+    this.disablePrintMode();
+  }
+
+  viewReport(): void {
+    const selectedOrder = this.getSingleSelectedOrder(true);
+    if (!selectedOrder) {
+      return;
+    }
+
+    this.reportData = this.buildCashMemoReport(selectedOrder);
+    this.isReportModalOpen = true;
+    this.openDropdownId = null;
+  }
+
+  closeReportModal(): void {
+    this.isReportModalOpen = false;
+    this.disablePrintMode();
+  }
+
+  printOrder(): void {
+    const selectedOrder = this.getSingleSelectedOrder(true);
+    if (!selectedOrder) {
+      return;
+    }
+
+    this.reportData = this.buildCashMemoReport(selectedOrder);
+    this.isReportModalOpen = true;
+
+    window.setTimeout(() => {
+      this.enablePrintMode();
+      window.print();
+    }, 100);
+  }
+
+  async downloadOrder(): Promise<void> {
+    const selectedOrder = this.getSingleSelectedOrder(true);
+    if (!selectedOrder) {
+      return;
+    }
+
+    this.reportData = this.buildCashMemoReport(selectedOrder);
+    this.isReportModalOpen = true;
+    this.isReportDownloading = true;
+
+    try {
+      await this.waitForDomRender();
+      const memoElement = document.getElementById('cashMemoPrintable');
+      if (!memoElement) {
+        alert('Cash memo content is not ready for download.');
+        return;
+      }
+
+      const canvas = await html2canvas(memoElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff'
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const jsPdfConstructor = await this.getJsPdfConstructor();
+      const pdf = new jsPdfConstructor('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 10;
+      const contentWidth = pageWidth - margin * 2;
+      const contentHeight = (canvas.height * contentWidth) / canvas.width;
+
+      let remainingHeight = contentHeight;
+      let yPosition = margin;
+
+      pdf.addImage(imgData, 'PNG', margin, yPosition, contentWidth, contentHeight);
+      remainingHeight -= pageHeight - margin * 2;
+
+      while (remainingHeight > 0) {
+        yPosition = remainingHeight - contentHeight + margin;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', margin, yPosition, contentWidth, contentHeight);
+        remainingHeight -= pageHeight - margin * 2;
+      }
+
+      pdf.save(`cash-memo-${selectedOrder.id}.pdf`);
+    } catch (error) {
+      console.error('Unable to download order memo PDF', error);
+      alert('Failed to generate the PDF. Please try again.');
+    } finally {
+      this.isReportDownloading = false;
     }
   }
 
@@ -375,6 +519,114 @@ export class OrderManagementComponent implements OnInit {
   private formatDate(dateStr: string): string {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  private enablePrintMode(): void {
+    document.body.classList.add('printing-cash-memo');
+  }
+
+  private disablePrintMode(): void {
+    document.body.classList.remove('printing-cash-memo');
+  }
+
+  private getSingleSelectedOrder(showAlert: boolean): Order | null {
+    if (this.selectedOrderIds.size !== 1) {
+      if (showAlert) {
+        alert('Please select exactly one order to continue.');
+      }
+      return null;
+    }
+
+    const [selectedOrderId] = Array.from(this.selectedOrderIds);
+    const selectedOrder = this.orders.find(order => order.id === selectedOrderId) || null;
+
+    if (!selectedOrder && showAlert) {
+      alert('The selected order was not found.');
+    }
+
+    return selectedOrder;
+  }
+
+  private buildCashMemoReport(order: Order): CashMemoReport {
+    const quantity = 1;
+    const unitPrice = this.toNumber(order.price);
+    const rowTotal = Number((quantity * unitPrice).toFixed(2));
+    const subtotal = rowTotal;
+    const discount = 0;
+    const shipping = 0;
+    const tax = 0;
+    const finalTotal = Number((subtotal - discount + shipping + tax).toFixed(2));
+
+    return {
+      order,
+      customerName: order.customerName || this.customerName || 'Guest',
+      email: this.contactEmail || 'Not available',
+      phone: this.contactPhone || 'Not available',
+      shippingAddress: this.shippingAddress || 'Not available',
+      billingAddress: this.billingAddress || 'Not available',
+      items: [
+        {
+          productName: order.productName,
+          quantity,
+          unitPrice,
+          rowTotal
+        }
+      ],
+      subtotal,
+      discount,
+      shipping,
+      tax,
+      finalTotal,
+      market: this.market || 'Not available',
+      tags: this.tags || 'Not available',
+      paymentTerms: order.paymentMethod || this.selectedPaymentTerm,
+      notes: this.notes || 'No notes available'
+    };
+  }
+
+  private waitForDomRender(): Promise<void> {
+    return new Promise(resolve => window.setTimeout(() => resolve(), 120));
+  }
+
+  private async getJsPdfConstructor(): Promise<JsPdfConstructor> {
+    const browserWindow = window as Window & { jspdf?: { jsPDF?: JsPdfConstructor } };
+    if (browserWindow.jspdf?.jsPDF) {
+      return browserWindow.jspdf.jsPDF;
+    }
+
+    if (!this.jsPdfLoaderPromise) {
+      this.jsPdfLoaderPromise = new Promise<void>((resolve, reject) => {
+        const existingScript = document.getElementById('cartify-jspdf-loader') as HTMLScriptElement | null;
+        if (existingScript) {
+          existingScript.addEventListener('load', () => resolve(), { once: true });
+          existingScript.addEventListener('error', () => reject(new Error('Failed to load jsPDF library.')), { once: true });
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.id = 'cartify-jspdf-loader';
+        script.src = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error('Failed to load jsPDF library.'));
+        document.head.appendChild(script);
+      });
+    }
+
+    try {
+      await this.jsPdfLoaderPromise;
+    } catch (error) {
+      this.jsPdfLoaderPromise = null;
+      throw error;
+    }
+
+    const jsPdfFromWindow = browserWindow.jspdf?.jsPDF;
+    if (!jsPdfFromWindow) {
+      this.jsPdfLoaderPromise = null;
+      throw new Error('jsPDF is unavailable after loading.');
+    }
+
+    return jsPdfFromWindow;
   }
 
   createOrder(): void {
