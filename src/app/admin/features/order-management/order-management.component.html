@@ -19,7 +19,7 @@
           </div>
           <div class="ms-3">
             <h5 class="card-title">Total Order</h5>
-            <p class="card-text fw-bold fs-4">10.7K</p>
+            <p class="card-text fw-bold fs-4">{{ totalOrderCount }}</p>
           </div>
         </div>
       </div>
@@ -32,7 +32,7 @@
           </div>
           <div class="ms-3">
             <h5 class="card-title">New Order</h5>
-            <p class="card-text fw-bold fs-4">509</p>
+            <p class="card-text fw-bold fs-4">{{ newOrderCount }}</p>
           </div>
         </div>
       </div>
@@ -45,7 +45,7 @@
           </div>
           <div class="ms-3">
             <h5 class="card-title">Complete Order</h5>
-            <p class="card-text fw-bold fs-4">8.9K</p>
+            <p class="card-text fw-bold fs-4">{{ completeOrderCount }}</p>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@
           </div>
           <div class="ms-3">
             <h5 class="card-title">Canceled Order</h5>
-            <p class="card-text fw-bold fs-4">94</p>
+            <p class="card-text fw-bold fs-4">{{ canceledOrderCount }}</p>
           </div>
         </div>
       </div>
@@ -399,346 +399,6 @@
             <i *ngIf="!isReportDownloading" class="bi bi-download me-1"></i>
             {{ isReportDownloading ? 'Generating PDF...' : 'Download PDF' }}
           </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="modal-backdrop fade show" *ngIf="isReportModalOpen"></div>
-
-  <!-- Manual Order Modal -->
-  <div class="modal fade"
-    tabindex="-1"
-    [class.show]="isAddOrderModalOpen"
-    [style.display]="isAddOrderModalOpen ? 'block' : 'none'"
-    [attr.aria-hidden]="!isAddOrderModalOpen"
-    aria-labelledby="manualOrderModalLabel"
-    (click)="closeAddOrderModal()">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable manual-order-modal" (click)="$event.stopPropagation()">
-      <div class="modal-content border-0 shadow-lg">
-        <div class="modal-header">
-          <div>
-            <h5 class="modal-title fw-semibold" id="manualOrderModalLabel">{{ isEditMode ? 'Edit Order' : 'Manual Order' }}</h5>
-            <small class="text-muted">{{ isEditMode ? 'Update the selected order from the dashboard' : 'Create and manage custom orders from the dashboard' }}</small>
-          </div>
-          <button type="button" class="btn-close" aria-label="Close" (click)="closeAddOrderModal()"></button>
-        </div>
-
-        <div class="modal-body p-0">
-          <div class="row g-0 flex-column flex-lg-row">
-            <!-- Left: Product & Payment Details -->
-            <div class="col-lg-8 p-4 manual-order-left">
-              <div class="mb-3">
-                <label class="form-label small text-muted">Order ID</label>
-                <input type="number" class="form-control form-control-sm" [(ngModel)]="newOrderId">
-              </div>
-              <div class="manual-section mb-4">
-                <h6 class="section-title">Product</h6>
-                <div class="input-group mb-3">
-                  <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                  <input type="text" class="form-control" placeholder="Search Product" [(ngModel)]="searchProductQuery">
-                  <button class="btn btn-outline-secondary" type="button">Browse</button>
-                </div>
-                <div class="table-responsive border rounded-3">
-                  <table class="table align-middle mb-0 manual-product-table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Product</th>
-                        <th scope="col" class="text-center">Quantity</th>
-                        <th scope="col" class="text-end">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let product of manualProducts">
-                        <td>
-                          <div class="d-flex align-items-center">
-                            <img [src]="product.image" class="product-img me-2" alt="Product">
-                            <div>
-                              <div class="fw-semibold">{{ product.name }}</div>
-                              <small class="text-muted">SKU: {{ product.sku }}</small>
-                            </div>
-                          </div>
-                        </td>
-                        <td class="text-center">
-                          <input type="number"
-                            class="form-control form-control-sm quantity-input mx-auto"
-                            min="1"
-                            [(ngModel)]="product.quantity"
-                            (ngModelChange)="onProductQuantityChange()">
-                        </td>
-                        <td class="text-end fw-semibold">${{ getProductRowTotal(product).toFixed(2) }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div class="manual-section mb-4">
-                <h6 class="section-title">Payment & Totals</h6>
-                <div class="totals-list border rounded-3">
-                  <div class="totals-row">
-                    <span>Subtotal</span>
-                    <div class="price-input-wrap">
-                      <span class="price-symbol">$</span>
-                      <input type="number"
-                        class="form-control form-control-sm erp-input price-input text-end"
-                        min="0"
-                        step="0.01"
-                        [(ngModel)]="subtotal"
-                        (ngModelChange)="onSubtotalInputChange()">
-                    </div>
-                  </div>
-                  <div class="totals-row">
-                    <div class="d-flex align-items-center flex-wrap gap-2">
-                      <span>Edit Discount</span>
-                      <button type="button"
-                        class="btn btn-sm rounded-pill px-3"
-                        [ngClass]="isNewCustomer ? 'btn-success' : 'btn-outline-secondary'"
-                        (click)="isNewCustomer = !isNewCustomer">
-                        New Customer
-                      </button>
-                    </div>
-                    <div class="price-input-wrap">
-                      <span class="price-symbol">- $</span>
-                      <input type="number"
-                        class="form-control form-control-sm erp-input price-input text-end"
-                        min="0"
-                        step="0.01"
-                        [(ngModel)]="discount"
-                        (ngModelChange)="onPricingFieldChange()">
-                    </div>
-                  </div>
-                  <div class="totals-row">
-                    <div>
-                      <span>Edit Shipping/Delivery</span>
-                      <small class="d-block text-muted">Free shipping</small>
-                    </div>
-                    <div class="price-input-wrap">
-                      <span class="price-symbol">$</span>
-                      <input type="number"
-                        class="form-control form-control-sm erp-input price-input text-end"
-                        min="0"
-                        step="0.01"
-                        [(ngModel)]="shipping"
-                        (ngModelChange)="onPricingFieldChange()">
-                    </div>
-                  </div>
-                  <div class="totals-row">
-                    <div>
-                      <span>Tax Rate (%)</span>
-                      <small class="d-block text-muted">Applied on (Subtotal - Discount)</small>
-                    </div>
-                    <div class="price-input-wrap">
-                      <input type="number"
-                        class="form-control form-control-sm erp-input price-input text-end"
-                        min="0"
-                        step="0.01"
-                        [(ngModel)]="taxRate"
-                        (ngModelChange)="onTaxRateChange()">
-                      <span class="price-symbol">%</span>
-                      <small class="text-muted ms-1">= ${{ estimatedTaxAmount.toFixed(2) }}</small>
-                    </div>
-                  </div>
-                  <div class="totals-row">
-                    <div>
-                      <span>Estimated Tax</span>
-                      <small class="d-block text-muted">Customer exempt</small>
-                    </div>
-                    <div class="price-input-wrap">
-                      <span class="price-symbol">$</span>
-                      <input type="number"
-                        class="form-control form-control-sm erp-input price-input text-end"
-                        readonly
-                        step="0.01"
-                        [ngModel]="estimatedTaxAmount">
-                    </div>
-                  </div>
-                  <div class="totals-row fw-semibold">
-                    <span>Final Total</span>
-                    <span class="text-success">${{ finalTotal.toFixed(2) }}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="manual-section">
-                <div class="section-title d-flex align-items-center">
-                  <i class="bi bi-clock-history me-2 text-success"></i>
-                  <span>Payment Due Later</span>
-                </div>
-                <label class="form-label text-muted small mb-2">Payment Terms</label>
-                <div class="dropdown payment-terms-dropdown" [class.show]="isPaymentTermsMenuOpen">
-                  <button type="button"
-                    class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-between"
-                    [attr.aria-expanded]="isPaymentTermsMenuOpen"
-                    (click)="togglePaymentTermsMenu($event)">
-                    <span>{{ selectedPaymentTerm }}</span>
-                    <i class="bi bi-chevron-down"></i>
-                  </button>
-                  <ul class="dropdown-menu w-100" [class.show]="isPaymentTermsMenuOpen" (click)="$event.stopPropagation()">
-                    <li *ngFor="let term of paymentTerms">
-                      <button type="button" class="dropdown-item" (click)="selectPaymentTerm(term)">{{ term }}</button>
-                    </li>
-                  </ul>
-                </div>
-                <textarea class="form-control form-control-sm mt-3 erp-input"
-                  rows="3"
-                  [(ngModel)]="paymentHelperNote"
-                  placeholder="Helper note for payment schedule, reminders, or customer instructions..."></textarea>
-              </div>
-            </div>
-
-            <!-- Right: Order Metadata -->
-            <div class="col-lg-4 p-4 manual-order-right">
-              <div class="meta-card mb-3">
-                <div class="meta-card-header">
-                  <h6 class="mb-0">Notes</h6>
-                  <button type="button" class="btn btn-link p-0 text-muted edit-btn" (click)="toggleMetadataEdit('notes', $event)">
-                    <i class="bi" [ngClass]="isEditingMetadata.notes ? 'bi-check2' : 'bi-pencil'"></i>
-                  </button>
-                </div>
-                <ng-container *ngIf="isEditingMetadata.notes; else notesView">
-                  <textarea class="form-control form-control-sm mt-2 erp-input"
-                    rows="3"
-                    [(ngModel)]="notes"
-                    placeholder="Internal order notes..."></textarea>
-                </ng-container>
-                <ng-template #notesView>
-                  <p class="mb-0 text-muted mt-2">{{ notes || 'No internal notes' }}</p>
-                </ng-template>
-              </div>
-
-              <div class="meta-card mb-3">
-                <div class="meta-card-header">
-                  <h6 class="mb-0">Customer</h6>
-                  <button type="button" class="btn btn-link p-0 text-muted edit-btn" (click)="toggleMetadataEdit('customer', $event)">
-                    <i class="bi" [ngClass]="isEditingMetadata.customer ? 'bi-check2' : 'bi-pencil'"></i>
-                  </button>
-                </div>
-                <ng-container *ngIf="isEditingMetadata.customer; else customerView">
-                  <input type="text"
-                    class="form-control form-control-sm mt-2 erp-input"
-                    [(ngModel)]="customerName"
-                    placeholder="Search or add a customer">
-                  <input type="text"
-                    class="form-control form-control-sm mt-2 erp-input"
-                    [(ngModel)]="customerId"
-                    placeholder="Customer ID">
-                </ng-container>
-                <ng-template #customerView>
-                  <p class="mb-1 fw-semibold mt-2">{{ customerName || 'No customer selected' }}</p>
-                  <small class="text-muted">{{ customerId || 'Customer ID not assigned' }}</small>
-                </ng-template>
-              </div>
-
-              <div class="meta-card mb-3">
-                <div class="meta-card-header">
-                  <h6 class="mb-0">Order Date</h6>
-                </div>
-                <input type="date" class="form-control form-control-sm mt-2 erp-input" [(ngModel)]="orderDate">
-              </div>
-
-              <div class="meta-card mb-3">
-                <div class="meta-card-header">
-                  <h6 class="mb-0">Contact Information</h6>
-                  <button type="button" class="btn btn-link p-0 text-muted edit-btn" (click)="toggleMetadataEdit('contact', $event)">
-                    <i class="bi" [ngClass]="isEditingMetadata.contact ? 'bi-check2' : 'bi-pencil'"></i>
-                  </button>
-                </div>
-                <ng-container *ngIf="isEditingMetadata.contact; else contactView">
-                  <input type="email"
-                    class="form-control form-control-sm mt-2 erp-input"
-                    [(ngModel)]="contactEmail"
-                    placeholder="Email">
-                  <input type="tel"
-                    class="form-control form-control-sm mt-2 erp-input"
-                    [(ngModel)]="contactPhone"
-                    placeholder="Phone">
-                </ng-container>
-                <ng-template #contactView>
-                  <p class="mb-1 mt-2">{{ contactEmail || 'No email added' }}</p>
-                  <small class="text-muted">{{ contactPhone || 'No phone added' }}</small>
-                </ng-template>
-              </div>
-
-              <div class="meta-card mb-3">
-                <div class="meta-card-header">
-                  <h6 class="mb-0">Shipping Address</h6>
-                  <button type="button" class="btn btn-link p-0 text-muted edit-btn" (click)="toggleMetadataEdit('shipping', $event)">
-                    <i class="bi" [ngClass]="isEditingMetadata.shipping ? 'bi-check2' : 'bi-pencil'"></i>
-                  </button>
-                </div>
-                <ng-container *ngIf="isEditingMetadata.shipping; else shippingView">
-                  <textarea class="form-control form-control-sm mt-2 erp-input"
-                    rows="3"
-                    [(ngModel)]="shippingAddress"
-                    placeholder="Street, City, State, Zip Code"></textarea>
-                </ng-container>
-                <ng-template #shippingView>
-                  <p class="mb-0 text-muted mt-2">{{ shippingAddress || 'No shipping address added' }}</p>
-                </ng-template>
-              </div>
-
-              <div class="meta-card mb-3">
-                <div class="meta-card-header">
-                  <h6 class="mb-0">Billing Address</h6>
-                  <button type="button" class="btn btn-link p-0 text-muted edit-btn" (click)="toggleMetadataEdit('billing', $event)">
-                    <i class="bi" [ngClass]="isEditingMetadata.billing ? 'bi-check2' : 'bi-pencil'"></i>
-                  </button>
-                </div>
-                <ng-container *ngIf="isEditingMetadata.billing; else billingView">
-                  <textarea class="form-control form-control-sm mt-2 erp-input"
-                    rows="3"
-                    [(ngModel)]="billingAddress"
-                    placeholder="Billing address"></textarea>
-                </ng-container>
-                <ng-template #billingView>
-                  <p class="mb-0 text-muted mt-2">{{ billingAddress || 'No billing address added' }}</p>
-                </ng-template>
-              </div>
-
-              <div class="meta-card mb-3">
-                <div class="meta-card-header">
-                  <h6 class="mb-0">Market</h6>
-                  <button type="button" class="btn btn-link p-0 text-muted edit-btn" (click)="toggleMetadataEdit('market', $event)">
-                    <i class="bi" [ngClass]="isEditingMetadata.market ? 'bi-check2' : 'bi-pencil'"></i>
-                  </button>
-                </div>
-                <ng-container *ngIf="isEditingMetadata.market; else marketView">
-                  <select class="form-select form-select-sm mt-2 erp-input" [(ngModel)]="market">
-                    <option>Website Store</option>
-                    <option>Facebook Shop</option>
-                    <option>WhatsApp Commerce</option>
-                    <option>Walk-in</option>
-                  </select>
-                </ng-container>
-                <ng-template #marketView>
-                  <p class="mb-0 text-muted mt-2">{{ market || 'No market selected' }}</p>
-                </ng-template>
-              </div>
-
-              <div class="meta-card">
-                <div class="meta-card-header">
-                  <h6 class="mb-0">Tags</h6>
-                  <button type="button" class="btn btn-link p-0 text-muted edit-btn" (click)="toggleMetadataEdit('tags', $event)">
-                    <i class="bi" [ngClass]="isEditingMetadata.tags ? 'bi-check2' : 'bi-pencil'"></i>
-                  </button>
-                </div>
-                <ng-container *ngIf="isEditingMetadata.tags; else tagsView">
-                  <input type="text"
-                    class="form-control form-control-sm mt-2 erp-input"
-                    [(ngModel)]="tags"
-                    placeholder="Priority, VIP, COD">
-                </ng-container>
-                <ng-template #tagsView>
-                  <p class="mb-0 text-muted mt-2">{{ tags || 'No tags added' }}</p>
-                </ng-template>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" (click)="closeAddOrderModal()">Cancel</button>
-          <button type="button" class="btn btn-success px-4" (click)="createOrder()">{{ isEditMode ? 'Update Order' : 'Create Order' }}</button>
         </div>
       </div>
     </div>

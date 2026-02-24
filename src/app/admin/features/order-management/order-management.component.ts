@@ -595,6 +595,22 @@ export class OrderManagementComponent implements OnInit {
     return this.orders.filter(order => order.status === status).length;
   }
 
+  get totalOrderCount(): number {
+    return this.orders.length;
+  }
+
+  get newOrderCount(): number {
+    return this.orders.filter(order => order.status === 'Pending').length;
+  }
+
+  get completeOrderCount(): number {
+    return this.orders.filter(order => order.status === 'Delivered').length;
+  }
+
+  get canceledOrderCount(): number {
+    return this.orders.filter(order => order.status === 'Cancelled').length;
+  }
+
   private getVisibleOrders(): Order[] {
     return this.getPaginatedOrders();
   }
