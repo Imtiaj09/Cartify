@@ -14,6 +14,7 @@ export interface Order {
 
 type PaymentTerm = 'Due on Receipt' | 'Cash on Delivery' | 'bkash' | 'Nagad';
 type EditableMetaSection = 'notes' | 'customer' | 'contact' | 'shipping' | 'billing' | 'market' | 'tags';
+type OrderFilter = 'All' | 'Delivered' | 'Pending' | 'Cancelled';
 
 interface ManualOrderProduct {
   name: string;
@@ -130,6 +131,7 @@ export class OrderManagementComponent implements OnInit {
 
   public currentPage: number = 1;
   public itemsPerPage: number = 10;
+  public activeFilter: OrderFilter = 'All';
 
   private isSubtotalManuallyEdited = false;
   private editingOrderId: number | null = null;
@@ -507,13 +509,20 @@ export class OrderManagementComponent implements OnInit {
     this.finalTotal = this.calculateFinalTotal();
   }
 
+  get filteredOrders(): Order[] {
+    if (this.activeFilter === 'All') {
+      return this.orders;
+    }
+    return this.orders.filter(order => order.status === this.activeFilter);
+  }
+
   get totalPages(): number {
-    return Math.ceil(this.orders.length / this.itemsPerPage) || 1;
+    return Math.ceil(this.filteredOrders.length / this.itemsPerPage) || 1;
   }
 
   public getPaginatedOrders(): Order[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.orders.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.filteredOrders.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   get paginationPages(): (number | string)[] {
@@ -571,6 +580,19 @@ export class OrderManagementComponent implements OnInit {
     if (this.currentPage > 1) {
       this.currentPage--;
     }
+  }
+
+  setFilter(filter: OrderFilter): void {
+    this.activeFilter = filter;
+    this.currentPage = 1;
+    this.selectedOrderIds.clear();
+  }
+
+  getOrderCount(status: OrderFilter): number {
+    if (status === 'All') {
+      return this.orders.length;
+    }
+    return this.orders.filter(order => order.status === status).length;
   }
 
   private getVisibleOrders(): Order[] {

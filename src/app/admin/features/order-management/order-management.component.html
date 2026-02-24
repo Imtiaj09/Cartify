@@ -70,10 +70,30 @@
     <div class="card-body">
       <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
         <div class="btn-group" role="group">
-          <button type="button" class="btn btn-outline-secondary active">All Order</button>
-          <button type="button" class="btn btn-outline-secondary">Completed</button>
-          <button type="button" class="btn btn-outline-secondary">Pending</button>
-          <button type="button" class="btn btn-outline-secondary">Canceled</button>
+          <button type="button"
+            class="btn btn-outline-secondary"
+            [class.active]="activeFilter === 'All'"
+            (click)="setFilter('All')">
+            All Order ({{ getOrderCount('All') }})
+          </button>
+          <button type="button"
+            class="btn btn-outline-secondary"
+            [class.active]="activeFilter === 'Delivered'"
+            (click)="setFilter('Delivered')">
+            Completed ({{ getOrderCount('Delivered') }})
+          </button>
+          <button type="button"
+            class="btn btn-outline-secondary"
+            [class.active]="activeFilter === 'Pending'"
+            (click)="setFilter('Pending')">
+            Pending ({{ getOrderCount('Pending') }})
+          </button>
+          <button type="button"
+            class="btn btn-outline-secondary"
+            [class.active]="activeFilter === 'Cancelled'"
+            (click)="setFilter('Cancelled')">
+            Canceled ({{ getOrderCount('Cancelled') }})
+          </button>
         </div>
         <div class="d-flex flex-wrap align-items-center gap-2 mt-2 mt-md-0">
           <div class="input-group">
