@@ -380,6 +380,36 @@
   height: 100%;
 }
 
+/* --- Pagination Styles --- */
+.pagination {
+  margin-bottom: 0;
+}
+
+.page-link {
+  color: #6c757d;
+  border: none;
+  margin: 0 2px;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  font-weight: 500;
+}
+
+.page-link:hover {
+  color: #198754;
+  background-color: #e9ecef;
+}
+
+.page-item.active .page-link {
+  background-color: #198754;
+  border-color: #198754;
+  color: #fff;
+}
+
+.page-item.disabled .page-link {
+  color: #adb5bd;
+  background-color: transparent;
+}
+
 /* --- Mobile Responsiveness Fixes --- */
 @media (max-width: 991.98px) {
   /* 1. Fix Modal Stacking */

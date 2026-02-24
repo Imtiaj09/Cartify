@@ -128,6 +128,9 @@ export class OrderManagementComponent implements OnInit {
     tags: false
   };
 
+  public currentPage: number = 1;
+  public itemsPerPage: number = 10;
+
   private isSubtotalManuallyEdited = false;
   private editingOrderId: number | null = null;
   private jsPdfLoaderPromise: Promise<void> | null = null;
@@ -237,6 +240,10 @@ export class OrderManagementComponent implements OnInit {
     this.selectedOrderIds.clear();
     this.openDropdownId = null;
     this.saveOrdersToLocalStorage();
+
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = Math.max(1, this.totalPages);
+    }
   }
 
   editSelectedOrder(): void {
@@ -500,8 +507,74 @@ export class OrderManagementComponent implements OnInit {
     this.finalTotal = this.calculateFinalTotal();
   }
 
+  get totalPages(): number {
+    return Math.ceil(this.orders.length / this.itemsPerPage) || 1;
+  }
+
+  public getPaginatedOrders(): Order[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.orders.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get paginationPages(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    const pages: (number | string)[] = [];
+    pages.push(1);
+
+    if (current > 4) {
+      pages.push('...');
+    }
+
+    let start = Math.max(2, current - 1);
+    let end = Math.min(total - 1, current + 1);
+
+    if (current <= 4) {
+      end = 5;
+    }
+
+    if (current >= total - 3) {
+      start = total - 4;
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (current < total - 3) {
+      pages.push('...');
+    }
+
+    pages.push(total);
+
+    return pages;
+  }
+
+  goToPage(page: number | string): void {
+    if (typeof page === 'number' && page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
   private getVisibleOrders(): Order[] {
-    return this.orders;
+    return this.getPaginatedOrders();
   }
 
   private formatDateForInput(dateStr: string): string {
@@ -650,6 +723,7 @@ export class OrderManagementComponent implements OnInit {
     } else {
       this.orders.unshift(newOrder);
       this.selectedOrderIds.clear();
+      this.currentPage = 1;
     }
 
     this.closeAddOrderModal();
