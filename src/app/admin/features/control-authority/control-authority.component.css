@@ -1,0 +1,191 @@
+:host {
+  display: block;
+}
+
+.control-authority-page {
+  display: block;
+}
+
+.card {
+  border-radius: 12px;
+}
+
+.shadow-sm {
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.04) !important;
+}
+
+.text-success {
+  color: #50a571 !important;
+}
+
+.text-muted {
+  color: #8898aa !important;
+}
+
+.btn-success {
+  background-color: #50a571;
+  border-color: #50a571;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+  background-color: #408a5c;
+  border-color: #408a5c;
+}
+
+.summary-card {
+  border: none;
+}
+
+.icon-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.bg-success-soft {
+  background-color: rgba(80, 165, 113, 0.1);
+}
+
+.bg-primary-soft {
+  background-color: rgba(13, 110, 253, 0.1);
+}
+
+.bg-info-soft {
+  background-color: rgba(13, 202, 240, 0.1);
+}
+
+.authority-table-card {
+  border-radius: 12px;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.table thead th {
+  background-color: #eefbe7;
+  color: #198754;
+  font-weight: 600;
+  white-space: nowrap;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.table tbody td {
+  border-color: #edf0f2;
+}
+
+.admin-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #eefbe7;
+  color: #50a571;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.badge.bg-primary {
+  background-color: #50a571 !important;
+}
+
+.status-btn {
+  min-width: 110px;
+}
+
+.btn-outline-success {
+  color: #50a571;
+  border-color: #50a571;
+}
+
+.btn-outline-success:hover,
+.btn-outline-success:focus {
+  color: #ffffff;
+  background-color: #50a571;
+  border-color: #50a571;
+}
+
+.square-btn {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.permission-wrapper {
+  border: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+}
+
+.permission-switch {
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  background-color: #ffffff;
+  padding: 0.6rem 0.85rem;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.permission-label {
+  color: #495057;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.permission-switch .form-check {
+  padding-left: 0;
+  display: flex;
+  align-items: center;
+}
+
+.permission-switch .form-check-input {
+  float: none;
+  margin: 0;
+  width: 2.5rem;
+  height: 1.25rem;
+  cursor: pointer;
+}
+
+.form-check-input:checked {
+  background-color: #50a571;
+  border-color: #50a571;
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: #50a571;
+  box-shadow: 0 0 0 0.25rem rgba(80, 165, 113, 0.25);
+}
+
+.modal-content {
+  border-radius: 12px;
+}
+
+@media (max-width: 991.98px) {
+  .control-authority-page {
+    padding: 1rem !important;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table th,
+  .table td {
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+}
