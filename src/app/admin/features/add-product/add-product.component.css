@@ -1,0 +1,109 @@
+/* --- General Card Styles --- */
+.card {
+  border-radius: 12px;
+}
+
+.shadow-sm {
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.04) !important;
+}
+
+/* --- Colors --- */
+.text-success {
+  color: #50a571 !important;
+}
+
+.btn-success {
+  background-color: #50a571;
+  border-color: #50a571;
+}
+
+.btn-success:hover {
+  background-color: #408a5c;
+  border-color: #408a5c;
+}
+
+.text-muted {
+  color: #8898aa !important;
+}
+
+/* --- Form Controls --- */
+.form-control:focus, .form-select:focus {
+  border-color: #50a571;
+  box-shadow: 0 0 0 0.25rem rgba(80, 165, 113, 0.25);
+}
+
+.form-check-input:checked {
+  background-color: #50a571;
+  border-color: #50a571;
+}
+
+/* --- Buttons --- */
+.square-btn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+/* --- Rich Text Icons --- */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.rich-text-icons i:hover {
+  color: #50a571;
+}
+
+/* --- Image Upload --- */
+.border-dashed {
+  border-style: dashed !important;
+}
+
+.add-image-box:hover {
+  background-color: #f8f9fa;
+  border-color: #50a571 !important;
+}
+
+.thumbnail-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* --- Color Swatches --- */
+.color-swatch {
+  width: 32px;
+  height: 32px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 991.98px) {
+  .col-lg-7, .col-lg-5 {
+    width: 100%;
+  }
+
+  .d-flex.justify-content-between.align-items-center.mb-4 {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 1rem;
+  }
+
+  .d-flex.align-items-center.gap-2 {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .input-group.me-2 {
+    width: 100% !important;
+    margin-right: 0 !important;
+    margin-bottom: 0.5rem;
+  }
+}
