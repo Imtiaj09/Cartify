@@ -137,28 +137,37 @@
       <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-4">
           <h5 class="fw-bold mb-4">Upload Product Image</h5>
-          <div class="main-image-preview bg-light rounded-3 mb-3 d-flex align-items-center justify-content-center" style="height: 250px;">
-            <img src="https://via.placeholder.com/200" alt="Preview" class="img-fluid rounded" style="max-height: 100%;">
-          </div>
-          <div class="d-flex justify-content-between mb-4">
-            <button class="btn btn-outline-secondary btn-sm px-3">Browse</button>
-            <button class="btn btn-outline-secondary btn-sm px-3">Replace</button>
+
+          <!-- Main Image Preview -->
+          <div class="main-image-preview bg-light rounded-3 mb-3 d-flex align-items-center justify-content-center overflow-hidden" style="height: 250px;">
+            <img *ngIf="mainImage" [src]="mainImage" alt="Preview" class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+            <div *ngIf="!mainImage" class="text-muted text-center">
+              <i class="bi bi-image fs-1 d-block mb-2"></i>
+              <span>No image selected</span>
+            </div>
           </div>
 
+          <!-- Action Buttons -->
+          <div class="d-flex justify-content-between mb-4">
+            <button class="btn btn-outline-secondary btn-sm px-3" (click)="triggerFileInput('browseInput')">Browse</button>
+            <button class="btn btn-outline-secondary btn-sm px-3" (click)="triggerFileInput('replaceInput')" [disabled]="!mainImage">Replace</button>
+          </div>
+
+          <!-- Hidden File Inputs -->
+          <input type="file" id="browseInput" class="d-none" accept="image/*" multiple (change)="onFileSelected($event)">
+          <input type="file" id="replaceInput" class="d-none" accept="image/*" (change)="onReplaceFileSelected($event)">
+
+          <!-- Thumbnail Gallery -->
           <div class="d-flex gap-2 flex-wrap">
-            <div class="position-relative thumbnail-wrapper">
-              <img src="https://via.placeholder.com/60" class="rounded border" width="60" height="60">
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger p-1" style="font-size: 0.5rem;">
+            <div class="position-relative thumbnail-wrapper cursor-pointer" *ngFor="let img of productImages" (click)="setMainImage(img)">
+              <img [src]="img" class="rounded border" width="60" height="60" [class.border-success]="img === mainImage" [class.border-2]="img === mainImage" style="object-fit: cover;">
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger p-1 cursor-pointer" style="font-size: 0.5rem;" (click)="removeImage(img, $event)">
                 <i class="bi bi-x"></i>
               </span>
             </div>
-            <div class="position-relative thumbnail-wrapper">
-              <img src="https://via.placeholder.com/60" class="rounded border" width="60" height="60">
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger p-1" style="font-size: 0.5rem;">
-                <i class="bi bi-x"></i>
-              </span>
-            </div>
-            <div class="add-image-box border border-2 border-dashed rounded d-flex align-items-center justify-content-center text-success cursor-pointer" style="width: 60px; height: 60px;">
+
+            <!-- Add Image Box -->
+            <div class="add-image-box border border-2 border-dashed rounded d-flex align-items-center justify-content-center text-success cursor-pointer" style="width: 60px; height: 60px;" (click)="triggerFileInput('browseInput')">
               <i class="bi bi-plus-lg fs-4"></i>
             </div>
           </div>
@@ -195,11 +204,14 @@
         <div class="card-body p-4">
           <h5 class="fw-bold mb-4">Select your color</h5>
           <div class="d-flex gap-3">
-            <div class="color-swatch rounded-circle cursor-pointer" style="background-color: #aaddbb;"></div>
-            <div class="color-swatch rounded-circle cursor-pointer" style="background-color: #ffb7b2;"></div>
-            <div class="color-swatch rounded-circle cursor-pointer" style="background-color: #b2d8ff;"></div>
-            <div class="color-swatch rounded-circle cursor-pointer" style="background-color: #f5f5dc;"></div>
-            <div class="color-swatch rounded-circle cursor-pointer" style="background-color: #4a4a4a;"></div>
+            <div class="color-swatch rounded-circle cursor-pointer"
+                 *ngFor="let color of colors"
+                 [style.background-color]="color"
+                 [class.border]="selectedColor === color"
+                 [class.border-3]="selectedColor === color"
+                 [class.border-dark]="selectedColor === color"
+                 (click)="selectColor(color)">
+            </div>
           </div>
         </div>
       </div>
