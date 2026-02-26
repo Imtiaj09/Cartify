@@ -1,3 +1,86 @@
-.admin-role-page {
-  display: block;
+/* --- General Card Styles --- */
+.card {
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+}
+
+.shadow-sm {
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.04) !important;
+}
+
+/* --- Colors --- */
+.text-success {
+  color: #42996b !important;
+}
+
+.btn-success {
+  background-color: #42996b;
+  border-color: #42996b;
+}
+
+.btn-success:hover {
+  background-color: #368059;
+  border-color: #368059;
+}
+
+.btn-outline-success {
+  color: #42996b;
+  border-color: #42996b;
+}
+
+.btn-outline-success:hover {
+  background-color: #42996b;
+  color: white;
+}
+
+.text-muted {
+  color: #8898aa !important;
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+
+/* --- Form Controls --- */
+.form-control, .form-select {
+  border-color: #e0e0e0;
+  border-radius: 8px;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #42996b;
+  box-shadow: 0 0 0 0.2rem rgba(66, 153, 107, 0.25);
+}
+
+.input-group-text {
+  border-color: #e0e0e0;
+}
+
+/* --- Social Icons --- */
+.social-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  text-decoration: none;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.social-icon:hover {
+  background-color: #42996b;
+  color: white;
+}
+
+/* --- Rich Text Icons --- */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-pointer:hover {
+  color: #42996b;
 }
