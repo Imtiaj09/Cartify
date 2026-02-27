@@ -1,19 +1,54 @@
 <section class="home-page">
   <div class="container-fluid px-3 px-lg-4">
     <section class="hero-banner position-relative overflow-hidden rounded-4 mt-4 mb-4">
-      <button type="button" class="slider-arrow slider-arrow-left" aria-label="Previous slide">
-        <i class="bi bi-chevron-left" aria-hidden="true"></i>
-      </button>
+      <div id="heroPromoCarousel" class="carousel slide h-100" data-bs-ride="carousel" data-bs-interval="5500">
+        <div class="carousel-inner h-100">
+          <div class="carousel-item h-100" *ngFor="let slide of heroSlides; let i = index" [class.active]="i === 0">
+            <article class="hero-slide h-100 p-4 p-md-5">
+              <div class="row g-4 align-items-center h-100">
+                <div class="col-12 col-lg-7">
+                  <div class="hero-content">
+                    <p class="text-white-50 mb-2 text-uppercase small fw-semibold">{{ slide.eyebrow }}</p>
+                    <h2 class="hero-title text-white fw-bold fst-italic mb-3">{{ slide.title }}</h2>
+                    <p class="hero-subtitle mb-4">{{ slide.subtitle }}</p>
+                    <a [attr.href]="slide.ctaLink" class="btn btn-light btn-lg rounded-pill px-4 fw-semibold text-success">{{ slide.ctaText }}</a>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-5">
+                  <div class="hero-media mx-auto mx-lg-0 ms-lg-auto">
+                    <img class="hero-image img-fluid" [src]="slide.imageUrl" [alt]="slide.imageAlt" loading="lazy" />
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
 
-      <div class="hero-content p-4 p-md-5">
-        <p class="text-white-50 mb-2">Discover the Latest Deals -</p>
-        <h1 class="hero-title text-white fw-bold fst-italic mb-4">Up to 50% Off!</h1>
-        <a href="#" class="btn btn-light btn-lg rounded-pill px-4 fw-semibold text-success">Shop Now</a>
+        <button class="carousel-control-prev slider-arrow slider-arrow-left hero-control" type="button" data-bs-target="#heroPromoCarousel" data-bs-slide="prev">
+          <span class="slider-arrow-icon" aria-hidden="true">
+            <i class="bi bi-chevron-left"></i>
+          </span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next slider-arrow slider-arrow-right hero-control" type="button" data-bs-target="#heroPromoCarousel" data-bs-slide="next">
+          <span class="slider-arrow-icon" aria-hidden="true">
+            <i class="bi bi-chevron-right"></i>
+          </span>
+          <span class="visually-hidden">Next</span>
+        </button>
+
+        <div class="carousel-indicators hero-indicators mb-0">
+          <button
+            *ngFor="let slide of heroSlides; let i = index"
+            type="button"
+            data-bs-target="#heroPromoCarousel"
+            [attr.data-bs-slide-to]="i"
+            [class.active]="i === 0"
+            [attr.aria-current]="i === 0 ? 'true' : null"
+            [attr.aria-label]="slide.title"
+          ></button>
+        </div>
       </div>
-
-      <button type="button" class="slider-arrow slider-arrow-right" aria-label="Next slide">
-        <i class="bi bi-chevron-right" aria-hidden="true"></i>
-      </button>
     </section>
 
     <section class="row g-4 mb-4">
@@ -71,7 +106,7 @@
             <div>
               <p class="text-uppercase small text-white-50 mb-2">Gaming Laptop</p>
               <h3 class="h4 fw-bold mb-2">BE THE WINNER</h3>
-              <p class="fs-4 fw-bold mb-0">$1990</p>
+              <p class="fs-4 fw-bold mb-0">৳1990</p>
             </div>
             <div class="mini-placeholder">Laptop</div>
           </div>
@@ -94,7 +129,7 @@
             <div>
               <p class="small text-uppercase text-muted mb-1">Smart TV</p>
               <h3 class="h5 fw-bold mb-2">Philips 4K Ambilight TV</h3>
-              <p class="fw-bold text-success mb-3">$750.99</p>
+              <p class="fw-bold text-success mb-3">৳750.99</p>
               <a href="#" class="btn btn-outline-success btn-sm rounded-pill px-3">Shop Now</a>
             </div>
           </div>
@@ -171,7 +206,7 @@
                 <span class="small text-muted">(128)</span>
               </div>
               <div class="d-flex align-items-center justify-content-between mt-auto">
-                <p class="h5 fw-bold mb-0">$89.00</p>
+                <p class="h5 fw-bold mb-0">৳89.00</p>
                 <a href="#" class="btn btn-sm trend-btn rounded-pill px-3">Shop Now</a>
               </div>
             </div>
@@ -200,7 +235,7 @@
                 <span class="small text-muted">(94)</span>
               </div>
               <div class="d-flex align-items-center justify-content-between mt-auto">
-                <p class="h5 fw-bold mb-0">$124.00</p>
+                <p class="h5 fw-bold mb-0">৳124.00</p>
                 <a href="#" class="btn btn-sm trend-btn rounded-pill px-3">Shop Now</a>
               </div>
             </div>
@@ -229,7 +264,7 @@
                 <span class="small text-muted">(72)</span>
               </div>
               <div class="d-flex align-items-center justify-content-between mt-auto">
-                <p class="h5 fw-bold mb-0">$76.50</p>
+                <p class="h5 fw-bold mb-0">৳76.50</p>
                 <a href="#" class="btn btn-sm trend-btn rounded-pill px-3">Shop Now</a>
               </div>
             </div>
@@ -309,8 +344,8 @@
                 <span class="small text-muted">(182)</span>
               </div>
               <div class="d-flex align-items-center gap-2 mb-3">
-                <p class="h5 fw-bold mb-0">$112.00</p>
-                <p class="small text-muted text-decoration-line-through mb-0">$149.00</p>
+                <p class="h5 fw-bold mb-0">৳112.00</p>
+                <p class="small text-muted text-decoration-line-through mb-0">৳149.00</p>
               </div>
               <a href="#" class="btn btn-sm best-cart-btn rounded-pill mt-auto align-self-start">
                 <i class="bi bi-cart3 me-2" aria-hidden="true"></i>
@@ -343,8 +378,8 @@
                 <span class="small text-muted">(240)</span>
               </div>
               <div class="d-flex align-items-center gap-2 mb-3">
-                <p class="h5 fw-bold mb-0">$134.00</p>
-                <p class="small text-muted text-decoration-line-through mb-0">$169.00</p>
+                <p class="h5 fw-bold mb-0">৳134.00</p>
+                <p class="small text-muted text-decoration-line-through mb-0">৳169.00</p>
               </div>
               <a href="#" class="btn btn-sm best-cart-btn rounded-pill mt-auto align-self-start">
                 <i class="bi bi-cart3 me-2" aria-hidden="true"></i>
@@ -376,8 +411,8 @@
                 <span class="small text-muted">(164)</span>
               </div>
               <div class="d-flex align-items-center gap-2 mb-3">
-                <p class="h5 fw-bold mb-0">$82.50</p>
-                <p class="small text-muted text-decoration-line-through mb-0">$109.00</p>
+                <p class="h5 fw-bold mb-0">৳82.50</p>
+                <p class="small text-muted text-decoration-line-through mb-0">৳109.00</p>
               </div>
               <a href="#" class="btn btn-sm best-cart-btn rounded-pill mt-auto align-self-start">
                 <i class="bi bi-cart3 me-2" aria-hidden="true"></i>
@@ -410,8 +445,8 @@
                 <span class="small text-muted">(96)</span>
               </div>
               <div class="d-flex align-items-center gap-2 mb-3">
-                <p class="h5 fw-bold mb-0">$98.00</p>
-                <p class="small text-muted text-decoration-line-through mb-0">$128.00</p>
+                <p class="h5 fw-bold mb-0">৳98.00</p>
+                <p class="small text-muted text-decoration-line-through mb-0">৳128.00</p>
               </div>
               <a href="#" class="btn btn-sm best-cart-btn rounded-pill mt-auto align-self-start">
                 <i class="bi bi-cart3 me-2" aria-hidden="true"></i>
@@ -453,28 +488,28 @@
                       <div class="explore-tile h-100">
                         <div class="explore-thumb mb-2">Outerwear</div>
                         <p class="small fw-semibold mb-1">Winter Jackets</p>
-                        <p class="small text-muted mb-0">From $79</p>
+                        <p class="small text-muted mb-0">From ৳79</p>
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="explore-tile h-100">
                         <div class="explore-thumb mb-2">Shoes</div>
                         <p class="small fw-semibold mb-1">Street Sneakers</p>
-                        <p class="small text-muted mb-0">From $65</p>
+                        <p class="small text-muted mb-0">From ৳65</p>
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="explore-tile h-100">
                         <div class="explore-thumb mb-2">Watch</div>
                         <p class="small fw-semibold mb-1">Luxury Watches</p>
-                        <p class="small text-muted mb-0">From $149</p>
+                        <p class="small text-muted mb-0">From ৳149</p>
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="explore-tile h-100">
                         <div class="explore-thumb mb-2">Bag</div>
                         <p class="small fw-semibold mb-1">Travel Bags</p>
-                        <p class="small text-muted mb-0">From $59</p>
+                        <p class="small text-muted mb-0">From ৳59</p>
                       </div>
                     </div>
                   </div>
@@ -505,28 +540,28 @@
                       <div class="explore-tile h-100">
                         <div class="explore-thumb mb-2">Laptop</div>
                         <p class="small fw-semibold mb-1">Pro Laptops</p>
-                        <p class="small text-muted mb-0">From $899</p>
+                        <p class="small text-muted mb-0">From ৳899</p>
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="explore-tile h-100">
                         <div class="explore-thumb mb-2">Phone</div>
                         <p class="small fw-semibold mb-1">Smartphones</p>
-                        <p class="small text-muted mb-0">From $499</p>
+                        <p class="small text-muted mb-0">From ৳499</p>
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="explore-tile h-100">
                         <div class="explore-thumb mb-2">Audio</div>
                         <p class="small fw-semibold mb-1">Headphones</p>
-                        <p class="small text-muted mb-0">From $89</p>
+                        <p class="small text-muted mb-0">From ৳89</p>
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="explore-tile h-100">
                         <div class="explore-thumb mb-2">Gaming</div>
                         <p class="small fw-semibold mb-1">Controllers</p>
-                        <p class="small text-muted mb-0">From $55</p>
+                        <p class="small text-muted mb-0">From ৳55</p>
                       </div>
                     </div>
                   </div>
@@ -557,28 +592,28 @@
                       <div class="explore-tile h-100">
                         <div class="explore-thumb mb-2">Kitchen</div>
                         <p class="small fw-semibold mb-1">Mixers</p>
-                        <p class="small text-muted mb-0">From $99</p>
+                        <p class="small text-muted mb-0">From ৳99</p>
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="explore-tile h-100">
                         <div class="explore-thumb mb-2">Cleaning</div>
                         <p class="small fw-semibold mb-1">Vacuum Tech</p>
-                        <p class="small text-muted mb-0">From $139</p>
+                        <p class="small text-muted mb-0">From ৳139</p>
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="explore-tile h-100">
                         <div class="explore-thumb mb-2">Decor</div>
                         <p class="small fw-semibold mb-1">Wall Lighting</p>
-                        <p class="small text-muted mb-0">From $45</p>
+                        <p class="small text-muted mb-0">From ৳45</p>
                       </div>
                     </div>
                     <div class="col-6">
                       <div class="explore-tile h-100">
                         <div class="explore-thumb mb-2">Living</div>
                         <p class="small fw-semibold mb-1">Air Purifier</p>
-                        <p class="small text-muted mb-0">From $129</p>
+                        <p class="small text-muted mb-0">From ৳129</p>
                       </div>
                     </div>
                   </div>
@@ -605,6 +640,217 @@
           <button type="button" data-bs-target="#startExploringCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
           <button type="button" data-bs-target="#startExploringCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
           <button type="button" data-bs-target="#startExploringCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="limited-deal-section mb-4">
+      <article class="limited-deal-card rounded-4 p-3 p-md-4 p-xl-5 overflow-hidden">
+        <div class="row g-4 g-xl-5 align-items-center">
+          <div class="col-12 col-lg-5">
+            <a [attr.href]="limitedDeal.ctaLink" class="limited-deal-media d-block text-decoration-none">
+              <img class="limited-deal-image img-fluid" [src]="limitedDeal.imageUrl" [alt]="limitedDeal.imageAlt" loading="lazy" />
+            </a>
+          </div>
+
+          <div class="col-12 col-lg-7">
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+              <span class="badge best-badge best-badge-sale">Flash Sale</span>
+              <p class="small text-uppercase limited-deal-muted fw-semibold mb-0">Limited-Time Deal</p>
+            </div>
+
+            <h2 class="limited-deal-title text-white fw-bold fst-italic mb-3">{{ limitedDeal.title }}</h2>
+            <p class="limited-deal-copy mb-4">{{ limitedDeal.subtitle }}</p>
+
+            <div class="d-flex flex-wrap align-items-end gap-3 gap-md-4 mb-4">
+              <div>
+                <p class="small text-uppercase limited-deal-muted fw-semibold mb-1">Deal Price</p>
+                <p class="limited-deal-price mb-0">৳{{ limitedDeal.dealPrice | number: '1.2-2' }}</p>
+              </div>
+              <div>
+                <p class="small text-uppercase limited-deal-muted fw-semibold mb-1">Original Price</p>
+                <p class="limited-deal-original mb-0">৳{{ limitedDeal.originalPrice | number: '1.2-2' }}</p>
+              </div>
+            </div>
+
+            <div class="limited-countdown mb-4" role="timer" aria-live="polite" aria-label="Deal countdown timer">
+              <div class="countdown-box">
+                <span class="countdown-value">{{ countdown.days }}</span>
+                <span class="countdown-label">Days</span>
+              </div>
+              <div class="countdown-box">
+                <span class="countdown-value">{{ countdown.hours }}</span>
+                <span class="countdown-label">Hours</span>
+              </div>
+              <div class="countdown-box">
+                <span class="countdown-value">{{ countdown.minutes }}</span>
+                <span class="countdown-label">Minutes</span>
+              </div>
+              <div class="countdown-box">
+                <span class="countdown-value">{{ countdown.seconds }}</span>
+                <span class="countdown-label">Seconds</span>
+              </div>
+            </div>
+
+            <div class="limited-stock mb-4">
+              <div class="d-flex flex-wrap justify-content-between gap-2 align-items-center mb-2">
+                <p class="small limited-deal-muted fw-semibold mb-0">{{ limitedDeal.claimedPercent }}% claimed</p>
+                <p class="small limited-deal-muted fw-semibold mb-0">{{ limitedDeal.claimedUnits }} of {{ limitedDeal.totalUnits }} items claimed</p>
+              </div>
+              <div class="progress limited-progress" role="progressbar" [attr.aria-valuenow]="limitedDeal.claimedPercent" aria-valuemin="0" aria-valuemax="100" aria-label="Deal stock claimed">
+                <div class="progress-bar limited-progress-bar" [style.width.%]="limitedDeal.claimedPercent"></div>
+              </div>
+            </div>
+
+            <a [attr.href]="limitedDeal.ctaLink" class="btn btn-success btn-lg rounded-pill px-4 fw-semibold limited-deal-cta">
+              <i class="bi bi-lightning-fill me-2" aria-hidden="true"></i>
+              Grab This Deal
+            </a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="happy-customers-section container-fluid px-3 px-lg-4 pb-5">
+      <div class="happy-customers-panel rounded-4 p-3 p-md-4 p-xl-5">
+        <header class="text-center mb-4 mb-lg-5">
+          <p class="small text-uppercase text-success fw-semibold mb-2">What They Say</p>
+          <h2 class="h2 fw-bold mb-0">Our Happy Customers</h2>
+        </header>
+
+        <div id="happyCustomersCarousel" class="carousel slide carousel-dark happy-customers-carousel" data-bs-ride="carousel" data-bs-touch="true" data-bs-interval="5600">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="row g-4">
+                <div class="col-12 col-md-6 col-lg-4">
+                  <article class="card border-0 testimonial-card h-100 p-4">
+                    <div class="d-flex align-items-center mb-3">
+                      <img class="testimonial-avatar rounded-circle me-3" src="https://i.pravatar.cc/120?img=32" alt="Ayesha Rahman" loading="lazy" />
+                      <div>
+                        <h3 class="h6 fw-bold mb-1">Ayesha Rahman</h3>
+                        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="testimonial-text mb-0">Cartify made checkout effortless. The product quality exceeded my expectation and shipping was lightning fast.</p>
+                  </article>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                  <article class="card border-0 testimonial-card h-100 p-4">
+                    <div class="d-flex align-items-center mb-3">
+                      <img class="testimonial-avatar rounded-circle me-3" src="https://i.pravatar.cc/120?img=14" alt="Nafis Chowdhury" loading="lazy" />
+                      <div>
+                        <h3 class="h6 fw-bold mb-1">Nafis Chowdhury</h3>
+                        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="testimonial-text mb-0">Best deals I have seen in one place. I upgraded my gaming setup and saved a lot during their flash promotions.</p>
+                  </article>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                  <article class="card border-0 testimonial-card h-100 p-4">
+                    <div class="d-flex align-items-center mb-3">
+                      <img class="testimonial-avatar rounded-circle me-3" src="https://i.pravatar.cc/120?img=5" alt="Sadia Karim" loading="lazy" />
+                      <div>
+                        <h3 class="h6 fw-bold mb-1">Sadia Karim</h3>
+                        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="testimonial-text mb-0">The collections feel premium and curated. I found exactly what I needed for work and weekend looks.</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+
+            <div class="carousel-item">
+              <div class="row g-4">
+                <div class="col-12 col-md-6 col-lg-4">
+                  <article class="card border-0 testimonial-card h-100 p-4">
+                    <div class="d-flex align-items-center mb-3">
+                      <img class="testimonial-avatar rounded-circle me-3" src="https://i.pravatar.cc/120?img=44" alt="Rafiul Hasan" loading="lazy" />
+                      <div>
+                        <h3 class="h6 fw-bold mb-1">Rafiul Hasan</h3>
+                        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="testimonial-text mb-0">Customer support was excellent and responsive. They helped me track my order within minutes.</p>
+                  </article>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                  <article class="card border-0 testimonial-card h-100 p-4">
+                    <div class="d-flex align-items-center mb-3">
+                      <img class="testimonial-avatar rounded-circle me-3" src="https://i.pravatar.cc/120?img=47" alt="Maliha Tasnim" loading="lazy" />
+                      <div>
+                        <h3 class="h6 fw-bold mb-1">Maliha Tasnim</h3>
+                        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="testimonial-text mb-0">I love how smooth the mobile experience is. Browsing, filtering, and checkout all feel super fast.</p>
+                  </article>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                  <article class="card border-0 testimonial-card h-100 p-4">
+                    <div class="d-flex align-items-center mb-3">
+                      <img class="testimonial-avatar rounded-circle me-3" src="https://i.pravatar.cc/120?img=57" alt="Tanvir Alam" loading="lazy" />
+                      <div>
+                        <h3 class="h6 fw-bold mb-1">Tanvir Alam</h3>
+                        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                          <i class="bi bi-star-fill"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="testimonial-text mb-0">Cartify is now my first stop before buying anything online. Great quality, fair prices, and reliable delivery.</p>
+                  </article>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-indicators explore-indicators testimonials-indicators mb-0">
+            <button type="button" data-bs-target="#happyCustomersCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Customer testimonials page 1"></button>
+            <button type="button" data-bs-target="#happyCustomersCarousel" data-bs-slide-to="1" aria-label="Customer testimonials page 2"></button>
+          </div>
+        </div>
+
+        <div class="text-center mt-4 mt-lg-5">
+          <a href="#" class="btn btn-success btn-lg rounded-pill px-5 py-3 fw-bold happy-customers-cta">GET STARTED</a>
         </div>
       </div>
     </section>

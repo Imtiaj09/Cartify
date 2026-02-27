@@ -82,3 +82,109 @@
 <main class="shop-content">
   <router-outlet></router-outlet>
 </main>
+
+<footer class="shop-footer mt-auto">
+  <div class="container-fluid px-3 px-lg-4 pb-5 pt-5">
+    <div class="row g-4 g-lg-5">
+      <div class="col-12 col-md-6 col-xl-3 footer-col">
+        <a
+          routerLink="/shop/home"
+          class="brand-logo text-decoration-none d-inline-flex align-items-center mb-3"
+          aria-label="Cartify home"
+        >
+          <span class="brand-green">CART</span><span class="brand-dark">IFY</span>
+        </a>
+        <p class="footer-about mb-4">
+          Your one-stop destination for the latest in fashion and technology.
+        </p>
+        <div class="d-flex align-items-center gap-2 footer-social">
+          <a href="#" class="footer-social-link" aria-label="Cartify on Facebook">
+            <i class="bi bi-facebook" aria-hidden="true"></i>
+          </a>
+          <a href="#" class="footer-social-link" aria-label="Cartify on Twitter">
+            <i class="bi bi-twitter" aria-hidden="true"></i>
+          </a>
+          <a href="#" class="footer-social-link" aria-label="Cartify on Instagram">
+            <i class="bi bi-instagram" aria-hidden="true"></i>
+          </a>
+          <a href="#" class="footer-social-link" aria-label="Cartify on LinkedIn">
+            <i class="bi bi-linkedin" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-3 footer-col">
+        <h2 class="h6 fw-bold footer-title mb-3">Quick Navigation</h2>
+        <ul class="list-unstyled mb-0 footer-nav-list">
+          <li><a routerLink="/shop/home" class="nav-link footer-nav-link top-nav-link px-0 py-1">Home</a></li>
+          <li><a routerLink="/shop/products" class="nav-link footer-nav-link top-nav-link px-0 py-1">Products</a></li>
+          <li><a href="#" class="nav-link footer-nav-link top-nav-link px-0 py-1">About Us</a></li>
+          <li><a href="#" class="nav-link footer-nav-link top-nav-link px-0 py-1">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-3 footer-col">
+        <h2 class="h6 fw-bold footer-title mb-3">Support &amp; Policies</h2>
+        <ul class="list-unstyled mb-0 footer-nav-list">
+          <li><a href="#" class="nav-link footer-nav-link small-nav-link px-0 py-1">FAQ</a></li>
+          <li><a href="#" class="nav-link footer-nav-link small-nav-link px-0 py-1">Shipping Policy</a></li>
+          <li><a href="#" class="nav-link footer-nav-link small-nav-link px-0 py-1">Privacy Policy</a></li>
+          <li><a href="#" class="nav-link footer-nav-link small-nav-link px-0 py-1">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-3 footer-col">
+        <h2 class="h6 fw-bold footer-title mb-3">Join our Newsletter</h2>
+        <form class="footer-newsletter mb-4" novalidate>
+          <label for="newsletter-email" class="visually-hidden">Email address</label>
+          <div class="d-flex flex-column flex-sm-row gap-2">
+            <input
+              id="newsletter-email"
+              type="email"
+              class="form-control newsletter-input rounded-pill"
+              placeholder="Enter your email"
+            />
+            <button type="submit" class="btn btn-success rounded-pill px-4 fw-semibold newsletter-btn">
+              Subscribe
+            </button>
+          </div>
+        </form>
+
+        <ul class="list-unstyled mb-0 footer-contact">
+          <li class="footer-contact-item">
+            <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+            <span>25 Green Road, Dhaka 1205</span>
+          </li>
+          <li class="footer-contact-item">
+            <i class="bi bi-telephone-fill" aria-hidden="true"></i>
+            <a href="tel:+8801712345678">+880 17 1234 5678</a>
+          </li>
+          <li class="footer-contact-item">
+            <i class="bi bi-envelope-fill" aria-hidden="true"></i>
+            <a href="mailto:support@cartify.com">support@cartify.com</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="footer-divider my-4" />
+
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+      <p class="small mb-0 footer-copy">© 2026 Cartify. A. H. M. Imtiaj. All rights reserved.</p>
+      <div class="d-flex align-items-center flex-wrap justify-content-center gap-2 footer-payments">
+        <span class="payment-chip" aria-label="Visa">
+          <i class="bi bi-credit-card-2-front me-1" aria-hidden="true"></i>
+          Visa
+        </span>
+        <span class="payment-chip" aria-label="Mastercard">
+          <i class="bi bi-credit-card me-1" aria-hidden="true"></i>
+          Mastercard
+        </span>
+        <span class="payment-chip" aria-label="PayPal">
+          <i class="bi bi-paypal me-1" aria-hidden="true"></i>
+          PayPal
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>
