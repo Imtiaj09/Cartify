@@ -98,7 +98,13 @@
         <div class="d-flex flex-wrap align-items-center gap-2 mt-2 mt-md-0">
           <div class="input-group">
             <span class="input-group-text bg-transparent"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control border-start-0" placeholder="Search Order report...">
+            <input
+              type="text"
+              class="form-control border-start-0"
+              placeholder="Search Order report..."
+              [(ngModel)]="orderReportSearchQuery"
+              (ngModelChange)="onOrderSearchChange()"
+            >
           </div>
           <button type="button"
             class="btn btn-outline-secondary square-btn"

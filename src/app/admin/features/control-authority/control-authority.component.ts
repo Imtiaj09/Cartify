@@ -33,6 +33,8 @@ interface AdminFormModel {
 export class ControlAuthorityComponent implements OnInit {
   private readonly adminStorageKey = 'cartify_control_authority_admins';
   admins: AdminUser[] = [];
+  currentPage = 1;
+  itemsPerPage = 5;
 
   isModalOpen = false;
   modalMode: 'add' | 'edit' = 'add';
@@ -73,6 +75,53 @@ export class ControlAuthorityComponent implements OnInit {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     return !!name && emailRegex.test(email);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.admins.length / this.itemsPerPage) || 1;
+  }
+
+  get paginatedAdmins(): AdminUser[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.admins.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get paginationPages(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, index) => index + 1);
+    }
+
+    const pages: (number | string)[] = [1];
+
+    if (current > 4) {
+      pages.push('...');
+    }
+
+    let start = Math.max(2, current - 1);
+    let end = Math.min(total - 1, current + 1);
+
+    if (current <= 4) {
+      end = 5;
+    }
+
+    if (current >= total - 3) {
+      start = total - 4;
+    }
+
+    for (let page = start; page <= end; page += 1) {
+      pages.push(page);
+    }
+
+    if (current < total - 3) {
+      pages.push('...');
+    }
+
+    pages.push(total);
+
+    return pages;
   }
 
   openModal(admin?: AdminUser): void {
@@ -134,6 +183,7 @@ export class ControlAuthorityComponent implements OnInit {
       };
 
       this.setAdmins([newAdmin, ...this.admins]);
+      this.currentPage = 1;
     }
 
     this.closeModal();
@@ -196,8 +246,37 @@ export class ControlAuthorityComponent implements OnInit {
     return admin.id;
   }
 
+  goToPage(page: number | string): void {
+    if (typeof page !== 'number') {
+      return;
+    }
+
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage += 1;
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage -= 1;
+    }
+  }
+
+  hasMultiplePages(): boolean {
+    return this.totalPages > 1;
+  }
+
   private setAdmins(admins: AdminUser[]): void {
     this.admins = admins;
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
     this.persistAdmins();
   }
 

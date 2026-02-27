@@ -132,6 +132,7 @@ export class OrderManagementComponent implements OnInit {
   public currentPage: number = 1;
   public itemsPerPage: number = 10;
   public activeFilter: OrderFilter = 'All';
+  public orderReportSearchQuery = '';
 
   private isSubtotalManuallyEdited = false;
   private editingOrderId: number | null = null;
@@ -510,10 +511,19 @@ export class OrderManagementComponent implements OnInit {
   }
 
   get filteredOrders(): Order[] {
-    if (this.activeFilter === 'All') {
-      return this.orders;
-    }
-    return this.orders.filter(order => order.status === this.activeFilter);
+    const query = this.orderReportSearchQuery.trim().replace('#', '');
+
+    return this.orders.filter((order) => {
+      const matchesStatus = this.activeFilter === 'All' || order.status === this.activeFilter;
+      const matchesOrderId = !query || order.id.toString().includes(query);
+
+      return matchesStatus && matchesOrderId;
+    });
+  }
+
+  onOrderSearchChange(): void {
+    this.currentPage = 1;
+    this.selectedOrderIds.clear();
   }
 
   get totalPages(): number {

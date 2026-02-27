@@ -22,8 +22,10 @@ export interface DirectoryUser {
 export class UsersComponent {
   searchQuery = '';
   selectedStatus: UserStatusFilter = 'All';
+  currentPage = 1;
+  itemsPerPage = 5;
 
-  readonly users: DirectoryUser[] = [
+  users: DirectoryUser[] = [
     {
       id: 1001,
       name: 'Olivia Bennett',
@@ -124,6 +126,53 @@ export class UsersComponent {
     });
   }
 
+  get totalPages(): number {
+    return Math.ceil(this.filteredUsers.length / this.itemsPerPage) || 1;
+  }
+
+  get paginatedUsers(): DirectoryUser[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredUsers.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get paginationPages(): (number | string)[] {
+    const total = this.totalPages;
+    const current = this.currentPage;
+
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, index) => index + 1);
+    }
+
+    const pages: (number | string)[] = [1];
+
+    if (current > 4) {
+      pages.push('...');
+    }
+
+    let start = Math.max(2, current - 1);
+    let end = Math.min(total - 1, current + 1);
+
+    if (current <= 4) {
+      end = 5;
+    }
+
+    if (current >= total - 3) {
+      start = total - 4;
+    }
+
+    for (let page = start; page <= end; page += 1) {
+      pages.push(page);
+    }
+
+    if (current < total - 3) {
+      pages.push('...');
+    }
+
+    pages.push(total);
+
+    return pages;
+  }
+
   trackByUserId(index: number, user: DirectoryUser): number {
     return user.id;
   }
@@ -142,16 +191,60 @@ export class UsersComponent {
     return (nameParts[0][0] + nameParts[1][0]).toUpperCase();
   }
 
-  getStatusBadgeClass(status: UserAccountStatus): string {
+  getStatusButtonClass(status: UserAccountStatus): string {
     if (status === 'Active') {
-      return 'bg-success';
+      return 'btn-outline-success';
     }
 
     if (status === 'Inactive') {
-      return 'bg-secondary';
+      return 'btn-outline-secondary';
     }
 
-    return 'bg-danger';
+    return 'btn-outline-danger';
+  }
+
+  toggleStatus(userId: number): void {
+    this.users = this.users.map((user) => {
+      if (user.id !== userId) {
+        return user;
+      }
+
+      return {
+        ...user,
+        status: this.getNextStatus(user.status)
+      };
+    });
+    this.syncPaginationBounds();
+  }
+
+  onFilterChange(): void {
+    this.currentPage = 1;
+  }
+
+  goToPage(page: number | string): void {
+    if (typeof page !== 'number') {
+      return;
+    }
+
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage += 1;
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage -= 1;
+    }
+  }
+
+  hasMultiplePages(): boolean {
+    return this.totalPages > 1;
   }
 
   exportUserList(): void {
@@ -199,6 +292,28 @@ export class UsersComponent {
 
   suspendUser(user: DirectoryUser): void {
     console.log('Suspend user:', user.id);
+  }
+
+  private getNextStatus(status: UserAccountStatus): UserAccountStatus {
+    if (status === 'Active') {
+      return 'Inactive';
+    }
+
+    if (status === 'Inactive') {
+      return 'Banned';
+    }
+
+    return 'Active';
+  }
+
+  private syncPaginationBounds(): void {
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+
+    if (this.currentPage < 1) {
+      this.currentPage = 1;
+    }
   }
 
   private escapeCsvValue(value: string): string {
