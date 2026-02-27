@@ -1,0 +1,166 @@
+:host {
+  display: block;
+}
+
+.hero-banner {
+  min-height: 340px;
+  background: linear-gradient(120deg, #073f48 0%, #0d5a65 50%, #184f58 100%);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
+}
+
+.hero-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 78% 48%, rgba(255, 255, 255, 0.18) 0 19%, transparent 20%),
+    linear-gradient(120deg, transparent 52%, rgba(255, 255, 255, 0.12) 53%, transparent 66%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 620px;
+}
+
+.hero-title {
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  line-height: 1;
+}
+
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.92);
+  color: #13494f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-arrow-left {
+  left: 10px;
+}
+
+.slider-arrow-right {
+  right: 10px;
+}
+
+.promo-card {
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.promo-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
+}
+
+.fashion-card,
+.accessories-card,
+.tv-card {
+  background-color: #ffffff;
+}
+
+.media-placeholder {
+  min-height: 255px;
+  border-radius: 0.9rem;
+  border: 2px dashed #d0d8e2;
+  background: linear-gradient(135deg, #f8fafc 0%, #eef2f6 100%);
+  color: #6c757d;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.square-placeholder {
+  aspect-ratio: 1 / 1;
+  border-radius: 0.75rem;
+  border: 2px dashed #d3dae2;
+  background: #f8fafc;
+}
+
+.accessory-item {
+  color: #2f3438;
+}
+
+.accessory-item:hover {
+  color: #198754;
+}
+
+.laptop-card {
+  background: linear-gradient(130deg, #380103 0%, #8d1520 100%);
+}
+
+.phone-card {
+  background: linear-gradient(130deg, #03203c 0%, #0f4c81 100%);
+}
+
+.mini-placeholder {
+  min-width: 86px;
+  min-height: 66px;
+  border-radius: 0.75rem;
+  border: 1px dashed rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.85);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+.tv-placeholder {
+  width: 110px;
+  height: 84px;
+  border-radius: 0.75rem;
+  border: 2px dashed #cfd5dc;
+  background: linear-gradient(135deg, #eef2f5 0%, #dde5eb 100%);
+  color: #5e6772;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.bottom-card {
+  min-height: 210px;
+}
+
+.trousers-card {
+  background: linear-gradient(145deg, #344960 0%, #1f2c3f 100%);
+}
+
+.mens-card {
+  background: linear-gradient(140deg, #20242c 0%, #0a0c0f 100%);
+}
+
+.denim-card {
+  background: linear-gradient(140deg, #edf3fa 0%, #d7e2f0 100%);
+  color: #233446;
+}
+
+.appliance-card {
+  background: linear-gradient(135deg, #e7f5ff 0%, #b8e0fb 100%);
+  color: #184567;
+}
+
+@media (max-width: 767.98px) {
+  .hero-banner {
+    min-height: 280px;
+  }
+
+  .slider-arrow {
+    width: 38px;
+    height: 38px;
+  }
+}
