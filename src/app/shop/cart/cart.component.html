@@ -1,1 +1,154 @@
-<p>cart works!</p>
+<section class="cart-page py-4 py-lg-5">
+  <div class="container-fluid px-3 px-lg-4">
+    <header class="mb-4">
+      <p class="small text-uppercase fw-semibold text-muted mb-1">Checkout Preview</p>
+      <h1 class="h3 fw-bold mb-1">Shopping Cart</h1>
+      <p class="text-muted mb-0">You have {{ totalUnits }} item(s) ready for checkout.</p>
+    </header>
+
+    <ng-container *ngIf="!isEmpty; else emptyCartState">
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <section class="card border-0 shadow-sm rounded-4 cart-items-card">
+            <div class="card-body p-3 p-md-4">
+              <article
+                class="cart-item-row py-3"
+                [class.border-bottom]="index < cartItems.length - 1"
+                *ngFor="let item of cartItems; let index = index; trackBy: trackByCartItem"
+              >
+                <div class="row g-3 g-md-2 align-items-center">
+                  <div class="col-12 col-md-6 col-lg-7">
+                    <div class="d-flex align-items-start gap-3">
+                      <div class="item-image-wrap rounded-4 overflow-hidden flex-shrink-0">
+                        <img [src]="item.product.images[0]" [alt]="item.product.name" class="item-image img-fluid" loading="lazy" />
+                      </div>
+
+                      <div>
+                        <p class="small text-uppercase text-muted fw-semibold mb-1">{{ item.product.category }}</p>
+                        <h2 class="h6 fw-semibold mb-1">{{ item.product.name }}</h2>
+                        <p class="small text-muted mb-2 item-description">{{ item.product.description }}</p>
+                        <div class="d-inline-flex align-items-center gap-2 color-pill rounded-pill">
+                          <span class="small text-muted fw-semibold">Color</span>
+                          <span class="item-color-swatch rounded-circle" [style.background-color]="item.selectedColor"></span>
+                          <span class="small fw-semibold color-code">{{ getColorLabel(item) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-6 col-md-3 col-lg-2">
+                    <div class="quantity-wrap rounded-pill">
+                      <button
+                        type="button"
+                        class="btn btn-sm quantity-btn"
+                        [disabled]="item.quantity <= minQuantity"
+                        (click)="decreaseQuantity(item.product.id)"
+                        aria-label="Decrease quantity"
+                      >
+                        <i class="bi bi-dash-lg" aria-hidden="true"></i>
+                      </button>
+                      <input type="text" class="form-control quantity-input text-center" [value]="item.quantity" readonly />
+                      <button type="button" class="btn btn-sm quantity-btn" (click)="increaseQuantity(item.product.id)" aria-label="Increase quantity">
+                        <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="col-6 col-md-3 col-lg-3 text-end">
+                    <p class="h6 fw-bold mb-1">৳{{ getLineTotal(item) | number: '1.0-0' }}</p>
+                    <p class="small text-muted text-decoration-line-through mb-2" *ngIf="hasDiscount(item.product)">
+                      ৳{{ getOriginalLineTotal(item) | number: '1.0-0' }}
+                    </p>
+                    <button type="button" class="btn btn-link remove-btn text-decoration-none p-0" (click)="removeItem(item.product.id)">
+                      <i class="bi bi-trash3 me-1" aria-hidden="true"></i>
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+
+        <div class="col-lg-4">
+          <aside class="order-summary-wrap sticky-top">
+            <section class="card border-0 shadow-sm rounded-4 order-summary-card">
+              <div class="card-body p-3 p-md-4">
+                <h2 class="h5 fw-bold mb-3">Order Summary</h2>
+
+                <div class="summary-line d-flex align-items-center justify-content-between mb-2">
+                  <span class="text-muted">Subtotal</span>
+                  <span class="fw-semibold">৳{{ cartSubtotal | number: '1.0-0' }}</span>
+                </div>
+                <div class="summary-line d-flex align-items-center justify-content-between mb-2">
+                  <span class="text-muted">Shipping</span>
+                  <span class="fw-semibold">৳{{ shippingFee | number: '1.0-0' }}</span>
+                </div>
+                <div class="summary-line d-flex align-items-center justify-content-between mb-3" *ngIf="promoDiscount > 0">
+                  <span class="text-success">Discount ({{ appliedPromoCode }})</span>
+                  <span class="fw-semibold text-success">-৳{{ promoDiscount | number: '1.0-0' }}</span>
+                </div>
+
+                <div class="promo-box rounded-4 p-3 mb-3">
+                  <label for="promo-code-input" class="small text-muted fw-semibold mb-2 d-inline-block">Promo Code</label>
+                  <div class="input-group">
+                    <input
+                      id="promo-code-input"
+                      type="text"
+                      class="form-control"
+                      placeholder="e.g. CARTIFY10"
+                      [value]="promoCode"
+                      (input)="onPromoCodeInput($event)"
+                    />
+                    <button type="button" class="btn btn-outline-success" (click)="applyPromoCode()">Apply</button>
+                  </div>
+                  <p class="small mb-0 mt-2 promo-feedback" *ngIf="promoFeedback" [class.text-success]="promoFeedbackType === 'success'" [class.text-danger]="promoFeedbackType === 'error'">
+                    {{ promoFeedback }}
+                  </p>
+                </div>
+
+                <hr class="my-3" />
+
+                <div class="summary-total d-flex align-items-center justify-content-between mb-3">
+                  <span class="fw-semibold">Total</span>
+                  <span class="h4 fw-bold mb-0">৳{{ cartTotal | number: '1.0-0' }}</span>
+                </div>
+
+                <button type="button" class="btn btn-success w-100 rounded-pill py-2 fw-semibold checkout-btn">
+                  <i class="bi bi-shield-check me-2" aria-hidden="true"></i>
+                  Proceed to Checkout
+                </button>
+
+                <div class="payment-trust mt-3 pt-3 border-top">
+                  <p class="small text-muted mb-2">Secure payments accepted</p>
+                  <div class="d-flex flex-wrap align-items-center gap-2">
+                    <span class="payment-chip" *ngFor="let method of paymentMethods; trackBy: trackByText">
+                      <i class="bi" [ngClass]="method === 'Visa' ? 'bi-credit-card-2-front' : 'bi-credit-card'"></i>
+                      {{ method }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</section>
+
+<ng-template #emptyCartState>
+  <section class="card border-0 shadow-sm rounded-4 empty-cart-card">
+    <div class="card-body text-center p-4 p-lg-5">
+      <div class="empty-cart-icon mx-auto mb-3">
+        <i class="bi bi-cart-x fs-3" aria-hidden="true"></i>
+      </div>
+      <h2 class="h4 fw-bold mb-2">Your cart is empty</h2>
+      <p class="text-muted mb-4">Looks like you have not added anything yet. Explore products and add your favorites.</p>
+      <a routerLink="/shop/products" class="btn btn-success rounded-pill px-4 py-2 fw-semibold">
+        <i class="bi bi-arrow-left-short me-1" aria-hidden="true"></i>
+        Continue Shopping
+      </a>
+    </div>
+  </section>
+</ng-template>
