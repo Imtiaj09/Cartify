@@ -5,6 +5,20 @@
   background-color: #f7f9fb;
 }
 
+.shop-header {
+  z-index: 1030;
+  background-color: rgba(255, 255, 255, 0.96);
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+.shop-header.shop-header-scrolled {
+  background-color: rgba(255, 255, 255, 0.82);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.09);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
 .brand-logo {
   font-size: 1.55rem;
   font-weight: 800;

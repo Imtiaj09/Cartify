@@ -2,6 +2,26 @@
   display: block;
 }
 
+.home-content {
+  padding-bottom: 1.25rem;
+}
+
+.section-spacer {
+  margin-bottom: clamp(2.5rem, 4.5vw, 4rem);
+}
+
+.home-content > .section-spacer:last-child {
+  margin-bottom: 0;
+}
+
+.section-eyebrow {
+  color: #7d8895;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
 .hero-banner {
   min-height: 340px;
   background: linear-gradient(120deg, #073f48 0%, #0d5a65 50%, #184f58 100%);
@@ -362,10 +382,6 @@
   transform: translateY(-1px);
 }
 
-.happy-customers-section {
-  margin-bottom: 0.25rem;
-}
-
 .happy-customers-panel {
   background-color: #f8fafc;
   border: 1px solid #e3ecf2;
@@ -448,17 +464,22 @@
 }
 
 .trend-card,
-.trend-panel {
+.trend-panel,
+.best-product-card {
   border-radius: 1rem;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.09);
   overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
 }
 
 .trend-card:hover,
-.trend-panel:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
+.trend-panel:hover,
+.best-product-card:hover,
+.trend-card:focus-within,
+.trend-panel:focus-within,
+.best-product-card:focus-within {
+  transform: translateY(-8px);
+  box-shadow: 0 22px 42px rgba(15, 23, 42, 0.16);
 }
 
 .card-top {
@@ -466,7 +487,8 @@
 }
 
 .trend-image-placeholder {
-  min-height: 165px;
+  width: 100%;
+  aspect-ratio: 4 / 5;
   border-radius: 0.85rem;
   border: 2px dashed #d2dae4;
   background: linear-gradient(135deg, #f5f8fb 0%, #eaf0f6 100%);
@@ -518,24 +540,13 @@
   color: #165735 !important;
 }
 
-.best-product-card {
-  border-radius: 1rem;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-  overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.best-product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
-}
-
 .best-product-media {
   background-color: #f7f9fc;
 }
 
 .best-image-placeholder {
-  min-height: 176px;
+  width: 100%;
+  aspect-ratio: 4 / 5;
   border-radius: 0.85rem;
   border: 2px dashed #d2dae4;
   background: linear-gradient(135deg, #f5f8fb 0%, #eaf0f6 100%);
@@ -756,11 +767,6 @@
     min-height: 220px;
   }
 
-  .happy-customers-section {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
   .happy-customers-carousel {
     padding: 0 0 2.7rem;
   }
@@ -813,14 +819,6 @@
 
   .hero-indicators {
     bottom: 0.75rem;
-  }
-
-  .trend-image-placeholder {
-    min-height: 190px;
-  }
-
-  .best-image-placeholder {
-    min-height: 210px;
   }
 
   .explore-carousel {
