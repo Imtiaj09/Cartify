@@ -1,1 +1,273 @@
-<p>product-catalog works!</p>
+<section class="catalog-page py-4 py-lg-5">
+  <div class="container-fluid px-3 px-lg-4">
+    <div class="d-flex d-lg-none align-items-center justify-content-between mb-3">
+      <h1 class="h4 fw-bold mb-0">Product Catalog</h1>
+      <button type="button" class="btn btn-light rounded-pill border" (click)="openMobileFilters()">
+        <i class="bi bi-sliders2 me-2" aria-hidden="true"></i>
+        Filters
+      </button>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-3 d-none d-lg-block">
+        <aside class="filter-sidebar card border-0 shadow-sm rounded-4">
+          <div class="card-body p-4">
+            <ng-container *ngTemplateOutlet="filterTemplate; context: { viewPrefix: 'desktop' }"></ng-container>
+          </div>
+        </aside>
+      </div>
+
+      <div class="col-lg-9">
+        <section class="catalog-content card border-0 shadow-sm rounded-4 h-100">
+          <div class="card-body p-3 p-md-4 p-xl-5">
+            <header class="catalog-toolbar d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+              <div>
+                <p class="small text-muted text-uppercase fw-semibold mb-1">Curated Selection</p>
+                <h2 class="h4 fw-bold mb-1">Shop All Products</h2>
+                <p class="text-muted mb-0">Showing {{ showingCount }} of {{ totalCount }} products</p>
+              </div>
+
+              <div class="d-flex align-items-center gap-2 sort-control-wrap">
+                <label for="catalog-sort" class="small fw-semibold text-muted mb-0">Sort By</label>
+                <select id="catalog-sort" class="form-select form-select-sm rounded-pill" [value]="sortBy" (change)="onSortChange($event)">
+                  <option *ngFor="let option of sortOptions; trackBy: trackBySort" [value]="option.value">{{ option.label }}</option>
+                </select>
+              </div>
+            </header>
+
+            <div
+              class="active-filters d-flex flex-wrap align-items-center gap-2 mb-4"
+              *ngIf="selectedCategories.length > 0 || selectedColor || selectedRating > 0 || maxPrice < priceRangeMax"
+            >
+              <button
+                *ngFor="let category of selectedCategories; trackBy: trackByValue"
+                type="button"
+                class="btn btn-sm active-filter-chip rounded-pill"
+                (click)="removeCategoryFilter(category)"
+              >
+                <i class="bi bi-x-lg me-1" aria-hidden="true"></i>
+                {{ category }}
+              </button>
+
+              <button
+                *ngIf="selectedColor"
+                type="button"
+                class="btn btn-sm active-filter-chip rounded-pill d-inline-flex align-items-center"
+                (click)="clearColorFilter()"
+              >
+                <i class="bi bi-x-lg me-1" aria-hidden="true"></i>
+                <span class="chip-color-dot me-2" [style.background-color]="selectedColor"></span>
+                {{ getColorLabel(selectedColor) }}
+              </button>
+
+              <button
+                *ngIf="selectedRating > 0"
+                type="button"
+                class="btn btn-sm active-filter-chip rounded-pill"
+                (click)="clearRatingFilter()"
+              >
+                <i class="bi bi-x-lg me-1" aria-hidden="true"></i>
+                {{ selectedRating }}+ Stars
+              </button>
+
+              <button
+                *ngIf="maxPrice < priceRangeMax"
+                type="button"
+                class="btn btn-sm active-filter-chip rounded-pill"
+                (click)="clearPriceFilter()"
+              >
+                <i class="bi bi-x-lg me-1" aria-hidden="true"></i>
+                Up to ৳{{ maxPrice | number: '1.0-0' }}
+              </button>
+
+              <button type="button" class="btn btn-link btn-sm text-success text-decoration-none fw-semibold" (click)="clearAllFilters()">
+                Clear All
+              </button>
+            </div>
+
+            <div class="row g-4" *ngIf="visibleProducts.length > 0; else noProductState">
+              <div class="col-12 col-md-6 col-xl-4" *ngFor="let product of visibleProducts; trackBy: trackByProductId">
+                <article class="card border-0 catalog-product-card h-100">
+                  <div class="catalog-product-media p-3 position-relative">
+                    <span
+                      *ngIf="product.badge"
+                      class="badge catalog-badge position-absolute top-0 start-0 mt-3 ms-3"
+                      [ngClass]="{ 'catalog-badge-sale': product.badge === 'Sale', 'catalog-badge-hot': product.badge === 'Hot' }"
+                    >
+                      {{ product.badge }}
+                    </span>
+
+                    <button type="button" class="btn btn-light catalog-wishlist rounded-circle p-0" aria-label="Add to wishlist">
+                      <i class="bi bi-heart" aria-hidden="true"></i>
+                    </button>
+
+                    <div class="catalog-image-stack rounded-4 overflow-hidden" [class.has-hover]="product.images.length > 1">
+                      <img class="catalog-image catalog-image-primary" [src]="product.images[0]" [alt]="product.name" loading="lazy" />
+                      <img
+                        *ngIf="product.images.length > 1"
+                        class="catalog-image catalog-image-secondary"
+                        [src]="product.images[1]"
+                        [alt]="product.name + ' alternate view'"
+                        loading="lazy"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="card-body pt-0 d-flex flex-column">
+                    <p class="small text-uppercase text-muted fw-semibold mb-2">{{ product.category }}</p>
+                    <h3 class="h6 fw-semibold mb-2">{{ product.name }}</h3>
+                    <p class="small text-muted mb-3 catalog-description">{{ product.description }}</p>
+
+                    <div class="d-flex align-items-center mb-2">
+                      <div class="catalog-stars me-2" [attr.aria-label]="product.rating + ' out of 5 stars'">
+                        <i
+                          *ngFor="let star of starScale; trackBy: trackByValue"
+                          class="bi"
+                          [ngClass]="star <= product.rating ? 'bi-star-fill' : 'bi-star'"
+                        ></i>
+                      </div>
+                      <span class="small text-muted">({{ product.reviewCount }})</span>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-1 mb-3">
+                      <span class="tag-chip" *ngFor="let tag of product.tags; trackBy: trackByValue">{{ tag }}</span>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                      <p class="h5 fw-bold mb-0">৳{{ getEffectivePrice(product) | number: '1.0-0' }}</p>
+                      <p class="small text-muted text-decoration-line-through mb-0" *ngIf="hasDiscount(product)">
+                        ৳{{ product.price | number: '1.0-0' }}
+                      </p>
+                      <span class="discount-chip" *ngIf="hasDiscount(product)">-{{ getDiscountPercent(product) }}%</span>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between gap-2 mt-auto">
+                      <div class="d-flex align-items-center gap-1">
+                        <span
+                          class="card-color-swatch rounded-circle"
+                          *ngFor="let color of product.colors; trackBy: trackByValue"
+                          [style.background-color]="color"
+                        ></span>
+                      </div>
+
+                      <button type="button" class="btn btn-sm catalog-cart-btn rounded-pill px-3">
+                        <i class="bi bi-cart3 me-2" aria-hidden="true"></i>
+                        Add to Cart
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <div class="text-center mt-4" *ngIf="canLoadMore">
+              <button type="button" class="btn load-more-btn rounded-pill px-4 py-2 fw-semibold" (click)="loadMore()">
+                Load More
+                <i class="bi bi-arrow-down-short ms-1" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile-filter-overlay d-lg-none" [class.show]="isMobileFiltersOpen" [attr.aria-hidden]="!isMobileFiltersOpen">
+    <div class="mobile-filter-backdrop" (click)="closeMobileFilters()"></div>
+    <aside class="mobile-filter-panel bg-white">
+      <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+        <h2 class="h6 fw-bold mb-0">Filter Products</h2>
+        <button type="button" class="btn btn-sm btn-light rounded-circle" (click)="closeMobileFilters()" aria-label="Close filters">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="p-3">
+        <ng-container *ngTemplateOutlet="filterTemplate; context: { viewPrefix: 'mobile' }"></ng-container>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<ng-template #filterTemplate let-viewPrefix="viewPrefix">
+  <div class="filter-section">
+    <h3 class="filter-title">Categories</h3>
+    <div class="form-check mb-2" *ngFor="let category of categories; let i = index; trackBy: trackByValue">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        [id]="viewPrefix + '-category-' + i"
+        [checked]="isCategorySelected(category)"
+        (change)="onCategoryChange(category, $event)"
+      />
+      <label class="form-check-label" [for]="viewPrefix + '-category-' + i">{{ category }}</label>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <h3 class="filter-title mb-0">Price (BDT)</h3>
+      <p class="small text-muted mb-0">Up to ৳{{ maxPrice | number: '1.0-0' }}</p>
+    </div>
+    <input
+      type="range"
+      class="form-range"
+      [min]="priceMin"
+      [max]="priceRangeMax"
+      [step]="priceStep"
+      [value]="maxPrice"
+      (input)="onMaxPriceChange($event)"
+    />
+    <div class="d-flex justify-content-between small text-muted">
+      <span>৳{{ priceMin | number: '1.0-0' }}</span>
+      <span>৳{{ priceRangeMax | number: '1.0-0' }}</span>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <h3 class="filter-title">Colors</h3>
+    <div class="d-flex flex-wrap gap-2">
+      <button
+        type="button"
+        class="color-swatch rounded-circle"
+        *ngFor="let color of colorOptions; trackBy: trackByColor"
+        [style.background-color]="color.value"
+        [class.active]="selectedColor === color.value"
+        [attr.aria-label]="color.name"
+        (click)="onColorFilterChange(color.value)"
+      ></button>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <h3 class="filter-title">Rating</h3>
+    <div class="d-flex flex-column gap-2">
+      <button
+        type="button"
+        class="btn btn-light rating-filter-btn text-start"
+        *ngFor="let rating of ratingOptions; trackBy: trackByValue"
+        [class.active]="selectedRating === rating"
+        (click)="onRatingFilterChange(rating)"
+      >
+        <span class="rating-filter-stars">
+          <i
+            *ngFor="let star of starScale; trackBy: trackByValue"
+            class="bi"
+            [ngClass]="star <= rating ? 'bi-star-fill' : 'bi-star'"
+          ></i>
+        </span>
+        <span class="small fw-semibold">{{ rating }} &amp; Up</span>
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #noProductState>
+  <div class="no-product-state text-center rounded-4 p-4 p-lg-5">
+    <div class="no-product-icon mx-auto mb-3">
+      <i class="bi bi-search" aria-hidden="true"></i>
+    </div>
+    <h3 class="h5 fw-bold mb-2">No products matched your filters</h3>
+    <p class="text-muted mb-3">Try removing a few filters to discover more products.</p>
+    <button type="button" class="btn btn-success rounded-pill px-4" (click)="clearAllFilters()">Reset Filters</button>
+  </div>
+</ng-template>
