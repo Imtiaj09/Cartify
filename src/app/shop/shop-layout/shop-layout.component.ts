@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CartService } from '../../shared/services/cart.service';
+import { AuthService, User } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-shop-layout',
@@ -10,9 +11,14 @@ import { CartService } from '../../shared/services/cart.service';
 export class ShopLayoutComponent implements OnInit {
   isHeaderScrolled = false;
   cartTotalItems$: Observable<number>;
+  currentUser$: Observable<User | null>;
 
-  constructor(private readonly cartService: CartService) {
+  constructor(
+    private readonly cartService: CartService,
+    private readonly authService: AuthService
+  ) {
     this.cartTotalItems$ = this.cartService.cartTotalItems$;
+    this.currentUser$ = this.authService.currentUser$;
   }
 
   ngOnInit(): void {
@@ -26,5 +32,9 @@ export class ShopLayoutComponent implements OnInit {
 
   private updateScrollState(): void {
     this.isHeaderScrolled = typeof window !== 'undefined' && window.scrollY > 8;
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 }
