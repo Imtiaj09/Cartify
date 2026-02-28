@@ -22,69 +22,69 @@
             <span>Dashboard</span>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('manageOrders')">
           <a class="nav-link d-flex align-items-center" routerLink="/admin/orders" routerLinkActive="active" (click)="closeSidebar()">
             <i class="bi bi-cart-check me-3"></i>
             <span>Order Management</span>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('manageUsers')">
           <a class="nav-link d-flex align-items-center" routerLink="/admin/customers" routerLinkActive="active" (click)="closeSidebar()">
             <i class="bi bi-people me-3"></i>
             <span>Customers</span>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('manageProducts')">
           <a class="nav-link d-flex align-items-center" routerLink="/admin/categories" routerLinkActive="active" (click)="closeSidebar()">
             <i class="bi bi-tags me-3"></i>
             <span>Categories</span>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('viewReports')">
           <a class="nav-link d-flex align-items-center" routerLink="/admin/transactions" routerLinkActive="active" (click)="closeSidebar()">
             <i class="bi bi-credit-card me-3"></i>
             <span>Transaction</span>
           </a>
         </li>
 
-        <li class="nav-item-header mt-4 mb-2">
+        <li class="nav-item-header mt-4 mb-2" *ngIf="hasPermission('manageProducts')">
           <small class="text-muted text-uppercase">Product</small>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('manageProducts')">
           <a class="nav-link d-flex align-items-center" routerLink="/admin/add-product" routerLinkActive="active" (click)="closeSidebar()">
             <i class="bi bi-plus-circle me-3"></i>
             <span>Add Products</span>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('manageProducts')">
           <a class="nav-link d-flex align-items-center" href="#" (click)="closeSidebar()">
             <i class="bi bi-box-seam me-3"></i>
             <span>Product List</span>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('manageProducts')">
           <a class="nav-link d-flex align-items-center" href="#" (click)="closeSidebar()">
             <i class="bi bi-star me-3"></i>
             <span>Product Reviews</span>
           </a>
         </li>
 
-        <li class="nav-item-header mt-4 mb-2">
+        <li class="nav-item-header mt-4 mb-2" *ngIf="hasPermission('manageUsers')">
           <small class="text-muted text-uppercase">Admin</small>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('manageUsers')">
           <a class="nav-link d-flex align-items-center" routerLink="/admin/admin-role" routerLinkActive="active" (click)="closeSidebar()">
             <i class="bi bi-person-badge me-3"></i>
             <span>Admin role</span>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('manageUsers')">
           <a class="nav-link d-flex align-items-center" routerLink="/admin/control-authority" routerLinkActive="active" (click)="closeSidebar()">
             <i class="bi bi-gear me-3"></i>
             <span>Control Authority</span>
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="hasPermission('manageUsers')">
           <a class="nav-link d-flex align-items-center" routerLink="/admin/users" routerLinkActive="active" (click)="closeSidebar()">
             <i class="bi bi-people-fill me-3"></i>
             <span>Users</span>

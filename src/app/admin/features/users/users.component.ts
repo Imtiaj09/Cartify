@@ -22,7 +22,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.usersSubscription = this.authService.allUsers$.subscribe((users) => {
       this.users = users
-        .filter((user) => user.role === 'CUSTOMER')
+        .filter((user) => user.role === 'Customer')
         .sort(
           (a, b) => new Date(b.registrationDate).getTime() - new Date(a.registrationDate).getTime()
         );

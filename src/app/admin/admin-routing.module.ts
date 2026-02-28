@@ -11,6 +11,7 @@ import { AdminRoleComponent } from './features/admin-role/admin-role.component';
 import { ControlAuthorityComponent } from './features/control-authority/control-authority.component';
 import { UsersComponent } from './features/users/users.component';
 import { AuthGuard } from '../shared/guards/auth.guard';
+import { PermissionGuard } from '../shared/guards/permission.guard';
 
 const routes: Routes = [
   {
@@ -18,14 +19,24 @@ const routes: Routes = [
     component: AdminLayoutComponent,
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
-    data: { expectedRoles: ['ADMIN'] },
+    data: { expectedRoles: ['Super Admin', 'Sub Admin'] },
     children: [
       { path: 'dashboard', component: DashboardComponent, data: { title: 'Dashboard' } },
       { path: 'orders', component: OrderManagementComponent, data: { title: 'Order Management' } },
       { path: 'customers', component: CustomersComponent, data: { title: 'Customers' } },
-      { path: 'categories', component: CategoriesComponent, data: { title: 'Categories' } },
+      {
+        path: 'categories',
+        component: CategoriesComponent,
+        canActivate: [PermissionGuard],
+        data: { title: 'Categories', requiredPermission: 'manageProducts' }
+      },
       { path: 'transactions', component: TransactionsComponent, data: { title: 'Transactions' } },
-      { path: 'add-product', component: AddProductComponent, data: { title: 'Add Product' } },
+      {
+        path: 'add-product',
+        component: AddProductComponent,
+        canActivate: [PermissionGuard],
+        data: { title: 'Add Product', requiredPermission: 'manageProducts' }
+      },
       { path: 'admin-role', component: AdminRoleComponent, data: { title: 'Admin Role' } },
       { path: 'control-authority', component: ControlAuthorityComponent, data: { title: 'Control Authority' } },
       { path: 'users', component: UsersComponent, data: { title: 'Users' } },

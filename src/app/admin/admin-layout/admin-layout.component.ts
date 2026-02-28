@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
+import { AdminPermissionKey, AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -12,7 +13,11 @@ export class AdminLayoutComponent implements OnInit {
   pageTitle: string = 'Dashboard';
   isSidebarOpen: boolean = false;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     // 1. Set title immediately on load (Fixes Refresh Bug)
@@ -41,5 +46,9 @@ export class AdminLayoutComponent implements OnInit {
 
   closeSidebar(): void {
     this.isSidebarOpen = false;
+  }
+
+  hasPermission(permission: AdminPermissionKey): boolean {
+    return this.authService.hasPermission(permission);
   }
 }

@@ -11,6 +11,13 @@
     </button>
   </div>
 
+  <div class="alert alert-warning d-flex justify-content-between align-items-center" *ngIf="credentialNotice">
+    <div><strong>Temporary Credentials:</strong> {{ credentialNotice }}</div>
+    <button type="button" class="btn btn-sm btn-outline-warning" (click)="clearCredentialNotice()">Dismiss</button>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="syncError">{{ syncError }}</div>
+
   <div class="row g-4 mb-4">
     <div class="col-lg-4 col-md-6">
       <div class="card border-0 shadow-sm summary-card h-100 bg-success-soft">
@@ -124,6 +131,8 @@
                 <button
                   type="button"
                   class="btn btn-outline-secondary square-btn text-danger"
+                  [disabled]="isDeleteDisabled(admin)"
+                  [title]="isDeleteDisabled(admin) ? 'You cannot delete your own Super Admin account' : 'Delete admin'"
                   (click)="deleteAdmin(admin.id)"
                   aria-label="Delete admin"
                 >
@@ -187,6 +196,8 @@
       </div>
 
       <div class="modal-body pt-0">
+        <div class="alert alert-danger mb-3" *ngIf="syncError">{{ syncError }}</div>
+
         <div class="row g-3 mb-4">
           <div class="col-md-6">
             <label for="adminName" class="form-label text-muted small fw-bold">Name</label>
@@ -214,10 +225,29 @@
 
           <div class="col-md-6">
             <label for="adminRole" class="form-label text-muted small fw-bold">Role</label>
-            <select id="adminRole" name="adminRole" class="form-select" [(ngModel)]="adminForm.role">
+            <select
+              id="adminRole"
+              name="adminRole"
+              class="form-select"
+              [(ngModel)]="adminForm.role"
+              (ngModelChange)="onRoleChange()"
+            >
               <option value="Super Admin">Super Admin</option>
-              <option value="Sub Admin">Sub Admin</option>
+              <option value="Sub Admin" [disabled]="isEditingSelfSuperAdmin">Sub Admin</option>
             </select>
+          </div>
+
+          <div class="col-md-6" *ngIf="modalMode === 'add'">
+            <label for="temporaryPassword" class="form-label text-muted small fw-bold">Temporary Password</label>
+            <input
+              id="temporaryPassword"
+              name="temporaryPassword"
+              type="text"
+              class="form-control"
+              placeholder="Minimum 6 characters"
+              [(ngModel)]="adminForm.temporaryPassword"
+            >
+            <small class="text-muted">Share this password securely with the new admin.</small>
           </div>
         </div>
 
@@ -234,6 +264,7 @@
                     type="checkbox"
                     id="manageProducts"
                     name="manageProducts"
+                    [disabled]="isSuperAdminSelected"
                     [(ngModel)]="adminForm.permissions.manageProducts"
                   >
                 </div>
@@ -249,6 +280,7 @@
                     type="checkbox"
                     id="manageOrders"
                     name="manageOrders"
+                    [disabled]="isSuperAdminSelected"
                     [(ngModel)]="adminForm.permissions.manageOrders"
                   >
                 </div>
@@ -264,6 +296,7 @@
                     type="checkbox"
                     id="manageUsers"
                     name="manageUsers"
+                    [disabled]="isSuperAdminSelected"
                     [(ngModel)]="adminForm.permissions.manageUsers"
                   >
                 </div>
@@ -279,6 +312,7 @@
                     type="checkbox"
                     id="viewReports"
                     name="viewReports"
+                    [disabled]="isSuperAdminSelected"
                     [(ngModel)]="adminForm.permissions.viewReports"
                   >
                 </div>

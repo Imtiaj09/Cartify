@@ -26,19 +26,19 @@ const routes: Routes = [
         path: 'profile',
         component: ProfileComponent,
         canActivate: [AuthGuard],
-        data: { expectedRoles: ['CUSTOMER', 'ADMIN'] }
+        data: { expectedRoles: ['Customer', 'Super Admin', 'Sub Admin'] }
       },
       {
         path: 'checkout',
         component: CheckoutComponent,
         canActivate: [AuthGuard],
-        data: { expectedRoles: ['CUSTOMER', 'ADMIN'] }
+        data: { expectedRoles: ['Customer', 'Super Admin', 'Sub Admin'] }
       },
       {
         path: 'order-success/:id',
         component: OrderSuccessComponent,
         canActivate: [AuthGuard],
-        data: { expectedRoles: ['CUSTOMER', 'ADMIN'] }
+        data: { expectedRoles: ['Customer', 'Super Admin', 'Sub Admin'] }
       }
     ]
   }

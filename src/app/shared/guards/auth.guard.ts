@@ -101,6 +101,10 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
       return [];
     }
 
-    return value.filter((role): role is UserRole => role === 'ADMIN' || role === 'CUSTOMER');
+    return value.filter((role): role is UserRole => (
+      role === 'Super Admin' ||
+      role === 'Sub Admin' ||
+      role === 'Customer'
+    ));
   }
 }

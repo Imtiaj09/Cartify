@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { AdminCreateRequest, AdminUserRole, AuthService, User } from '../../../shared/services/auth.service';
 
-type AdminRole = 'Super Admin' | 'Sub Admin';
+type AdminRole = AdminUserRole;
 
 export interface AuthorityPermissions {
   manageProducts: boolean;
@@ -10,18 +12,20 @@ export interface AuthorityPermissions {
 }
 
 export interface AdminUser {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: AdminRole;
   permissions: AuthorityPermissions;
   isActive: boolean;
+  registrationDate: string;
 }
 
 interface AdminFormModel {
   name: string;
   email: string;
   role: AdminRole;
+  temporaryPassword: string;
   permissions: AuthorityPermissions;
 }
 
@@ -30,27 +34,47 @@ interface AdminFormModel {
   templateUrl: './control-authority.component.html',
   styleUrls: ['./control-authority.component.css']
 })
-export class ControlAuthorityComponent implements OnInit {
-  private readonly adminStorageKey = 'cartify_control_authority_admins';
+export class ControlAuthorityComponent implements OnInit, OnDestroy {
   admins: AdminUser[] = [];
   currentPage = 1;
   itemsPerPage = 5;
 
+  syncError = '';
+  credentialNotice = '';
+
   isModalOpen = false;
   modalMode: 'add' | 'edit' = 'add';
-  editingAdminId: number | null = null;
+  editingAdminId: string | null = null;
   adminForm: AdminFormModel = this.createEmptyAdminForm();
 
+  private currentUser: User | null = null;
+  private usersSubscription?: Subscription;
+  private currentUserSubscription?: Subscription;
+
+  constructor(private readonly authService: AuthService) {}
+
   ngOnInit(): void {
-    const storedAdmins = this.loadAdminsFromStorage();
+    this.usersSubscription = this.authService.allUsers$.subscribe((users) => {
+      this.admins = users
+        .filter((user): user is User & { role: AdminRole } => (
+          user.role === 'Super Admin' || user.role === 'Sub Admin'
+        ))
+        .map((user) => this.toAdminUser(user))
+        .sort((a, b) => new Date(b.registrationDate).getTime() - new Date(a.registrationDate).getTime());
 
-    if (storedAdmins !== null) {
-      this.admins = storedAdmins;
-      return;
-    }
+      if (this.currentPage > this.totalPages) {
+        this.currentPage = this.totalPages;
+      }
+    });
 
-    this.admins = this.createMockAdmins();
-    this.persistAdmins();
+    this.currentUserSubscription = this.authService.currentUser$.subscribe((user) => {
+      this.currentUser = user;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.usersSubscription?.unsubscribe();
+    this.currentUserSubscription?.unsubscribe();
   }
 
   get totalAdmins(): number {
@@ -74,7 +98,27 @@ export class ControlAuthorityComponent implements OnInit {
     const email = this.adminForm.email.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    return !!name && emailRegex.test(email);
+    if (!name || !emailRegex.test(email)) {
+      return false;
+    }
+
+    if (this.modalMode === 'add') {
+      return this.adminForm.temporaryPassword.trim().length >= 6;
+    }
+
+    return true;
+  }
+
+  get isSuperAdminSelected(): boolean {
+    return this.adminForm.role === 'Super Admin';
+  }
+
+  get isEditingSelfSuperAdmin(): boolean {
+    if (this.modalMode !== 'edit' || !this.editingAdminId || !this.currentUser) {
+      return false;
+    }
+
+    return this.currentUser.role === 'Super Admin' && this.currentUser.id === this.editingAdminId;
   }
 
   get totalPages(): number {
@@ -125,6 +169,8 @@ export class ControlAuthorityComponent implements OnInit {
   }
 
   openModal(admin?: AdminUser): void {
+    this.syncError = '';
+
     if (admin) {
       this.modalMode = 'edit';
       this.editingAdminId = admin.id;
@@ -135,6 +181,7 @@ export class ControlAuthorityComponent implements OnInit {
       this.adminForm = this.createEmptyAdminForm();
     }
 
+    this.onRoleChange();
     this.isModalOpen = true;
   }
 
@@ -145,65 +192,87 @@ export class ControlAuthorityComponent implements OnInit {
     this.adminForm = this.createEmptyAdminForm();
   }
 
+  onRoleChange(): void {
+    if (this.adminForm.role === 'Super Admin') {
+      this.adminForm.permissions = this.createFullPermissions();
+    }
+  }
+
   saveAdmin(): void {
     if (!this.canSaveAdmin) {
       return;
     }
 
+    this.syncError = '';
+
     const normalizedName = this.adminForm.name.trim();
     const normalizedEmail = this.adminForm.email.trim().toLowerCase();
-    const normalizedPermissions = { ...this.adminForm.permissions };
+    const role = this.adminForm.role;
+    const permissions = this.permissionsForRole(role, this.adminForm.permissions);
+    const nameParts = this.splitName(normalizedName);
 
-    if (this.modalMode === 'edit' && this.editingAdminId !== null) {
-      this.setAdmins(this.admins.map((admin) => {
-        if (admin.id !== this.editingAdminId) {
-          return admin;
+    try {
+      if (this.modalMode === 'edit' && this.editingAdminId) {
+        if (this.isEditingSelfSuperAdmin && role === 'Sub Admin') {
+          this.syncError = 'You cannot change your own role from Super Admin to Sub Admin.';
+          return;
         }
 
-        return {
-          ...admin,
-          name: normalizedName,
+        this.authService.updateAdminAccount(this.editingAdminId, {
+          firstName: nameParts.firstName,
+          lastName: nameParts.lastName,
           email: normalizedEmail,
-          role: this.adminForm.role,
-          permissions: normalizedPermissions
+          role,
+          permissions
+        });
+      } else {
+        const request: AdminCreateRequest = {
+          firstName: nameParts.firstName,
+          lastName: nameParts.lastName,
+          email: normalizedEmail,
+          role,
+          permissions,
+          temporaryPassword: this.adminForm.temporaryPassword.trim(),
+          status: 'Active'
         };
-      }));
-    } else {
-      const nextId = this.admins.length
-        ? Math.max(...this.admins.map((admin) => admin.id)) + 1
-        : 1;
 
-      const newAdmin: AdminUser = {
-        id: nextId,
-        name: normalizedName,
-        email: normalizedEmail,
-        role: this.adminForm.role,
-        permissions: normalizedPermissions,
-        isActive: true
-      };
-
-      this.setAdmins([newAdmin, ...this.admins]);
-      this.currentPage = 1;
-    }
-
-    this.closeModal();
-  }
-
-  deleteAdmin(id: number): void {
-    this.setAdmins(this.admins.filter((admin) => admin.id !== id));
-  }
-
-  toggleStatus(id: number): void {
-    this.setAdmins(this.admins.map((admin) => {
-      if (admin.id !== id) {
-        return admin;
+        this.authService.createAdminAccount(request);
+        this.credentialNotice = `Temporary password for ${normalizedEmail}: ${request.temporaryPassword}`;
+        this.currentPage = 1;
       }
 
-      return {
-        ...admin,
-        isActive: !admin.isActive
-      };
-    }));
+      this.closeModal();
+    } catch (error) {
+      this.syncError = error instanceof Error ? error.message : 'Failed to save admin account.';
+    }
+  }
+
+  deleteAdmin(id: string): void {
+    this.syncError = '';
+
+    if (this.isProtectedSelfDelete(id)) {
+      this.syncError = 'You cannot delete your own Super Admin account.';
+      return;
+    }
+
+    try {
+      this.authService.deleteAdminAccount(id);
+    } catch (error) {
+      this.syncError = error instanceof Error ? error.message : 'Failed to delete admin account.';
+    }
+  }
+
+  isDeleteDisabled(admin: AdminUser): boolean {
+    return this.isProtectedSelfDelete(admin.id);
+  }
+
+  toggleStatus(id: string): void {
+    this.syncError = '';
+    this.authService.toggleUserStatus(id);
+  }
+
+  clearCredentialNotice(): void {
+    this.credentialNotice = '';
   }
 
   getAccessModules(admin: AdminUser): string {
@@ -242,7 +311,7 @@ export class ControlAuthorityComponent implements OnInit {
     return (parts[0][0] + parts[1][0]).toUpperCase();
   }
 
-  trackByAdminId(index: number, admin: AdminUser): number {
+  trackByAdminId(_index: number, admin: AdminUser): string {
     return admin.id;
   }
 
@@ -272,133 +341,55 @@ export class ControlAuthorityComponent implements OnInit {
     return this.totalPages > 1;
   }
 
-  private setAdmins(admins: AdminUser[]): void {
-    this.admins = admins;
-    if (this.currentPage > this.totalPages) {
-      this.currentPage = this.totalPages;
-    }
-    this.persistAdmins();
+  private toAdminUser(user: User & { role: AdminRole }): AdminUser {
+    return {
+      id: user.id,
+      name: `${user.firstName} ${user.lastName}`.trim(),
+      email: user.email,
+      role: user.role,
+      permissions: { ...user.permissions },
+      isActive: user.status === 'Active',
+      registrationDate: user.registrationDate
+    };
   }
 
-  private persistAdmins(): void {
-    localStorage.setItem(this.adminStorageKey, JSON.stringify(this.admins));
+  private isProtectedSelfDelete(adminId: string): boolean {
+    return !!this.currentUser && this.currentUser.role === 'Super Admin' && this.currentUser.id === adminId;
   }
 
-  private loadAdminsFromStorage(): AdminUser[] | null {
-    const serializedAdmins = localStorage.getItem(this.adminStorageKey);
+  private splitName(name: string): { firstName: string; lastName: string } {
+    const parts = name.split(' ').map((part) => part.trim()).filter(Boolean);
 
-    if (!serializedAdmins) {
-      return null;
+    if (!parts.length) {
+      return { firstName: '', lastName: 'Admin' };
     }
 
-    try {
-      const parsedAdmins: unknown = JSON.parse(serializedAdmins);
-
-      if (!Array.isArray(parsedAdmins)) {
-        return null;
-      }
-
-      if (!parsedAdmins.every((admin) => this.isAdminUser(admin))) {
-        return null;
-      }
-
-      return parsedAdmins;
-    } catch {
-      return null;
-    }
+    return {
+      firstName: parts[0],
+      lastName: parts.slice(1).join(' ') || 'Admin'
+    };
   }
 
-  private isAdminUser(value: unknown): value is AdminUser {
-    if (!value || typeof value !== 'object') {
-      return false;
+  private permissionsForRole(role: AdminRole, permissions: AuthorityPermissions): AuthorityPermissions {
+    if (role === 'Super Admin') {
+      return this.createFullPermissions();
     }
 
-    const admin = value as Partial<AdminUser>;
-    const permissions = admin.permissions as Partial<AuthorityPermissions> | undefined;
-
-    return (
-      typeof admin.id === 'number' &&
-      Number.isFinite(admin.id) &&
-      typeof admin.name === 'string' &&
-      typeof admin.email === 'string' &&
-      (admin.role === 'Super Admin' || admin.role === 'Sub Admin') &&
-      typeof admin.isActive === 'boolean' &&
-      !!permissions &&
-      typeof permissions.manageProducts === 'boolean' &&
-      typeof permissions.manageOrders === 'boolean' &&
-      typeof permissions.manageUsers === 'boolean' &&
-      typeof permissions.viewReports === 'boolean'
-    );
+    return {
+      manageProducts: !!permissions.manageProducts,
+      manageOrders: !!permissions.manageOrders,
+      manageUsers: !!permissions.manageUsers,
+      viewReports: !!permissions.viewReports
+    };
   }
 
-  private createMockAdmins(): AdminUser[] {
-    return [
-      {
-        id: 1,
-        name: 'Sarah Mitchell',
-        email: 'sarah.mitchell@cartify.com',
-        role: 'Super Admin',
-        permissions: {
-          manageProducts: true,
-          manageOrders: true,
-          manageUsers: true,
-          viewReports: true
-        },
-        isActive: true
-      },
-      {
-        id: 2,
-        name: 'David Coleman',
-        email: 'david.coleman@cartify.com',
-        role: 'Sub Admin',
-        permissions: {
-          manageProducts: true,
-          manageOrders: true,
-          manageUsers: false,
-          viewReports: true
-        },
-        isActive: true
-      },
-      {
-        id: 3,
-        name: 'Olivia Harper',
-        email: 'olivia.harper@cartify.com',
-        role: 'Sub Admin',
-        permissions: {
-          manageProducts: false,
-          manageOrders: true,
-          manageUsers: true,
-          viewReports: false
-        },
-        isActive: false
-      },
-      {
-        id: 4,
-        name: 'James Foster',
-        email: 'james.foster@cartify.com',
-        role: 'Super Admin',
-        permissions: {
-          manageProducts: true,
-          manageOrders: true,
-          manageUsers: true,
-          viewReports: true
-        },
-        isActive: true
-      },
-      {
-        id: 5,
-        name: 'Emma Cooper',
-        email: 'emma.cooper@cartify.com',
-        role: 'Sub Admin',
-        permissions: {
-          manageProducts: true,
-          manageOrders: false,
-          manageUsers: false,
-          viewReports: true
-        },
-        isActive: true
-      }
-    ];
+  private createFullPermissions(): AuthorityPermissions {
+    return {
+      manageProducts: true,
+      manageOrders: true,
+      manageUsers: true,
+      viewReports: true
+    };
   }
 
   private createEmptyAdminForm(): AdminFormModel {
@@ -406,6 +397,7 @@ export class ControlAuthorityComponent implements OnInit {
       name: '',
       email: '',
       role: 'Sub Admin',
+      temporaryPassword: '',
       permissions: {
         manageProducts: false,
         manageOrders: false,
@@ -420,6 +412,7 @@ export class ControlAuthorityComponent implements OnInit {
       name: admin.name,
       email: admin.email,
       role: admin.role,
+      temporaryPassword: '',
       permissions: {
         ...admin.permissions
       }
