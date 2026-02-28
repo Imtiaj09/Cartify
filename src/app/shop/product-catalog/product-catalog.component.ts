@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Product, ProductBadge, ProductService } from '../../shared/services/product.service';
+import { CartService } from '../../shared/services/cart.service';
 
 type SortBy = 'newest' | 'priceLowToHigh' | 'priceHighToLow' | 'bestSelling';
 
@@ -56,6 +57,10 @@ export class ProductCatalogComponent implements OnInit {
 
   selectedGalleryProduct: Product | null = null;
   isGalleryModalOpen = false;
+  selectedQuickViewProduct: Product | null = null;
+
+  showToast = false;
+  toastMessage = '';
 
   private readonly colorNameMap: Record<string, string> = {
     '#aaddbb': 'Mint',
@@ -67,6 +72,7 @@ export class ProductCatalogComponent implements OnInit {
 
   constructor(
     private readonly productService: ProductService,
+    private readonly cartService: CartService,
     private readonly route: ActivatedRoute
   ) {}
 
@@ -299,6 +305,31 @@ export class ProductCatalogComponent implements OnInit {
   closeGallery(): void {
     this.isGalleryModalOpen = false;
     this.selectedGalleryProduct = null;
+  }
+
+  openQuickView(product: Product): void {
+    this.selectedQuickViewProduct = product;
+  }
+
+  closeQuickView(): void {
+    this.selectedQuickViewProduct = null;
+  }
+
+  onAddToCart(product: Product, quantity: number = 1, selectedColor?: string): void {
+    this.cartService.addToCart(product, quantity, selectedColor);
+    this.showToastNotification(`Added ${product.name} to cart`);
+
+    if (this.selectedQuickViewProduct) {
+      this.closeQuickView();
+    }
+  }
+
+  private showToastNotification(message: string): void {
+    this.toastMessage = message;
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000);
   }
 
   trackByProductId(index: number, product: Product): number {

@@ -1,28 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-type ProductBadge = 'Sale' | 'Hot' | null;
-
-interface CatalogProduct {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  discountedPrice: number | null;
-  category: string;
-  tags: string[];
-  colors: string[];
-  rating: number;
-  reviewCount: number;
-  badge: ProductBadge;
-  createdAt: string;
-  images: string[];
-}
-
-interface CartItem {
-  product: CatalogProduct;
-  quantity: number;
-  selectedColor: string;
-}
+import { CartItem, CartService } from '../../shared/services/cart.service';
 
 @Component({
   selector: 'app-cart',
@@ -40,15 +17,18 @@ export class CartComponent implements OnInit {
   appliedPromoCode = '';
   promoFeedback = '';
   promoFeedbackType: 'success' | 'error' | '' = '';
+  cartSubtotal = 0;
 
-  private readonly storageKey = 'cartify_cart_items';
+  constructor(private readonly cartService: CartService) {}
 
   ngOnInit(): void {
-    this.loadCartFromStorage();
-  }
+    this.cartService.cartItems$.subscribe((items) => {
+      this.cartItems = items;
+    });
 
-  get cartSubtotal(): number {
-    return this.cartItems.reduce((sum, item) => sum + this.getLineTotal(item), 0);
+    this.cartService.cartSubtotal$.subscribe((subtotal) => {
+      this.cartSubtotal = subtotal;
+    });
   }
 
   get promoDiscount(): number {
@@ -79,31 +59,16 @@ export class CartComponent implements OnInit {
     return this.cartItems.reduce((sum, item) => sum + item.quantity, 0);
   }
 
-  increaseQuantity(productId: number): void {
-    const item = this.cartItems.find((entry) => entry.product.id === productId);
-
-    if (!item) {
-      return;
-    }
-
-    item.quantity += this.quantityStep;
-    this.saveCartToStorage();
+  increaseQuantity(productId: number, selectedColor: string): void {
+    this.cartService.increaseQuantity(productId, selectedColor);
   }
 
-  decreaseQuantity(productId: number): void {
-    const item = this.cartItems.find((entry) => entry.product.id === productId);
-
-    if (!item || item.quantity <= this.minQuantity) {
-      return;
-    }
-
-    item.quantity -= this.quantityStep;
-    this.saveCartToStorage();
+  decreaseQuantity(productId: number, selectedColor: string): void {
+    this.cartService.decreaseQuantity(productId, selectedColor);
   }
 
-  removeItem(productId: number): void {
-    this.cartItems = this.cartItems.filter((item) => item.product.id !== productId);
-    this.saveCartToStorage();
+  removeItem(productId: number, selectedColor: string): void {
+    this.cartService.removeItem(productId, selectedColor);
   }
 
   onPromoCodeInput(event: Event): void {
@@ -166,16 +131,16 @@ export class CartComponent implements OnInit {
     this.promoFeedbackType = '';
   }
 
-  getEffectivePrice(product: CatalogProduct): number {
-    return product.discountedPrice ?? product.price;
+  getEffectivePrice(item: CartItem): number {
+    return item.product.discountedPrice ?? item.product.price;
   }
 
-  hasDiscount(product: CatalogProduct): boolean {
-    return product.discountedPrice !== null && product.discountedPrice < product.price;
+  hasDiscount(item: CartItem): boolean {
+    return item.product.discountedPrice !== null && item.product.discountedPrice < item.product.price;
   }
 
   getLineTotal(item: CartItem): number {
-    return this.getEffectivePrice(item.product) * item.quantity;
+    return this.getEffectivePrice(item) * item.quantity;
   }
 
   getOriginalLineTotal(item: CartItem): number {
@@ -194,105 +159,4 @@ export class CartComponent implements OnInit {
   trackByText(index: number, value: string): string {
     return value;
   }
-
-  private loadCartFromStorage(): void {
-    const savedCart = localStorage.getItem(this.storageKey);
-
-    if (!savedCart) {
-      this.cartItems = this.getDefaultCartItems();
-      this.saveCartToStorage();
-      return;
-    }
-
-    try {
-      const parsedCart = JSON.parse(savedCart) as CartItem[];
-
-      if (!Array.isArray(parsedCart)) {
-        this.cartItems = this.getDefaultCartItems();
-        this.saveCartToStorage();
-        return;
-      }
-
-      this.cartItems = parsedCart;
-    } catch {
-      this.cartItems = this.getDefaultCartItems();
-      this.saveCartToStorage();
-    }
-  }
-
-  private saveCartToStorage(): void {
-    localStorage.setItem(this.storageKey, JSON.stringify(this.cartItems));
-  }
-
-  private getDefaultCartItems(): CartItem[] {
-    return [
-      {
-        product: {
-          id: 1,
-          name: 'Quantum X Smartphone',
-          description: 'Flagship 5G phone with pro-grade camera and all-day battery.',
-          price: 64900,
-          discountedPrice: 58900,
-          category: 'Electronics',
-          tags: ['New Arrival', '5G'],
-          colors: ['#4a4a4a', '#b2d8ff'],
-          rating: 5,
-          reviewCount: 182,
-          badge: 'Hot',
-          createdAt: '2026-02-15T08:30:00Z',
-          images: [
-            'https://placehold.co/900x1100/eef5ff/1f2a44?text=Quantum+X+Front',
-            'https://placehold.co/900x1100/dce8fb/1f2a44?text=Quantum+X+Back'
-          ]
-        },
-        quantity: 1,
-        selectedColor: '#4a4a4a'
-      },
-      {
-        product: {
-          id: 4,
-          name: 'Classic Bomber Jacket',
-          description: 'Premium bomber jacket with soft inner lining for daily wear.',
-          price: 5900,
-          discountedPrice: 4700,
-          category: 'Fashion',
-          tags: ['Men', 'Winter'],
-          colors: ['#4a4a4a', '#aaddbb'],
-          rating: 4,
-          reviewCount: 136,
-          badge: 'Sale',
-          createdAt: '2026-02-03T10:40:00Z',
-          images: [
-            'https://placehold.co/900x1100/f7f9fc/3d4348?text=Bomber+Jacket+Front',
-            'https://placehold.co/900x1100/e6ebf1/3d4348?text=Bomber+Jacket+Back'
-          ]
-        },
-        quantity: 2,
-        selectedColor: '#aaddbb'
-      },
-      {
-        product: {
-          id: 9,
-          name: 'Espresso Maker Pro',
-          description: '19-bar pressure machine delivering cafe-level espresso at home.',
-          price: 18500,
-          discountedPrice: 16200,
-          category: 'Home',
-          tags: ['Coffee', 'Premium'],
-          colors: ['#4a4a4a', '#b2d8ff'],
-          rating: 5,
-          reviewCount: 91,
-          badge: 'Hot',
-          createdAt: '2026-02-12T16:45:00Z',
-          images: [
-            'https://placehold.co/900x1100/f2f5f8/273240?text=Espresso+Maker+Front',
-            'https://placehold.co/900x1100/e5ebf1/273240?text=Espresso+Maker+Side'
-          ]
-        },
-        quantity: 1,
-        selectedColor: '#b2d8ff'
-      }
-    ];
-  }
-
 }

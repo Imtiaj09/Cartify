@@ -114,6 +114,11 @@
                       <div class="gallery-overlay">
                         <i class="bi bi-arrows-angle-expand fs-4 text-white"></i>
                       </div>
+
+                      <button type="button" class="btn btn-light quick-view-btn rounded-pill shadow-sm" (click)="$event.stopPropagation(); openQuickView(product)">
+                        <i class="bi bi-eye me-2" aria-hidden="true"></i>
+                        Quick View
+                      </button>
                     </div>
                   </div>
 
@@ -154,7 +159,7 @@
                         ></span>
                       </div>
 
-                      <button type="button" class="btn btn-sm catalog-cart-btn rounded-pill px-3">
+                      <button type="button" class="btn btn-sm catalog-cart-btn rounded-pill px-3" (click)="onAddToCart(product)">
                         <i class="bi bi-cart3 me-2" aria-hidden="true"></i>
                         Add to Cart
                       </button>
@@ -189,6 +194,19 @@
         <ng-container *ngTemplateOutlet="filterTemplate; context: { viewPrefix: 'mobile' }"></ng-container>
       </div>
     </aside>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+    <div class="toast align-items-center text-white bg-success border-0" [class.show]="showToast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body fw-semibold">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          {{ toastMessage }}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" (click)="showToast = false" aria-label="Close"></button>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -297,4 +315,74 @@
       </button>
     </div>
   </div>
+</div>
+
+<!-- Quick View Modal -->
+<div class="modal fade" [class.show]="selectedQuickViewProduct" [style.display]="selectedQuickViewProduct ? 'block' : 'none'" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 rounded-4 shadow-lg" *ngIf="selectedQuickViewProduct">
+      <div class="modal-header border-0 pb-0">
+        <button type="button" class="btn-close" (click)="closeQuickView()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 p-lg-5">
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div id="quickViewCarousel" class="carousel slide rounded-4 overflow-hidden" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item" *ngFor="let image of selectedQuickViewProduct.images; let i = index" [class.active]="i === 0">
+                  <img [src]="image" class="d-block w-100" [alt]="selectedQuickViewProduct.name" style="aspect-ratio: 4/5; object-fit: cover;">
+                </div>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#quickViewCarousel" data-bs-slide="prev" *ngIf="selectedQuickViewProduct.images.length > 1">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#quickViewCarousel" data-bs-slide="next" *ngIf="selectedQuickViewProduct.images.length > 1">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+          </div>
+          <div class="col-md-6 d-flex flex-column">
+            <p class="small text-uppercase text-muted fw-bold mb-2">{{ selectedQuickViewProduct.category }}</p>
+            <h2 class="h3 fw-bold mb-2">{{ selectedQuickViewProduct.name }}</h2>
+            <div class="d-flex align-items-center mb-3">
+              <div class="text-warning me-2">
+                <i *ngFor="let star of starScale" class="bi" [ngClass]="star <= getProductRating(selectedQuickViewProduct) ? 'bi-star-fill' : 'bi-star'"></i>
+              </div>
+              <span class="small text-muted">({{ getProductReviewCount(selectedQuickViewProduct) }} reviews)</span>
+            </div>
+            <p class="text-muted mb-4">{{ selectedQuickViewProduct.description }}</p>
+
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <h3 class="h2 fw-bold mb-0 text-success">৳{{ getEffectivePrice(selectedQuickViewProduct) | number: '1.0-0' }}</h3>
+              <span class="text-muted text-decoration-line-through fs-5" *ngIf="hasDiscount(selectedQuickViewProduct)">৳{{ selectedQuickViewProduct.price | number: '1.0-0' }}</span>
+              <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2" *ngIf="hasDiscount(selectedQuickViewProduct)">{{ getDiscountPercent(selectedQuickViewProduct) }}% OFF</span>
+            </div>
+
+            <div class="mb-4" *ngIf="selectedQuickViewProduct.colors.length > 0">
+              <label class="small fw-bold text-uppercase text-muted mb-2">Color</label>
+              <div class="d-flex gap-2">
+                <button
+                  type="button"
+                  class="color-swatch rounded-circle"
+                  *ngFor="let color of selectedQuickViewProduct.colors"
+                  [style.background-color]="color"
+                  [attr.aria-label]="color"
+                ></button>
+              </div>
+            </div>
+
+            <div class="mt-auto d-flex gap-3">
+              <input type="number" class="form-control rounded-pill text-center" value="1" min="1" style="width: 80px;">
+              <button class="btn btn-success rounded-pill flex-grow-1 fw-semibold" (click)="onAddToCart(selectedQuickViewProduct)">
+                <i class="bi bi-cart-plus me-2"></i>Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" *ngIf="selectedQuickViewProduct"></div>
 </div>

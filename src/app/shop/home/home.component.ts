@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product, ProductService } from '../../shared/services/product.service';
+import { CartService } from '../../shared/services/cart.service';
 
 interface HeroSlide {
   eyebrow: string;
@@ -22,6 +23,7 @@ interface LimitedDeal {
   claimedPercent: number;
   claimedUnits: number;
   totalUnits: number;
+  product?: Product;
 }
 
 interface CountdownState {
@@ -106,10 +108,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   electronicsProducts: Product[] = [];
   fashionProducts: Product[] = [];
 
+  showToast = false;
+  toastMessage = '';
+
   private countdownTimerId: ReturnType<typeof setInterval> | null = null;
   private readonly dealEndAt = Date.now() + (2 * 24 * 60 * 60 + 13 * 60 * 60 + 18 * 60 + 25) * 1000;
 
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly productService: ProductService,
+    private readonly cartService: CartService
+  ) {}
 
   ngOnInit(): void {
     this.updateCountdown();
@@ -122,6 +130,19 @@ export class HomeComponent implements OnInit, OnDestroy {
       clearInterval(this.countdownTimerId);
       this.countdownTimerId = null;
     }
+  }
+
+  onAddToCart(product: Product): void {
+    this.cartService.addToCart(product);
+    this.showToastNotification(`Added ${product.name} to cart`);
+  }
+
+  private showToastNotification(message: string): void {
+    this.toastMessage = message;
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000);
   }
 
   private loadHomeProducts(): void {
@@ -178,7 +199,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         originalPrice: bestDealProduct.price,
         claimedPercent: 75,
         claimedUnits: Math.floor(bestDealProduct.stock * 0.75),
-        totalUnits: bestDealProduct.stock
+        totalUnits: bestDealProduct.stock,
+        product: bestDealProduct
       };
     }
   }

@@ -37,9 +37,16 @@
         <button type="button" class="btn btn-link text-dark action-icon p-0" aria-label="User profile">
           <i class="bi bi-person-circle fs-4" aria-hidden="true"></i>
         </button>
-        <a routerLink="/shop/cart" class="btn btn-link text-dark action-icon p-0 d-inline-flex align-items-center text-decoration-none">
+        <a routerLink="/shop/cart" class="btn btn-link text-dark action-icon p-0 d-inline-flex align-items-center text-decoration-none position-relative">
           <i class="bi bi-cart3 fs-4 me-1" aria-hidden="true"></i>
           <span class="fw-semibold">Cart</span>
+          <span
+            *ngIf="(cartTotalItems$ | async) as count"
+            class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle"
+            style="font-size: 0.65rem; padding: 0.35em 0.5em;"
+          >
+            {{ count }}
+          </span>
         </a>
       </div>
     </div>
