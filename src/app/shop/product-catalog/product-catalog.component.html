@@ -90,11 +90,11 @@
                 <article class="card border-0 catalog-product-card h-100">
                   <div class="catalog-product-media p-3 position-relative">
                     <span
-                      *ngIf="product.badge"
+                      *ngIf="getProductBadge(product)"
                       class="badge catalog-badge position-absolute top-0 start-0 mt-3 ms-3"
-                      [ngClass]="{ 'catalog-badge-sale': product.badge === 'Sale', 'catalog-badge-hot': product.badge === 'Hot' }"
+                      [ngClass]="{ 'catalog-badge-sale': getProductBadge(product) === 'Sale', 'catalog-badge-hot': getProductBadge(product) === 'Hot' }"
                     >
-                      {{ product.badge }}
+                      {{ getProductBadge(product) }}
                     </span>
 
                     <button type="button" class="btn btn-light catalog-wishlist rounded-circle p-0" aria-label="Add to wishlist">
@@ -123,10 +123,10 @@
                         <i
                           *ngFor="let star of starScale; trackBy: trackByValue"
                           class="bi"
-                          [ngClass]="star <= product.rating ? 'bi-star-fill' : 'bi-star'"
+                          [ngClass]="star <= getProductRating(product) ? 'bi-star-fill' : 'bi-star'"
                         ></i>
                       </div>
-                      <span class="small text-muted">({{ product.reviewCount }})</span>
+                      <span class="small text-muted">({{ getProductReviewCount(product) }})</span>
                     </div>
 
                     <div class="d-flex flex-wrap gap-1 mb-3">

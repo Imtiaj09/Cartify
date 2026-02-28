@@ -499,6 +499,14 @@
   justify-content: center;
 }
 
+.trend-image {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 0.85rem;
+  object-fit: cover;
+  display: block;
+}
+
 .trend-wishlist {
   width: 34px;
   height: 34px;
@@ -558,6 +566,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.best-image {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 0.85rem;
+  object-fit: cover;
+  display: block;
 }
 
 .best-wishlist {

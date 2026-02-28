@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Product, ProductBadge, ProductService } from '../../shared/services/product.service';
 
 interface HeroSlide {
   eyebrow: string;
@@ -36,6 +37,8 @@ interface CountdownState {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  readonly starScale: number[] = [1, 2, 3, 4, 5];
+
   heroSlides: HeroSlide[] = [
     {
       eyebrow: 'Limited Time Offers',
@@ -86,12 +89,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     seconds: '00'
   };
 
+  trendingProducts: Product[] = [];
+  bestSellingProducts: Product[] = [];
+
   private countdownTimerId: ReturnType<typeof setInterval> | null = null;
   private readonly dealEndAt = Date.now() + (2 * 24 * 60 * 60 + 13 * 60 * 60 + 18 * 60 + 25) * 1000;
+
+  constructor(private readonly productService: ProductService) {}
 
   ngOnInit(): void {
     this.updateCountdown();
     this.countdownTimerId = setInterval(() => this.updateCountdown(), 1000);
+    this.loadHomeProducts();
   }
 
   ngOnDestroy(): void {
@@ -99,6 +108,178 @@ export class HomeComponent implements OnInit, OnDestroy {
       clearInterval(this.countdownTimerId);
       this.countdownTimerId = null;
     }
+  }
+
+  getEffectivePrice(product: Product): number {
+    return product.discountedPrice ?? product.price;
+  }
+
+  hasDiscount(product: Product): boolean {
+    return product.discountedPrice !== null && product.discountedPrice < product.price;
+  }
+
+  getProductRating(product: Product): number {
+    return product.rating ?? 4;
+  }
+
+  getProductReviewCount(product: Product): number {
+    return product.reviewCount ?? 0;
+  }
+
+  getProductBadge(product: Product): ProductBadge {
+    if (product.badge === 'Sale' || product.badge === 'Hot') {
+      return product.badge;
+    }
+
+    if (this.hasDiscount(product)) {
+      return 'Sale';
+    }
+
+    if (product.isHighlighted) {
+      return 'Hot';
+    }
+
+    return null;
+  }
+
+  trackByProductId(index: number, product: Product): number {
+    return product.id;
+  }
+
+  private loadHomeProducts(): void {
+    const allProducts = this.productService.getProducts();
+
+    this.trendingProducts = this.getTrendingProducts(allProducts);
+    this.bestSellingProducts = this.getBestSellingProducts(allProducts);
+    this.updateLimitedDeal(allProducts);
+  }
+
+  private getTrendingProducts(products: Product[]): Product[] {
+    const trending = products.filter(
+      (p) => p.isHighlighted || (p.tags && p.tags.some((tag) => tag.toLowerCase().includes('trending')))
+    );
+
+    return this.fillWithFallback(trending, 4);
+  }
+
+  private getBestSellingProducts(products: Product[]): Product[] {
+    const bestSelling = products.filter((p) => p.discountedPrice !== null);
+    return this.fillWithFallback(bestSelling, 4);
+  }
+
+  private updateLimitedDeal(products: Product[]): void {
+    const bestDealProduct = products.reduce((best, current) => {
+      if (current.discountedPrice === null) {
+        return best;
+      }
+
+      const currentDiscount = (current.price - current.discountedPrice) / current.price;
+      const bestDiscount = best && best.discountedPrice ? (best.price - best.discountedPrice) / best.price : 0;
+
+      return currentDiscount > bestDiscount ? current : best;
+    }, null as Product | null);
+
+    if (bestDealProduct && bestDealProduct.discountedPrice !== null) {
+      this.limitedDeal = {
+        title: bestDealProduct.name,
+        subtitle: bestDealProduct.description,
+        imageUrl: bestDealProduct.mainImage,
+        imageAlt: bestDealProduct.name,
+        ctaLink: '#',
+        dealPrice: bestDealProduct.discountedPrice,
+        originalPrice: bestDealProduct.price,
+        claimedPercent: 75,
+        claimedUnits: Math.floor(bestDealProduct.stock * 0.75),
+        totalUnits: bestDealProduct.stock
+      };
+    }
+  }
+
+  private fillWithFallback(products: Product[], count: number): Product[] {
+    if (products.length >= count) {
+      return products.slice(0, count);
+    }
+
+    const needed = count - products.length;
+    const fallback = this.getDummyProducts().slice(0, needed);
+    return [...products, ...fallback];
+  }
+
+  private getDummyProducts(): Product[] {
+    return [
+      {
+        id: 991,
+        name: 'Classic Bomber Jacket',
+        description: 'Premium bomber jacket.',
+        price: 8900,
+        discountedPrice: 7900,
+        category: 'Fashion',
+        tags: ['Trending'],
+        colors: [],
+        stock: 10,
+        isHighlighted: false,
+        mainImage: 'https://placehold.co/900x1100/f7f9fc/3d4348?text=Bomber+Jacket',
+        images: [],
+        createdAt: new Date().toISOString(),
+        rating: 4,
+        reviewCount: 128,
+        badge: 'Sale'
+      },
+      {
+        id: 992,
+        name: 'Chronograph Elite Watch',
+        description: 'Luxury watch.',
+        price: 12400,
+        discountedPrice: 10900,
+        category: 'Accessories',
+        tags: ['Trending'],
+        colors: [],
+        stock: 10,
+        isHighlighted: false,
+        mainImage: 'https://placehold.co/900x1100/f2f5f8/2f3438?text=Smart+Watch',
+        images: [],
+        createdAt: new Date().toISOString(),
+        rating: 5,
+        reviewCount: 94,
+        badge: 'Hot'
+      },
+      {
+        id: 993,
+        name: 'Street Runner Sneakers',
+        description: 'Comfortable sneakers.',
+        price: 7650,
+        discountedPrice: 6990,
+        category: 'Footwear',
+        tags: ['Trending'],
+        colors: [],
+        stock: 10,
+        isHighlighted: false,
+        mainImage: 'https://placehold.co/900x1100/f2f7ff/22324a?text=Sneakers',
+        images: [],
+        createdAt: new Date().toISOString(),
+        rating: 4,
+        reviewCount: 72,
+        badge: 'Sale'
+      },
+      {
+        id: 994,
+        name: 'Urban Cap',
+        description: 'Stylish cap.',
+        price: 2500,
+        discountedPrice: 2200,
+        category: 'Accessories',
+        tags: ['Trending'],
+        colors: [],
+        stock: 10,
+        isHighlighted: false,
+        mainImage: 'https://placehold.co/900x1100/eef5ff/1f2a44?text=Cap',
+        images: [],
+        createdAt: new Date().toISOString(),
+        rating: 4,
+        reviewCount: 58,
+        badge: 'Sale'
+      }
+    ];
   }
 
   private updateCountdown(): void {

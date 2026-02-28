@@ -1,39 +1,61 @@
 <div class="container-fluid p-4">
-  <!-- Header Area -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0">Add New Product</h4>
     <div class="d-flex align-items-center gap-2">
       <div class="input-group me-2" style="width: 250px;">
         <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
-        <input type="text" class="form-control border-start-0" placeholder="Search...">
+        <input type="text" class="form-control border-start-0" placeholder="Search..." />
       </div>
-      <button class="btn btn-outline-secondary d-flex align-items-center">
-        <i class="bi bi-save me-2"></i> Save to draft
+      <button class="btn btn-outline-secondary d-flex align-items-center" type="button" (click)="saveDraft()">
+        <i class="bi bi-save me-2"></i>
+        Save to draft
       </button>
-      <button class="btn btn-success d-flex align-items-center">
-        <i class="bi bi-check2-circle me-2"></i> Publish Product
+      <button class="btn btn-success d-flex align-items-center" type="button" [disabled]="isPublishing" (click)="publishProduct()">
+        <i class="bi bi-check2-circle me-2"></i>
+        {{ isPublishing ? 'Publishing...' : 'Publish Product' }}
       </button>
-      <button class="btn btn-outline-secondary square-btn">
+      <button class="btn btn-outline-secondary square-btn" type="button">
         <i class="bi bi-plus-lg"></i>
       </button>
     </div>
   </div>
 
+  <div
+    *ngIf="publishAlertMessage"
+    class="alert mb-4"
+    [ngClass]="publishAlertType === 'success' ? 'alert-success' : 'alert-danger'"
+    role="alert"
+  >
+    {{ publishAlertMessage }}
+  </div>
+
   <div class="row g-4">
-    <!-- Left Column -->
     <div class="col-lg-7">
-      <!-- Basic Details Card -->
       <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-4">
           <h5 class="fw-bold mb-4">Basic Details</h5>
           <div class="mb-3">
             <label class="form-label text-muted small fw-bold">Product Name</label>
-            <input type="text" class="form-control" placeholder="Enter product name">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter product name"
+              [(ngModel)]="productForm.name"
+              name="productName"
+              (ngModelChange)="saveDraft()"
+            />
           </div>
           <div class="mb-3">
             <label class="form-label text-muted small fw-bold">Product Description</label>
             <div class="position-relative">
-              <textarea class="form-control" rows="6" placeholder="Enter product description..."></textarea>
+              <textarea
+                class="form-control"
+                rows="6"
+                placeholder="Enter product description..."
+                [(ngModel)]="productForm.description"
+                name="productDescription"
+                (ngModelChange)="saveDraft()"
+              ></textarea>
               <div class="rich-text-icons position-absolute bottom-0 end-0 p-2 text-muted">
                 <i class="bi bi-type-bold me-2 cursor-pointer"></i>
                 <i class="bi bi-type-italic me-2 cursor-pointer"></i>
@@ -45,7 +67,6 @@
         </div>
       </div>
 
-      <!-- Pricing Card -->
       <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-4">
           <h5 class="fw-bold mb-4">Pricing</h5>
@@ -53,52 +74,62 @@
             <label class="form-label text-muted small fw-bold">Product Price</label>
             <div class="input-group">
               <button class="btn btn-outline-secondary dropdown-toggle" type="button">
-                <img src="https://flagcdn.com/w20/bd.png" alt="BD" width="20"> BDT
+                <img src="https://flagcdn.com/w20/bd.png" alt="BD" width="20" />
+                BDT
               </button>
-              <input type="number" class="form-control" placeholder="0.00">
+              <input
+                type="number"
+                class="form-control"
+                placeholder="0.00"
+                [(ngModel)]="productForm.price"
+                name="productPrice"
+                (ngModelChange)="saveDraft()"
+              />
             </div>
           </div>
           <div class="row g-3 mb-3">
             <div class="col-md-6">
               <label class="form-label text-muted small fw-bold">Discounted Price</label>
-              <input type="number" class="form-control" placeholder="0.00">
+              <input
+                type="number"
+                class="form-control"
+                placeholder="0.00"
+                [(ngModel)]="productForm.discountedPrice"
+                name="productDiscountedPrice"
+                (ngModelChange)="saveDraft()"
+              />
             </div>
             <div class="col-md-6">
               <label class="form-label text-muted small fw-bold d-block">Tax Included</label>
               <div class="d-flex gap-3 mt-2">
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="taxIncluded" id="taxYes" checked>
+                  <input class="form-check-input" type="radio" name="taxIncluded" id="taxYes" checked />
                   <label class="form-check-label" for="taxYes">Yes</label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="taxIncluded" id="taxNo">
+                  <input class="form-check-input" type="radio" name="taxIncluded" id="taxNo" />
                   <label class="form-check-label" for="taxNo">No</label>
                 </div>
               </div>
             </div>
           </div>
-          <div class="row g-3">
-            <div class="col-12">
-              <label class="form-label text-muted small fw-bold">Expiration</label>
-            </div>
-            <div class="col-md-6">
-              <input type="date" class="form-control" placeholder="Start Date">
-            </div>
-            <div class="col-md-6">
-              <input type="date" class="form-control" placeholder="End Date">
-            </div>
-          </div>
         </div>
       </div>
 
-      <!-- Inventory Card -->
       <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-4">
           <h5 class="fw-bold mb-4">Inventory</h5>
           <div class="row g-3 mb-3">
             <div class="col-md-4">
               <label class="form-label text-muted small fw-bold">Stock Quantity</label>
-              <input type="number" class="form-control" placeholder="0">
+              <input
+                type="number"
+                class="form-control"
+                placeholder="0"
+                [(ngModel)]="productForm.stock"
+                name="productStock"
+                (ngModelChange)="saveDraft()"
+              />
             </div>
             <div class="col-md-4">
               <label class="form-label text-muted small fw-bold">Stock Status</label>
@@ -110,108 +141,144 @@
             </div>
             <div class="col-md-4 d-flex align-items-center pt-4">
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" id="unlimitedStock" checked>
+                <input class="form-check-input" type="checkbox" id="unlimitedStock" checked />
                 <label class="form-check-label ms-2" for="unlimitedStock">Unlimited</label>
               </div>
             </div>
           </div>
           <div class="form-check mt-3 mb-4">
-            <input class="form-check-input" type="checkbox" id="highlightProduct">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="highlightProduct"
+              [(ngModel)]="productForm.isHighlighted"
+              name="highlightProduct"
+              (ngModelChange)="saveDraft()"
+            />
             <label class="form-check-label text-muted" for="highlightProduct">
               Highlight this product in a featured section.
             </label>
           </div>
 
-          <!-- Bottom Actions (Moved inside Inventory Card) -->
           <div class="d-flex justify-content-end gap-3 pt-3 border-top">
-            <button class="btn btn-outline-secondary px-4">Save to draft</button>
-            <button class="btn btn-success px-4">Publish Product</button>
+            <button class="btn btn-outline-secondary px-4" type="button" (click)="saveDraft()">Save to draft</button>
+            <button class="btn btn-success px-4" type="button" [disabled]="isPublishing" (click)="publishProduct()">
+              {{ isPublishing ? 'Publishing...' : 'Publish Product' }}
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Right Column -->
     <div class="col-lg-5">
-      <!-- Upload Image Card -->
       <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-4">
           <h5 class="fw-bold mb-4">Upload Product Image</h5>
 
-          <!-- Main Image Preview -->
           <div class="main-image-preview bg-light rounded-3 mb-3 d-flex align-items-center justify-content-center overflow-hidden" style="height: 250px;">
-            <img *ngIf="mainImage" [src]="mainImage" alt="Preview" class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+            <img
+              *ngIf="mainImage"
+              [src]="mainImage"
+              alt="Preview"
+              class="img-fluid"
+              style="max-height: 100%; max-width: 100%; object-fit: contain;"
+            />
             <div *ngIf="!mainImage" class="text-muted text-center">
               <i class="bi bi-image fs-1 d-block mb-2"></i>
               <span>No image selected</span>
             </div>
           </div>
 
-          <!-- Action Buttons -->
           <div class="d-flex justify-content-between mb-4">
-            <button class="btn btn-outline-secondary btn-sm px-3" (click)="triggerFileInput('browseInput')">Browse</button>
-            <button class="btn btn-outline-secondary btn-sm px-3" (click)="triggerFileInput('replaceInput')" [disabled]="!mainImage">Replace</button>
+            <button class="btn btn-outline-secondary btn-sm px-3" type="button" (click)="triggerFileInput('browseInput')">Browse</button>
+            <button
+              class="btn btn-outline-secondary btn-sm px-3"
+              type="button"
+              (click)="triggerFileInput('replaceInput')"
+              [disabled]="!mainImage"
+            >
+              Replace
+            </button>
           </div>
 
-          <!-- Hidden File Inputs -->
-          <input type="file" id="browseInput" class="d-none" accept="image/*" multiple (change)="onFileSelected($event)">
-          <input type="file" id="replaceInput" class="d-none" accept="image/*" (change)="onReplaceFileSelected($event)">
+          <input type="file" id="browseInput" class="d-none" accept="image/*" multiple (change)="onFileSelected($event)" />
+          <input type="file" id="replaceInput" class="d-none" accept="image/*" (change)="onReplaceFileSelected($event)" />
 
-          <!-- Thumbnail Gallery -->
           <div class="d-flex gap-2 flex-wrap">
             <div class="position-relative thumbnail-wrapper cursor-pointer" *ngFor="let img of productImages" (click)="setMainImage(img)">
-              <img [src]="img" class="rounded border" width="60" height="60" [class.border-success]="img === mainImage" [class.border-2]="img === mainImage" style="object-fit: cover;">
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger p-1 cursor-pointer" style="font-size: 0.5rem;" (click)="removeImage(img, $event)">
+              <img
+                [src]="img"
+                class="rounded border"
+                width="60"
+                height="60"
+                [class.border-success]="img === mainImage"
+                [class.border-2]="img === mainImage"
+                style="object-fit: cover;"
+              />
+              <span
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger p-1 cursor-pointer"
+                style="font-size: 0.5rem;"
+                (click)="removeImage(img, $event)"
+              >
                 <i class="bi bi-x"></i>
               </span>
             </div>
 
-            <!-- Add Image Box -->
-            <div class="add-image-box border border-2 border-dashed rounded d-flex align-items-center justify-content-center text-success cursor-pointer" style="width: 60px; height: 60px;" (click)="triggerFileInput('browseInput')">
+            <div
+              class="add-image-box border border-2 border-dashed rounded d-flex align-items-center justify-content-center text-success cursor-pointer"
+              style="width: 60px; height: 60px;"
+              (click)="triggerFileInput('browseInput')"
+            >
               <i class="bi bi-plus-lg fs-4"></i>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Categories Card -->
       <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-4">
           <h5 class="fw-bold mb-4">Categories</h5>
           <div class="mb-3">
             <label class="form-label text-muted small fw-bold">Product Categories</label>
-            <select class="form-select">
-              <option selected>Select Category</option>
-              <option>Electronics</option>
-              <option>Fashion</option>
-              <option>Home & Kitchen</option>
+            <select class="form-select" [(ngModel)]="productForm.category" name="productCategory" (ngModelChange)="saveDraft()">
+              <option value="" selected>Select Category</option>
+              <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
             </select>
           </div>
           <div class="mb-3">
-            <label class="form-label text-muted small fw-bold">Product Tag</label>
-            <select class="form-select">
-              <option selected>Select Tag</option>
-              <option>New Arrival</option>
-              <option>Best Seller</option>
-              <option>Limited Edition</option>
+            <label class="form-label text-muted small fw-bold">Primary Tag</label>
+            <select class="form-select" [(ngModel)]="selectedTag" name="productPrimaryTag" (ngModelChange)="saveDraft()">
+              <option value="" selected>Select Tag</option>
+              <option *ngFor="let tag of quickTags" [value]="tag">{{ tag }}</option>
             </select>
+          </div>
+          <div>
+            <label class="form-label text-muted small fw-bold">Additional Tags (comma separated)</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="e.g. Summer, Premium"
+              [(ngModel)]="customTags"
+              name="productCustomTags"
+              (ngModelChange)="saveDraft()"
+            />
           </div>
         </div>
       </div>
 
-      <!-- Select Color Card -->
       <div class="card border-0 shadow-sm mb-4">
         <div class="card-body p-4">
           <h5 class="fw-bold mb-4">Select your color</h5>
-          <div class="d-flex gap-3">
-            <div class="color-swatch rounded-circle cursor-pointer"
-                 *ngFor="let color of colors"
-                 [style.background-color]="color"
-                 [class.border]="selectedColor === color"
-                 [class.border-3]="selectedColor === color"
-                 [class.border-dark]="selectedColor === color"
-                 (click)="selectColor(color)">
-            </div>
+          <div class="d-flex gap-3 flex-wrap">
+            <div
+              class="color-swatch rounded-circle cursor-pointer"
+              *ngFor="let color of colors"
+              [style.background-color]="color"
+              [class.border]="isColorSelected(color)"
+              [class.border-3]="isColorSelected(color)"
+              [class.border-dark]="isColorSelected(color)"
+              (click)="selectColor(color)"
+            ></div>
           </div>
         </div>
       </div>
