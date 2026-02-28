@@ -1,5 +1,6 @@
 <section class="home-page">
   <div class="container-fluid px-3 px-lg-4">
+    <!-- Hero Banner -->
     <section class="hero-banner position-relative overflow-hidden rounded-4 mt-4 section-spacer">
       <div id="heroPromoCarousel" class="carousel slide h-100" data-bs-ride="carousel" data-bs-interval="5500">
         <div class="carousel-inner h-100">
@@ -50,132 +51,23 @@
         </div>
       </div>
     </section>
-
   </div>
 
   <div class="container home-content">
-    <section class="row g-4 section-spacer">
-      <div class="col-12 col-lg-4">
-        <article class="promo-card card h-100 border-0 fashion-card">
-          <div class="card-body d-flex flex-column p-4">
-            <p class="section-eyebrow mb-2">Seasonal Edit</p>
-            <h2 class="h4 fw-bold mb-3">New Year! New Fashion</h2>
-            <div class="media-placeholder flex-grow-1 mb-4">Winter Jackets Image</div>
-            <a href="#" class="btn btn-success rounded-pill fw-semibold px-4 align-self-start">Shop Now</a>
+    <!-- Category Quick Links -->
+    <section class="category-links-section section-spacer">
+      <div class="d-flex flex-wrap justify-content-center gap-4 gap-md-5">
+        <a *ngFor="let category of categoryLinks" [href]="category.link" class="category-quick-link">
+          <div class="category-thumbnail">
+            <i class="bi" [ngClass]="category.icon"></i>
           </div>
-        </article>
-      </div>
-
-      <div class="col-12 col-lg-4">
-        <article class="promo-card card h-100 border-0 accessories-card">
-          <div class="card-body p-4">
-            <header class="d-flex align-items-center justify-content-between mb-3">
-              <h2 class="h4 fw-bold mb-0">Gaming accessories</h2>
-              <a href="#" class="small text-success fw-semibold text-decoration-none">See more</a>
-            </header>
-
-            <div class="row g-3">
-              <div class="col-6">
-                <a href="#" class="accessory-item text-decoration-none d-block">
-                  <div class="square-placeholder mb-2"></div>
-                  <span class="small fw-semibold">Headsets</span>
-                </a>
-              </div>
-              <div class="col-6">
-                <a href="#" class="accessory-item text-decoration-none d-block">
-                  <div class="square-placeholder mb-2"></div>
-                  <span class="small fw-semibold">Mouse</span>
-                </a>
-              </div>
-              <div class="col-6">
-                <a href="#" class="accessory-item text-decoration-none d-block">
-                  <div class="square-placeholder mb-2"></div>
-                  <span class="small fw-semibold">Controller</span>
-                </a>
-              </div>
-              <div class="col-6">
-                <a href="#" class="accessory-item text-decoration-none d-block">
-                  <div class="square-placeholder mb-2"></div>
-                  <span class="small fw-semibold">Chair</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-
-      <div class="col-12 col-lg-4 d-flex flex-column gap-4">
-        <article class="promo-card card border-0 text-white laptop-card">
-          <div class="card-body d-flex align-items-end justify-content-between p-4">
-            <div>
-              <p class="text-uppercase small text-white-50 mb-2">Gaming Laptop</p>
-              <h3 class="h4 fw-bold mb-2">BE THE WINNER</h3>
-              <p class="fs-4 fw-bold mb-0">৳1990</p>
-            </div>
-            <div class="mini-placeholder">Laptop</div>
-          </div>
-        </article>
-
-        <article class="promo-card card border-0 text-white phone-card">
-          <div class="card-body d-flex align-items-end justify-content-between p-4">
-            <div>
-              <p class="text-uppercase small text-white-50 mb-2">Smartphone</p>
-              <h3 class="h4 fw-bold mb-3">Redmi Y3</h3>
-              <span class="badge rounded-pill bg-warning text-dark px-3 py-2">NEW!</span>
-            </div>
-            <div class="mini-placeholder">Phone</div>
-          </div>
-        </article>
-
-        <article class="promo-card card border-0 tv-card">
-          <div class="card-body d-flex align-items-center gap-3 p-3 p-md-4">
-            <div class="tv-placeholder flex-shrink-0">TV</div>
-            <div>
-              <p class="small text-uppercase text-muted mb-1">Smart TV</p>
-              <h3 class="h5 fw-bold mb-2">Philips 4K Ambilight TV</h3>
-              <p class="fw-bold text-success mb-3">৳750.99</p>
-              <a href="#" class="btn btn-outline-success btn-sm rounded-pill px-3">Shop Now</a>
-            </div>
-          </div>
-        </article>
+          <span class="category-name">{{ category.name }}</span>
+        </a>
       </div>
     </section>
 
-    <section class="row g-4 section-spacer">
-      <div class="col-12 col-md-6 col-lg-3">
-        <article class="promo-card bottom-card trousers-card p-4 text-white d-flex flex-column justify-content-end">
-          <p class="small text-uppercase mb-2">Style Edit</p>
-          <h3 class="h4 fw-bold mb-3">Trousers Fashion</h3>
-          <a href="#" class="btn btn-light btn-sm rounded-pill fw-semibold align-self-start px-3">Shop Now</a>
-        </article>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-3">
-        <article class="promo-card bottom-card mens-card p-4 text-white d-flex flex-column justify-content-end">
-          <p class="small text-uppercase mb-2">Luxury Wear</p>
-          <h3 class="h4 fw-bold mb-3">MEN'S FASHION</h3>
-          <a href="#" class="btn btn-outline-light btn-sm rounded-pill fw-semibold align-self-start px-3">Shop Now</a>
-        </article>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-3">
-        <article class="promo-card bottom-card denim-card p-4 d-flex flex-column justify-content-end">
-          <p class="small text-uppercase text-muted mb-2">Modern Fit</p>
-          <h3 class="h4 fw-bold mb-3">DENIM</h3>
-          <a href="#" class="btn btn-primary btn-sm rounded-pill fw-semibold align-self-start px-3">Shop Now</a>
-        </article>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-3">
-        <article class="promo-card bottom-card appliance-card p-4 d-flex flex-column justify-content-end">
-          <p class="small text-uppercase text-primary mb-2">Smart Home</p>
-          <h3 class="h4 fw-bold mb-3">PHILIPS Domestic Appliances</h3>
-          <a href="#" class="btn btn-outline-primary btn-sm rounded-pill fw-semibold align-self-start px-3">Shop Now</a>
-        </article>
-      </div>
-    </section>
-
-    <section class="trending-section pt-2 section-spacer">
+    <!-- Trending Products -->
+    <section class="trending-section section-spacer">
       <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-3 mb-lg-4">
         <div>
           <p class="section-eyebrow mb-2">Popular Picks</p>
@@ -189,27 +81,34 @@
 
       <div class="row g-4">
         <div class="col-12 col-md-6 col-lg-3" *ngFor="let product of trendingProducts">
-          <article class="card border-0 trend-card h-100">
-            <div class="card-top p-3 position-relative">
-              <button type="button" class="btn btn-light trend-wishlist rounded-circle p-0" aria-label="Add to wishlist">
+          <article class="card product-card h-100">
+            <div class="card-top">
+              <span *ngIf="product.badge" class="product-badge"
+                    [ngClass]="{'badge-sale': product.badge === 'Sale', 'badge-hot': product.badge === 'Hot'}">
+                {{ product.badge }}
+              </span>
+              <button type="button" class="wishlist-btn" aria-label="Add to wishlist">
                 <i class="bi bi-heart" aria-hidden="true"></i>
               </button>
-              <div class="trend-image-container">
-                <img [src]="product.mainImage" [alt]="product.name" class="img-fluid rounded-3" loading="lazy" />
+              <div class="product-image-container">
+                <img [src]="product.mainImage" [alt]="product.name" loading="lazy" />
               </div>
             </div>
-            <div class="card-body pt-0 d-flex flex-column">
+            <div class="card-body d-flex flex-column pt-3">
               <p class="small text-uppercase text-muted fw-semibold mb-2">{{ product.category }}</p>
-              <h3 class="h6 fw-semibold mb-2">{{ product.name }}</h3>
+              <h3 class="h6 fw-bold mb-2 text-truncate">{{ product.name }}</h3>
               <div class="d-flex align-items-center mb-3">
-                <div class="trend-stars me-2" [attr.aria-label]="(product.rating || 4) + ' out of 5 stars'">
+                <div class="product-stars me-2" [attr.aria-label]="(product.rating || 4) + ' out of 5 stars'">
                   <i class="bi bi-star-fill" *ngFor="let star of [1,2,3,4,5]; let i = index" [class.text-warning]="i < (product.rating || 4)"></i>
                 </div>
                 <span class="small text-muted">({{ product.reviewCount || 0 }})</span>
               </div>
               <div class="d-flex align-items-center justify-content-between mt-auto">
-                <p class="h5 fw-bold mb-0">৳{{ product.price | number:'1.2-2' }}</p>
-                <a href="#" class="btn btn-sm trend-btn rounded-pill px-3">Shop Now</a>
+                <div class="d-flex align-items-center gap-2">
+                  <p class="h5 fw-bold mb-0 text-dark">৳{{ (product.discountedPrice || product.price) | number:'1.2-2' }}</p>
+                  <p class="small text-muted text-decoration-line-through mb-0" *ngIf="product.discountedPrice">৳{{ product.price | number:'1.2-2' }}</p>
+                </div>
+                <a href="#" class="btn btn-sm shop-btn rounded-pill px-3">Shop Now</a>
               </div>
             </div>
           </article>
@@ -217,11 +116,12 @@
       </div>
     </section>
 
-    <section class="best-selling-section section-spacer">
+    <!-- New in Electronics -->
+    <section class="electronics-section section-spacer">
       <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-3 mb-lg-4">
         <div>
-          <p class="section-eyebrow mb-2">Top Picks</p>
-          <h2 class="h3 fw-bold mb-0">Best Selling Product</h2>
+          <p class="section-eyebrow mb-2">Tech & Gadgets</p>
+          <h2 class="h3 fw-bold mb-0">New in Electronics</h2>
         </div>
         <a href="#" class="btn btn-link px-0 text-success fw-semibold text-decoration-none mt-2 mt-md-0">
           View All
@@ -230,230 +130,43 @@
       </div>
 
       <div class="row g-4">
-        <div class="col-12 col-md-6 col-lg-3" *ngFor="let product of bestSellingProducts">
-          <article class="card border-0 best-product-card h-100">
-            <div class="best-product-media p-3 position-relative">
-              <span *ngIf="product.badge" class="badge best-badge position-absolute top-0 start-0 mt-3 ms-3"
-                    [ngClass]="{'best-badge-sale': product.badge === 'Sale', 'best-badge-hot': product.badge === 'Hot'}">
+        <div class="col-12 col-md-6 col-lg-3" *ngFor="let product of electronicsProducts">
+          <article class="card product-card h-100">
+            <div class="card-top">
+              <span *ngIf="product.badge" class="product-badge"
+                    [ngClass]="{'badge-sale': product.badge === 'Sale', 'badge-hot': product.badge === 'Hot'}">
                 {{ product.badge }}
               </span>
-              <button type="button" class="btn btn-light best-wishlist rounded-circle p-0" aria-label="Add to wishlist">
+              <button type="button" class="wishlist-btn" aria-label="Add to wishlist">
                 <i class="bi bi-heart" aria-hidden="true"></i>
               </button>
-              <div class="best-image-container">
-                <img [src]="product.mainImage" [alt]="product.name" class="img-fluid rounded-3" loading="lazy" />
+              <div class="product-image-container">
+                <img [src]="product.mainImage" [alt]="product.name" loading="lazy" />
               </div>
             </div>
-            <div class="card-body pt-0 d-flex flex-column">
+            <div class="card-body d-flex flex-column pt-3">
               <p class="small text-uppercase text-muted fw-semibold mb-2">{{ product.category }}</p>
-              <h3 class="h6 fw-semibold mb-2">{{ product.name }}</h3>
+              <h3 class="h6 fw-bold mb-2 text-truncate">{{ product.name }}</h3>
               <div class="d-flex align-items-center mb-3">
-                <div class="best-stars me-2" [attr.aria-label]="(product.rating || 4) + ' out of 5 stars'">
+                <div class="product-stars me-2" [attr.aria-label]="(product.rating || 4) + ' out of 5 stars'">
                   <i class="bi bi-star-fill" *ngFor="let star of [1,2,3,4,5]; let i = index" [class.text-warning]="i < (product.rating || 4)"></i>
                 </div>
                 <span class="small text-muted">({{ product.reviewCount || 0 }})</span>
               </div>
-              <div class="d-flex align-items-center gap-2 mb-3">
-                <p class="h5 fw-bold mb-0" *ngIf="product.discountedPrice">৳{{ product.discountedPrice | number:'1.2-2' }}</p>
-                <p class="h5 fw-bold mb-0" *ngIf="!product.discountedPrice">৳{{ product.price | number:'1.2-2' }}</p>
-                <p class="small text-muted text-decoration-line-through mb-0" *ngIf="product.discountedPrice">৳{{ product.price | number:'1.2-2' }}</p>
+              <div class="mt-auto">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <p class="h5 fw-bold mb-0 text-dark">৳{{ (product.discountedPrice || product.price) | number:'1.2-2' }}</p>
+                  <p class="small text-muted text-decoration-line-through mb-0" *ngIf="product.discountedPrice">৳{{ product.price | number:'1.2-2' }}</p>
+                </div>
+                <button class="btn btn-sm add-cart-btn rounded-pill py-2">Add to Cart</button>
               </div>
-              <a href="#" class="btn btn-sm best-cart-btn rounded-pill mt-auto align-self-start">
-                <i class="bi bi-cart3 me-2" aria-hidden="true"></i>
-                Add to Cart
-              </a>
             </div>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="explore-now-section section-spacer">
-      <div
-        id="startExploringCarousel"
-        class="carousel slide explore-carousel position-relative"
-        data-bs-ride="carousel"
-        data-bs-interval="5500"
-      >
-        <div class="carousel-inner rounded-4">
-          <div class="carousel-item active">
-            <article class="explore-slide p-3 p-md-4 p-xl-5">
-              <header class="explore-slide-header mb-3 mb-md-4">
-                <p class="small text-uppercase text-muted fw-semibold mb-1">Fresh this week</p>
-                <h2 class="h3 fw-bold mb-0">Start Exploring Now</h2>
-              </header>
-              <div class="row g-4 align-items-center">
-                <div class="col-12 col-lg-6">
-                  <p class="small text-uppercase text-success fw-semibold mb-2">New Arrivals</p>
-                  <h3 class="display-6 fw-bold mb-3">Elevate your wardrobe with premium essentials.</h3>
-                  <p class="text-muted mb-4">Discover versatile pieces crafted for comfort, confidence, and all-day wear.</p>
-                  <div class="d-flex flex-wrap gap-2">
-                    <a href="#" class="btn explore-cta rounded-pill px-4">Shop Men</a>
-                    <a href="#" class="btn btn-outline-success rounded-pill px-4">Shop Women</a>
-                  </div>
-                </div>
-                <div class="col-12 col-lg-6">
-                  <div class="row g-3">
-                    <div class="col-6">
-                      <div class="explore-tile h-100">
-                        <div class="explore-thumb mb-2">Outerwear</div>
-                        <p class="small fw-semibold mb-1">Winter Jackets</p>
-                        <p class="small text-muted mb-0">From ৳79</p>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="explore-tile h-100">
-                        <div class="explore-thumb mb-2">Shoes</div>
-                        <p class="small fw-semibold mb-1">Street Sneakers</p>
-                        <p class="small text-muted mb-0">From ৳65</p>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="explore-tile h-100">
-                        <div class="explore-thumb mb-2">Watch</div>
-                        <p class="small fw-semibold mb-1">Luxury Watches</p>
-                        <p class="small text-muted mb-0">From ৳149</p>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="explore-tile h-100">
-                        <div class="explore-thumb mb-2">Bag</div>
-                        <p class="small fw-semibold mb-1">Travel Bags</p>
-                        <p class="small text-muted mb-0">From ৳59</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </div>
-
-          <div class="carousel-item">
-            <article class="explore-slide p-3 p-md-4 p-xl-5">
-              <header class="explore-slide-header mb-3 mb-md-4">
-                <p class="small text-uppercase text-muted fw-semibold mb-1">Fresh this week</p>
-                <h2 class="h3 fw-bold mb-0">Start Exploring Now</h2>
-              </header>
-              <div class="row g-4 align-items-center">
-                <div class="col-12 col-lg-6">
-                  <p class="small text-uppercase text-success fw-semibold mb-2">Tech Collection</p>
-                  <h3 class="display-6 fw-bold mb-3">Upgrade your daily setup with smart picks.</h3>
-                  <p class="text-muted mb-4">Explore curated electronics and accessories built for speed, style, and productivity.</p>
-                  <div class="d-flex flex-wrap gap-2">
-                    <a href="#" class="btn explore-cta rounded-pill px-4">Shop Gadgets</a>
-                    <a href="#" class="btn btn-outline-success rounded-pill px-4">See Deals</a>
-                  </div>
-                </div>
-                <div class="col-12 col-lg-6">
-                  <div class="row g-3">
-                    <div class="col-6">
-                      <div class="explore-tile h-100">
-                        <div class="explore-thumb mb-2">Laptop</div>
-                        <p class="small fw-semibold mb-1">Pro Laptops</p>
-                        <p class="small text-muted mb-0">From ৳899</p>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="explore-tile h-100">
-                        <div class="explore-thumb mb-2">Phone</div>
-                        <p class="small fw-semibold mb-1">Smartphones</p>
-                        <p class="small text-muted mb-0">From ৳499</p>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="explore-tile h-100">
-                        <div class="explore-thumb mb-2">Audio</div>
-                        <p class="small fw-semibold mb-1">Headphones</p>
-                        <p class="small text-muted mb-0">From ৳89</p>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="explore-tile h-100">
-                        <div class="explore-thumb mb-2">Gaming</div>
-                        <p class="small fw-semibold mb-1">Controllers</p>
-                        <p class="small text-muted mb-0">From ৳55</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </div>
-
-          <div class="carousel-item">
-            <article class="explore-slide p-3 p-md-4 p-xl-5">
-              <header class="explore-slide-header mb-3 mb-md-4">
-                <p class="small text-uppercase text-muted fw-semibold mb-1">Fresh this week</p>
-                <h2 class="h3 fw-bold mb-0">Start Exploring Now</h2>
-              </header>
-              <div class="row g-4 align-items-center">
-                <div class="col-12 col-lg-6">
-                  <p class="small text-uppercase text-success fw-semibold mb-2">Home Living</p>
-                  <h3 class="display-6 fw-bold mb-3">Bring comfort and design into every room.</h3>
-                  <p class="text-muted mb-4">Modern appliances and decor picks selected to simplify everyday routines.</p>
-                  <div class="d-flex flex-wrap gap-2">
-                    <a href="#" class="btn explore-cta rounded-pill px-4">Shop Home</a>
-                    <a href="#" class="btn btn-outline-success rounded-pill px-4">Browse More</a>
-                  </div>
-                </div>
-                <div class="col-12 col-lg-6">
-                  <div class="row g-3">
-                    <div class="col-6">
-                      <div class="explore-tile h-100">
-                        <div class="explore-thumb mb-2">Kitchen</div>
-                        <p class="small fw-semibold mb-1">Mixers</p>
-                        <p class="small text-muted mb-0">From ৳99</p>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="explore-tile h-100">
-                        <div class="explore-thumb mb-2">Cleaning</div>
-                        <p class="small fw-semibold mb-1">Vacuum Tech</p>
-                        <p class="small text-muted mb-0">From ৳139</p>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="explore-tile h-100">
-                        <div class="explore-thumb mb-2">Decor</div>
-                        <p class="small fw-semibold mb-1">Wall Lighting</p>
-                        <p class="small text-muted mb-0">From ৳45</p>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="explore-tile h-100">
-                        <div class="explore-thumb mb-2">Living</div>
-                        <p class="small fw-semibold mb-1">Air Purifier</p>
-                        <p class="small text-muted mb-0">From ৳129</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-
-        <button class="carousel-control-prev explore-control explore-control-prev" type="button" data-bs-target="#startExploringCarousel" data-bs-slide="prev">
-          <span class="explore-control-icon" aria-hidden="true">
-            <i class="bi bi-chevron-left"></i>
-          </span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next explore-control explore-control-next" type="button" data-bs-target="#startExploringCarousel" data-bs-slide="next">
-          <span class="explore-control-icon" aria-hidden="true">
-            <i class="bi bi-chevron-right"></i>
-          </span>
-          <span class="visually-hidden">Next</span>
-        </button>
-
-        <div class="carousel-indicators explore-indicators mb-0">
-          <button type="button" data-bs-target="#startExploringCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#startExploringCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#startExploringCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        </div>
-      </div>
-    </section>
-
+    <!-- Limited Deal Section -->
     <section class="limited-deal-section section-spacer">
       <article class="limited-deal-card rounded-4 p-3 p-md-4 p-xl-5 overflow-hidden">
         <div class="row g-4 g-xl-5 align-items-center">
@@ -465,7 +178,7 @@
 
           <div class="col-12 col-lg-7">
             <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-              <span class="badge best-badge best-badge-sale">Flash Sale</span>
+              <span class="badge badge-sale">Flash Sale</span>
               <p class="small text-uppercase limited-deal-muted fw-semibold mb-0">Limited-Time Deal</p>
             </div>
 
@@ -521,6 +234,107 @@
       </article>
     </section>
 
+    <!-- Fashion Essentials -->
+    <section class="fashion-section section-spacer">
+      <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-3 mb-lg-4">
+        <div>
+          <p class="section-eyebrow mb-2">Style Edit</p>
+          <h2 class="h3 fw-bold mb-0">Fashion Essentials</h2>
+        </div>
+        <a href="#" class="btn btn-link px-0 text-success fw-semibold text-decoration-none mt-2 mt-md-0">
+          View All
+          <i class="bi bi-arrow-right-short ms-1" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-3" *ngFor="let product of fashionProducts">
+          <article class="card product-card h-100">
+            <div class="card-top">
+              <span *ngIf="product.badge" class="product-badge"
+                    [ngClass]="{'badge-sale': product.badge === 'Sale', 'badge-hot': product.badge === 'Hot'}">
+                {{ product.badge }}
+              </span>
+              <button type="button" class="wishlist-btn" aria-label="Add to wishlist">
+                <i class="bi bi-heart" aria-hidden="true"></i>
+              </button>
+              <div class="product-image-container">
+                <img [src]="product.mainImage" [alt]="product.name" loading="lazy" />
+              </div>
+            </div>
+            <div class="card-body d-flex flex-column pt-3">
+              <p class="small text-uppercase text-muted fw-semibold mb-2">{{ product.category }}</p>
+              <h3 class="h6 fw-bold mb-2 text-truncate">{{ product.name }}</h3>
+              <div class="d-flex align-items-center mb-3">
+                <div class="product-stars me-2" [attr.aria-label]="(product.rating || 4) + ' out of 5 stars'">
+                  <i class="bi bi-star-fill" *ngFor="let star of [1,2,3,4,5]; let i = index" [class.text-warning]="i < (product.rating || 4)"></i>
+                </div>
+                <span class="small text-muted">({{ product.reviewCount || 0 }})</span>
+              </div>
+              <div class="mt-auto">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <p class="h5 fw-bold mb-0 text-dark">৳{{ (product.discountedPrice || product.price) | number:'1.2-2' }}</p>
+                  <p class="small text-muted text-decoration-line-through mb-0" *ngIf="product.discountedPrice">৳{{ product.price | number:'1.2-2' }}</p>
+                </div>
+                <button class="btn btn-sm add-cart-btn rounded-pill py-2">Add to Cart</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Best Selling Products -->
+    <section class="best-selling-section section-spacer">
+      <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-3 mb-lg-4">
+        <div>
+          <p class="section-eyebrow mb-2">Top Picks</p>
+          <h2 class="h3 fw-bold mb-0">Best Selling Product</h2>
+        </div>
+        <a href="#" class="btn btn-link px-0 text-success fw-semibold text-decoration-none mt-2 mt-md-0">
+          View All
+          <i class="bi bi-arrow-right-short ms-1" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-3" *ngFor="let product of bestSellingProducts">
+          <article class="card product-card h-100">
+            <div class="card-top">
+              <span *ngIf="product.badge" class="product-badge"
+                    [ngClass]="{'badge-sale': product.badge === 'Sale', 'badge-hot': product.badge === 'Hot'}">
+                {{ product.badge }}
+              </span>
+              <button type="button" class="wishlist-btn" aria-label="Add to wishlist">
+                <i class="bi bi-heart" aria-hidden="true"></i>
+              </button>
+              <div class="product-image-container">
+                <img [src]="product.mainImage" [alt]="product.name" loading="lazy" />
+              </div>
+            </div>
+            <div class="card-body d-flex flex-column pt-3">
+              <p class="small text-uppercase text-muted fw-semibold mb-2">{{ product.category }}</p>
+              <h3 class="h6 fw-bold mb-2 text-truncate">{{ product.name }}</h3>
+              <div class="d-flex align-items-center mb-3">
+                <div class="product-stars me-2" [attr.aria-label]="(product.rating || 4) + ' out of 5 stars'">
+                  <i class="bi bi-star-fill" *ngFor="let star of [1,2,3,4,5]; let i = index" [class.text-warning]="i < (product.rating || 4)"></i>
+                </div>
+                <span class="small text-muted">({{ product.reviewCount || 0 }})</span>
+              </div>
+              <div class="d-flex align-items-center justify-content-between mt-auto">
+                <div class="d-flex align-items-center gap-2">
+                  <p class="h5 fw-bold mb-0 text-dark">৳{{ (product.discountedPrice || product.price) | number:'1.2-2' }}</p>
+                  <p class="small text-muted text-decoration-line-through mb-0" *ngIf="product.discountedPrice">৳{{ product.price | number:'1.2-2' }}</p>
+                </div>
+                <a href="#" class="btn btn-sm shop-btn rounded-pill px-3">Shop Now</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Happy Customers -->
     <section class="happy-customers-section section-spacer">
       <div class="happy-customers-panel rounded-4 p-3 p-md-4 p-xl-5">
         <header class="text-center mb-4 mb-lg-5">

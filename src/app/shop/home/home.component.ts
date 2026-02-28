@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Product, ProductBadge, ProductService } from '../../shared/services/product.service';
+import { Product, ProductService } from '../../shared/services/product.service';
 
 interface HeroSlide {
   eyebrow: string;
@@ -31,14 +31,18 @@ interface CountdownState {
   seconds: string;
 }
 
+interface CategoryLink {
+  name: string;
+  icon: string;
+  link: string;
+}
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  readonly starScale: number[] = [1, 2, 3, 4, 5];
-
   heroSlides: HeroSlide[] = [
     {
       eyebrow: 'Limited Time Offers',
@@ -69,6 +73,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   ];
 
+  categoryLinks: CategoryLink[] = [
+    { name: 'Electronics', icon: 'bi-laptop', link: '#' },
+    { name: 'Fashion', icon: 'bi-bag', link: '#' },
+    { name: 'Home', icon: 'bi-house', link: '#' },
+    { name: 'Sports', icon: 'bi-bicycle', link: '#' },
+    { name: 'Beauty', icon: 'bi-stars', link: '#' }
+  ];
+
   limitedDeal: LimitedDeal = {
     title: 'Wireless Noise-Canceling Headphones',
     subtitle: 'Studio-grade sound, all-day comfort, and active noise canceling for focus anywhere.',
@@ -91,6 +103,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   trendingProducts: Product[] = [];
   bestSellingProducts: Product[] = [];
+  electronicsProducts: Product[] = [];
+  fashionProducts: Product[] = [];
 
   private countdownTimerId: ReturnType<typeof setInterval> | null = null;
   private readonly dealEndAt = Date.now() + (2 * 24 * 60 * 60 + 13 * 60 * 60 + 18 * 60 + 25) * 1000;
@@ -110,47 +124,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  getEffectivePrice(product: Product): number {
-    return product.discountedPrice ?? product.price;
-  }
-
-  hasDiscount(product: Product): boolean {
-    return product.discountedPrice !== null && product.discountedPrice < product.price;
-  }
-
-  getProductRating(product: Product): number {
-    return product.rating ?? 4;
-  }
-
-  getProductReviewCount(product: Product): number {
-    return product.reviewCount ?? 0;
-  }
-
-  getProductBadge(product: Product): ProductBadge {
-    if (product.badge === 'Sale' || product.badge === 'Hot') {
-      return product.badge;
-    }
-
-    if (this.hasDiscount(product)) {
-      return 'Sale';
-    }
-
-    if (product.isHighlighted) {
-      return 'Hot';
-    }
-
-    return null;
-  }
-
-  trackByProductId(index: number, product: Product): number {
-    return product.id;
-  }
-
   private loadHomeProducts(): void {
     const allProducts = this.productService.getProducts();
 
     this.trendingProducts = this.getTrendingProducts(allProducts);
     this.bestSellingProducts = this.getBestSellingProducts(allProducts);
+    this.electronicsProducts = this.getCategoryProducts(allProducts, 'Electronics');
+    this.fashionProducts = this.getCategoryProducts(allProducts, 'Fashion');
     this.updateLimitedDeal(allProducts);
   }
 
@@ -165,6 +145,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   private getBestSellingProducts(products: Product[]): Product[] {
     const bestSelling = products.filter((p) => p.discountedPrice !== null);
     return this.fillWithFallback(bestSelling, 4);
+  }
+
+  private getCategoryProducts(products: Product[], category: string): Product[] {
+    const categoryProducts = products.filter((p) => p.category === category);
+    return this.fillWithFallback(categoryProducts, 4);
   }
 
   private updateLimitedDeal(products: Product[]): void {
@@ -212,7 +197,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         name: 'Classic Bomber Jacket',
         description: 'Premium bomber jacket.',
         price: 8900,
-        discountedPrice: 7900,
+        discountedPrice: null,
         category: 'Fashion',
         tags: ['Trending'],
         colors: [],
@@ -220,17 +205,14 @@ export class HomeComponent implements OnInit, OnDestroy {
         isHighlighted: false,
         mainImage: 'https://placehold.co/900x1100/f7f9fc/3d4348?text=Bomber+Jacket',
         images: [],
-        createdAt: new Date().toISOString(),
-        rating: 4,
-        reviewCount: 128,
-        badge: 'Sale'
+        createdAt: new Date().toISOString()
       },
       {
         id: 992,
         name: 'Chronograph Elite Watch',
         description: 'Luxury watch.',
         price: 12400,
-        discountedPrice: 10900,
+        discountedPrice: null,
         category: 'Accessories',
         tags: ['Trending'],
         colors: [],
@@ -238,17 +220,14 @@ export class HomeComponent implements OnInit, OnDestroy {
         isHighlighted: false,
         mainImage: 'https://placehold.co/900x1100/f2f5f8/2f3438?text=Smart+Watch',
         images: [],
-        createdAt: new Date().toISOString(),
-        rating: 5,
-        reviewCount: 94,
-        badge: 'Hot'
+        createdAt: new Date().toISOString()
       },
       {
         id: 993,
         name: 'Street Runner Sneakers',
         description: 'Comfortable sneakers.',
         price: 7650,
-        discountedPrice: 6990,
+        discountedPrice: null,
         category: 'Footwear',
         tags: ['Trending'],
         colors: [],
@@ -256,17 +235,14 @@ export class HomeComponent implements OnInit, OnDestroy {
         isHighlighted: false,
         mainImage: 'https://placehold.co/900x1100/f2f7ff/22324a?text=Sneakers',
         images: [],
-        createdAt: new Date().toISOString(),
-        rating: 4,
-        reviewCount: 72,
-        badge: 'Sale'
+        createdAt: new Date().toISOString()
       },
       {
         id: 994,
         name: 'Urban Cap',
         description: 'Stylish cap.',
         price: 2500,
-        discountedPrice: 2200,
+        discountedPrice: null,
         category: 'Accessories',
         tags: ['Trending'],
         colors: [],
@@ -274,10 +250,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         isHighlighted: false,
         mainImage: 'https://placehold.co/900x1100/eef5ff/1f2a44?text=Cap',
         images: [],
-        createdAt: new Date().toISOString(),
-        rating: 4,
-        reviewCount: 58,
-        badge: 'Sale'
+        createdAt: new Date().toISOString()
       }
     ];
   }
