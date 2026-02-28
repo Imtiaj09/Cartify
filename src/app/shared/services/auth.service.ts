@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, throwError, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+
+export type UserStatus = 'Active' | 'Suspended';
 
 export interface User {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
+  status: UserStatus;
+  registrationDate: string;
   phone?: string;
   avatarUrl?: string;
   password?: string; // In a real app, never store plain text passwords
@@ -15,14 +19,22 @@ export interface User {
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<User | null>;
-  public currentUser$: Observable<User | null>;
   private readonly USERS_KEY = 'cartify_users';
   private readonly CURRENT_USER_KEY = 'currentUser';
 
+  private readonly currentUserSubject: BehaviorSubject<User | null>;
+  public readonly currentUser$: Observable<User | null>;
+
+  public readonly allUsers$ = new BehaviorSubject<User[]>([]);
+
   constructor() {
-    const storedUser = localStorage.getItem(this.CURRENT_USER_KEY);
-    this.currentUserSubject = new BehaviorSubject<User | null>(storedUser ? JSON.parse(storedUser) : null);
+    const users = this.loadUsersFromStorage();
+    this.allUsers$.next(users);
+
+    const storedCurrentUser = localStorage.getItem(this.CURRENT_USER_KEY);
+    const currentUser = storedCurrentUser ? this.normalizeUser(JSON.parse(storedCurrentUser) as Partial<User>) : null;
+
+    this.currentUserSubject = new BehaviorSubject<User | null>(currentUser);
     this.currentUser$ = this.currentUserSubject.asObservable();
   }
 
@@ -30,51 +42,99 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  register(userData: User): Observable<User> {
-    const users = this.getUsers();
+  register(userData: Partial<User>): Observable<User> {
+    const firstName = (userData.firstName || '').trim();
+    const lastName = (userData.lastName || '').trim();
+    const email = (userData.email || '').trim().toLowerCase();
 
-    // Check if email already exists
-    if (users.find(u => u.email === userData.email)) {
+    if (!firstName || !lastName || !email) {
+      return throwError(() => new Error('Missing required registration fields'));
+    }
+
+    const users = [...this.allUsers$.value];
+
+    if (users.find((user) => user.email.toLowerCase() === email)) {
       return throwError(() => new Error('Email already registered'));
     }
 
-    // Create new user
     const newUser: User = {
-      ...userData,
       id: Math.random().toString(36).substr(2, 9),
-      // Use brand green for avatar background
-      avatarUrl: `https://ui-avatars.com/api/?name=${userData.firstName}+${userData.lastName}&background=20a04b&color=fff`
+      firstName,
+      lastName,
+      email,
+      status: 'Active',
+      registrationDate: new Date().toISOString(),
+      phone: userData.phone,
+      password: userData.password,
+      avatarUrl: userData.avatarUrl || `https://ui-avatars.com/api/?name=${firstName}+${lastName}&background=20a04b&color=fff`
     };
 
-    // Save to users list
     users.push(newUser);
-    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+    this.saveUsers(users);
+    this.setCurrentUser(this.toSafeUser(newUser));
 
-    // Log in the user
-    this.setCurrentUser(newUser);
-
-    return of(newUser);
+    return of(this.toSafeUser(newUser));
   }
 
   login(email: string, password: string): Observable<User> {
-    const users = this.getUsers();
-    const user = users.find(u => u.email === email && u.password === password);
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = this.allUsers$.value.find(
+      (candidate) => candidate.email.toLowerCase() === normalizedEmail && candidate.password === password
+    );
 
-    if (user) {
-      // Remove password from user object before setting current user (optional security practice for frontend state)
-      const { password, ...userWithoutPassword } = user;
-      const safeUser = user as User; // For simplicity in this mock, we keep it compatible
-
-      this.setCurrentUser(safeUser);
-      return of(safeUser);
-    } else {
+    if (!user) {
       return throwError(() => new Error('Invalid email or password'));
     }
+
+    if (user.status === 'Suspended') {
+      return throwError(() => new Error('Your account is suspended. Please contact support.'));
+    }
+
+    const safeUser = this.toSafeUser(user);
+    this.setCurrentUser(safeUser);
+
+    return of(safeUser);
   }
 
-  logout() {
+  logout(): void {
     localStorage.removeItem(this.CURRENT_USER_KEY);
     this.currentUserSubject.next(null);
+  }
+
+  toggleUserStatus(userId: string): void {
+    const users: User[] = this.allUsers$.value.map((user): User => {
+      if (user.id !== userId) {
+        return user;
+      }
+
+      const toggledStatus: UserStatus = user.status === 'Active' ? 'Suspended' : 'Active';
+
+      return {
+        ...user,
+        status: toggledStatus
+      };
+    });
+
+    this.saveUsers(users);
+
+    const currentUser = this.currentUserValue;
+    if (!currentUser) {
+      return;
+    }
+
+    const updatedCurrent = users.find((user) => user.id === currentUser.id);
+    if (!updatedCurrent) {
+      return;
+    }
+
+    const safeUpdatedCurrent = this.toSafeUser(updatedCurrent);
+
+    if (safeUpdatedCurrent.status === 'Suspended') {
+      this.logout();
+      return;
+    }
+
+    this.setCurrentUser(safeUpdatedCurrent);
   }
 
   updateUser(updatedData: Partial<User>): void {
@@ -84,7 +144,7 @@ export class AuthService {
       throw new Error('No user logged in');
     }
 
-    const users = this.getUsers();
+    const users = [...this.allUsers$.value];
     const index = users.findIndex((user) => user.id === currentUser.id);
 
     if (index === -1) {
@@ -92,15 +152,19 @@ export class AuthService {
     }
 
     const existingUser = users[index];
-    const updatedUser: User = { ...existingUser, ...updatedData };
+    const updatedUser = this.normalizeUser({
+      ...existingUser,
+      ...updatedData,
+      id: existingUser.id,
+      email: existingUser.email,
+      password: existingUser.password
+    });
+
     users[index] = updatedUser;
 
     try {
-      localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
-
-      const { password, ...safeUser } = updatedUser;
-      localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(safeUser));
-      this.currentUserSubject.next(safeUser as User);
+      this.saveUsers(users);
+      this.setCurrentUser(this.toSafeUser(updatedUser));
     } catch {
       throw new Error('Unable to save profile changes. The selected image may be too large.');
     }
@@ -108,6 +172,7 @@ export class AuthService {
 
   updateProfile(updatedData: Partial<User>): Observable<User> {
     const currentUser = this.currentUserValue;
+
     if (!currentUser) {
       return throwError(() => new Error('No user logged in'));
     }
@@ -124,32 +189,83 @@ export class AuthService {
 
   changePassword(currentPassword: string, newPassword: string): Observable<boolean> {
     const currentUser = this.currentUserValue;
-    if (!currentUser) return throwError(() => new Error('No user logged in'));
 
-    const users = this.getUsers();
-    const index = users.findIndex(u => u.id === currentUser.id);
+    if (!currentUser) {
+      return throwError(() => new Error('No user logged in'));
+    }
 
-    if (index !== -1) {
-      const user = users[index];
-      if (user.password !== currentPassword) {
-        return throwError(() => new Error('Incorrect current password'));
+    const users = [...this.allUsers$.value];
+    const index = users.findIndex((user) => user.id === currentUser.id);
+
+    if (index === -1) {
+      return throwError(() => new Error('User not found'));
+    }
+
+    const user = users[index];
+
+    if (user.password !== currentPassword) {
+      return throwError(() => new Error('Incorrect current password'));
+    }
+
+    users[index] = {
+      ...user,
+      password: newPassword
+    };
+
+    this.saveUsers(users);
+
+    return of(true);
+  }
+
+  private loadUsersFromStorage(): User[] {
+    const usersJson = localStorage.getItem(this.USERS_KEY);
+
+    if (!usersJson) {
+      return [];
+    }
+
+    try {
+      const parsed = JSON.parse(usersJson) as Partial<User>[];
+
+      if (!Array.isArray(parsed)) {
+        return [];
       }
 
-      user.password = newPassword;
-      users[index] = user;
-      localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
-      return of(true);
+      return parsed.map((user) => this.normalizeUser(user));
+    } catch {
+      return [];
     }
-    return throwError(() => new Error('User not found'));
   }
 
-  private getUsers(): User[] {
-    const usersJson = localStorage.getItem(this.USERS_KEY);
-    return usersJson ? JSON.parse(usersJson) : [];
+  private saveUsers(users: User[]): void {
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+    this.allUsers$.next(users);
   }
 
-  private setCurrentUser(user: User) {
+  private setCurrentUser(user: User): void {
     localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
     this.currentUserSubject.next(user);
+  }
+
+  private normalizeUser(user: Partial<User>): User {
+    const firstName = (user.firstName || '').trim();
+    const lastName = (user.lastName || '').trim();
+
+    return {
+      id: user.id || Math.random().toString(36).substr(2, 9),
+      firstName,
+      lastName,
+      email: (user.email || '').trim().toLowerCase(),
+      status: user.status === 'Suspended' ? 'Suspended' : 'Active',
+      registrationDate: user.registrationDate || new Date().toISOString(),
+      phone: user.phone,
+      avatarUrl: user.avatarUrl || `https://ui-avatars.com/api/?name=${firstName || 'User'}+${lastName || 'Account'}&background=20a04b&color=fff`,
+      password: user.password
+    };
+  }
+
+  private toSafeUser(user: User): User {
+    const { password, ...safeUser } = user;
+    return safeUser as User;
   }
 }

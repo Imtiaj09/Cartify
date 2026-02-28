@@ -4,11 +4,6 @@
       <h4 class="fw-bold mb-0">Users</h4>
       <p class="text-muted mb-0 mt-1">Customer directory and account management</p>
     </div>
-
-    <button type="button" class="btn btn-success d-inline-flex align-items-center" (click)="exportUserList()">
-      <i class="bi bi-download me-2"></i>
-      Export User List
-    </button>
   </div>
 
   <div class="row g-4 mb-4">
@@ -47,8 +42,8 @@
             <i class="bi bi-person-x-fill"></i>
           </div>
           <div class="ms-3">
-            <h6 class="card-title text-muted mb-1">Banned Accounts</h6>
-            <p class="card-text fw-bold fs-4 mb-0">{{ bannedUsers }}</p>
+            <h6 class="card-title text-muted mb-1">Suspended Users</h6>
+            <p class="card-text fw-bold fs-4 mb-0">{{ suspendedUsers }}</p>
           </div>
         </div>
       </div>
@@ -80,8 +75,7 @@
           <select id="statusFilter" class="form-select" [(ngModel)]="selectedStatus" (ngModelChange)="onFilterChange()">
             <option value="All">All Statuses</option>
             <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-            <option value="Banned">Banned</option>
+            <option value="Suspended">Suspended</option>
           </select>
         </div>
       </div>
@@ -96,12 +90,11 @@
 
     <div class="card-body p-0">
       <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
+        <table class="table table-hover align-middle mb-0 users-table">
           <thead>
             <tr>
               <th scope="col" class="ps-4">User</th>
-              <th scope="col">Contact Info</th>
-              <th scope="col">Orders</th>
+              <th scope="col">Role</th>
               <th scope="col">Joined Date</th>
               <th scope="col">Status</th>
               <th scope="col" class="text-end pe-4">Actions</th>
@@ -109,104 +102,51 @@
           </thead>
 
           <tbody>
-            <tr *ngFor="let user of paginatedUsers; trackBy: trackByUserId">
+            <tr *ngFor="let user of filteredUsers; trackBy: trackByUserId">
               <td class="ps-4">
-                <div class="d-flex align-items-center">
-                  <div class="avatar-badge me-3">{{ getInitials(user.name) }}</div>
+                <div class="d-flex align-items-center gap-3">
+                  <img
+                    [src]="user.avatarUrl || fallbackAvatarUrl"
+                    alt="User Avatar"
+                    class="user-avatar rounded-circle"
+                    width="40"
+                    height="40"
+                  >
                   <div>
-                    <p class="fw-bold mb-0">{{ user.name }}</p>
+                    <p class="fw-bold mb-0">{{ user.firstName }} {{ user.lastName }}</p>
                     <small class="text-muted">{{ user.email }}</small>
                   </div>
                 </div>
               </td>
 
               <td>
-                <p class="mb-0">{{ user.phone }}</p>
-                <small class="text-muted">{{ user.address }}</small>
+                <span class="text-muted fw-semibold">Customer</span>
               </td>
 
-              <td>
-                <span class="badge bg-light text-dark border fw-semibold">{{ user.totalOrders }}</span>
-              </td>
-
-              <td>{{ user.joinedDate | date: 'dd MMM yyyy' }}</td>
+              <td>{{ user.registrationDate | date: 'dd MMM yyyy' }}</td>
 
               <td>
-                <button
-                  type="button"
-                  class="btn btn-sm status-toggle-btn"
-                  [ngClass]="getStatusButtonClass(user.status)"
-                  (click)="toggleStatus(user.id)"
-                >
-                  <i class="bi bi-arrow-repeat me-1"></i>
+                <span class="badge rounded-pill" [ngClass]="user.status === 'Active' ? 'bg-success' : 'bg-danger'">
                   {{ user.status }}
-                </button>
+                </span>
               </td>
 
               <td class="text-end pe-4">
                 <button
                   type="button"
-                  class="btn btn-outline-secondary square-btn me-2"
-                  aria-label="View profile"
-                  (click)="viewProfile(user)"
-                >
-                  <i class="bi bi-eye"></i>
-                </button>
-
-                <button
-                  type="button"
-                  class="btn btn-outline-secondary square-btn me-2"
-                  aria-label="Edit user"
-                  (click)="editUser(user)"
-                >
-                  <i class="bi bi-pencil"></i>
-                </button>
-
-                <button
-                  type="button"
-                  class="btn btn-outline-secondary square-btn"
-                  aria-label="Suspend user"
-                  (click)="suspendUser(user)"
-                >
-                  <i class="bi bi-person-slash text-danger"></i>
+                  class="btn btn-sm"
+                  [ngClass]="getActionButtonClass(user)"
+                  (click)="onToggleStatus(user.id)">
+                  {{ getActionLabel(user) }}
                 </button>
               </td>
             </tr>
 
             <tr *ngIf="!filteredUsers.length">
-              <td colspan="6" class="text-center py-4 text-muted">No users found for the selected filters.</td>
+              <td colspan="5" class="text-center py-4 text-muted">No users found for the selected filters.</td>
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
-
-    <div class="card-footer bg-white border-0 py-3" *ngIf="hasMultiplePages()">
-      <div class="d-flex justify-content-between align-items-center">
-        <button class="btn btn-outline-secondary btn-sm"
-          (click)="prevPage()"
-          [disabled]="currentPage === 1">
-          <i class="bi bi-arrow-left"></i> Previous
-        </button>
-
-        <div class="pagination-nums">
-          <ng-container *ngFor="let page of paginationPages">
-            <button *ngIf="page !== '...'"
-              type="button"
-              class="btn btn-sm me-1"
-              [ngClass]="page === currentPage ? 'btn-success' : 'btn-outline-light text-dark'"
-              (click)="goToPage(page)">
-              {{ page }}
-            </button>
-            <span *ngIf="page === '...'" class="me-1">...</span>
-          </ng-container>
-        </div>
-
-        <button class="btn btn-outline-secondary btn-sm"
-          (click)="nextPage()"
-          [disabled]="currentPage === totalPages">
-          Next <i class="bi bi-arrow-right"></i>
-        </button>
       </div>
     </div>
   </div>
