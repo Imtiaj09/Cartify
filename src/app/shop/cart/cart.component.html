@@ -114,7 +114,8 @@
                   <span class="h4 fw-bold mb-0">৳{{ cartTotal | number: '1.0-0' }}</span>
                 </div>
 
-                <button type="button" class="btn btn-success w-100 rounded-pill py-2 fw-semibold checkout-btn">
+                <button type="button" class="btn btn-success w-100 rounded-pill py-2 fw-semibold checkout-btn"
+                        [disabled]="isEmpty" routerLink="/shop/checkout">
                   <i class="bi bi-shield-check me-2" aria-hidden="true"></i>
                   Proceed to Checkout
                 </button>

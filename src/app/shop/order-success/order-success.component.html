@@ -1,0 +1,18 @@
+<div class="container text-center my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+          <h1 class="mt-3">Thank You for Your Purchase!</h1>
+          <p class="lead">Your order has been placed successfully.</p>
+          <p>Your Order ID is: <strong>{{ orderId }}</strong></p>
+          <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+            <button class="btn btn-primary me-md-2" routerLink="/shop/profile">View My Orders</button>
+            <button class="btn btn-outline-secondary" routerLink="/shop/home">Continue Shopping</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,1 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Brand Colors */
+.brand-green {
+  color: #0d8abc; /* Using the blue from the avatar background as brand color for now, or replace with actual green */
+}
+.brand-dark {
+  color: #333;
+}
+
+/* Bootstrap Overrides & Utilities */
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+.text-success {
+  color: #198754 !important; /* Bootstrap success green */
+}
+
+.btn-success {
+  background-color: #198754;
+  border-color: #198754;
+}
+
+.btn-success:hover {
+  background-color: #157347;
+  border-color: #146c43;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+  color: #198754;
+}
+
+.form-control:focus {
+  border-color: #198754;
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}

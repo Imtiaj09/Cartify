@@ -81,6 +81,20 @@
   transform: translateY(-1px);
 }
 
+/* Dropdown Styles */
+.dropdown-menu {
+  margin-top: 0.5rem !important;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.dropdown-item:active {
+  background-color: #198754;
+}
+
+.no-caret::after {
+  display: none;
+}
+
 .shop-nav {
   box-shadow: 0 4px 14px rgba(17, 24, 39, 0.06);
 }

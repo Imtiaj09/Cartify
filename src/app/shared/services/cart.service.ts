@@ -102,6 +102,10 @@ export class CartService {
     this.updateCartState(updatedItems);
   }
 
+  clearCart(): void {
+    this.updateCartState([]);
+  }
+
   private updateCartState(items: CartItem[]): void {
     this.cartItemsSubject.next(items);
     this.saveCartToStorage(items);

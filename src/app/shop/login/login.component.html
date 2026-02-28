@@ -1,0 +1,82 @@
+<div class="container-fluid min-vh-100">
+  <div class="row min-vh-100">
+    <!-- Left Column: Lifestyle Image -->
+    <div class="col-lg-6 d-none d-lg-block p-0 position-relative">
+      <div class="h-100 w-100" style="background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); background-size: cover; background-position: center;">
+        <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));"></div>
+        <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+          <h1 class="display-3 fw-bold">Cartify</h1>
+          <p class="lead">Your premium shopping destination</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Login Form -->
+    <div class="col-lg-6 col-12 d-flex align-items-center justify-content-center bg-white">
+      <div class="w-100 px-4 px-lg-5" style="max-width: 500px;">
+        <div class="text-center mb-5">
+          <h2 class="fw-bold mb-2">Welcome Back</h2>
+          <p class="text-muted">Please sign in to your account</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <!-- Email Input -->
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" formControlName="email"
+                   [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+            <label for="emailInput">Email address</label>
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+              <div *ngIf="f.email.errors.required">Email is required</div>
+              <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+            </div>
+          </div>
+
+          <!-- Password Input -->
+          <div class="form-floating mb-3 position-relative">
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="passwordInput" placeholder="Password" formControlName="password"
+                   [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+            <label for="passwordInput">Password</label>
+            <button type="button" class="btn btn-link position-absolute end-0 top-50 translate-middle-y text-decoration-none text-muted pe-3"
+                    (click)="togglePasswordVisibility()">
+              <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+            </button>
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+              <div *ngIf="f.password.errors.required">Password is required</div>
+              <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+            </div>
+          </div>
+
+          <!-- Error Message -->
+          <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{ error }}</div>
+
+          <!-- Submit Button -->
+          <div class="d-grid gap-2 mt-4">
+            <button type="submit" class="btn btn-success btn-lg text-white" [disabled]="loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Sign In
+            </button>
+          </div>
+
+          <!-- Social Login -->
+          <div class="text-center my-4">
+            <p class="text-muted mb-0">Or continue with</p>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="button" class="btn btn-outline-dark">
+              <i class="bi bi-google me-2"></i> Google
+            </button>
+            <button type="button" class="btn btn-outline-primary">
+              <i class="bi bi-facebook me-2"></i> Facebook
+            </button>
+          </div>
+
+          <!-- Register Link -->
+          <div class="text-center mt-4">
+            <p class="text-muted">Don't have an account? <a routerLink="/shop/register" class="text-success text-decoration-none fw-bold">Sign up</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
