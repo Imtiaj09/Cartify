@@ -1,44 +1,98 @@
-.card {
+.dashboard-page .card {
+  border-radius: 12px;
+}
+
+.kpi-card {
+  transition: transform 0.24s ease, box-shadow 0.24s ease;
   border: 1px solid #e9ecef;
-  border-radius: 0.5rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
-.bg-success-soft {
-  background-color: rgba(80, 165, 113, 0.1);
+.kpi-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 26px rgba(15, 23, 42, 0.12) !important;
 }
 
-.text-success {
-  color: #50a571 !important;
+.kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
 }
 
-.text-danger {
-  color: #dc3545 !important;
+.kpi-title {
+  color: #6c757d;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-weight: 600;
 }
 
-.text-primary {
-  color: #0d6efd !important;
+.kpi-header i {
+  font-size: 1.1rem;
+  color: #6c757d;
 }
 
-.report-metrics .metric {
-  padding-bottom: 0.5rem;
-  border-bottom: 3px solid transparent;
+.kpi-value {
+  font-weight: 700;
+  color: #212529;
 }
 
-.report-metrics .metric.active {
-  border-bottom-color: #50a571;
+.kpi-revenue {
+  background: linear-gradient(180deg, #ffffff 0%, #f4fbf7 100%);
 }
 
-.report-metrics .metric.active h6,
-.report-metrics .metric.active small {
-  color: #50a571;
+.kpi-orders {
+  background: linear-gradient(180deg, #ffffff 0%, #f4f8ff 100%);
 }
 
-.progress-bar.bg-purple {
-  background-color: #6f42c1;
+.kpi-pending {
+  background: linear-gradient(180deg, #ffffff 0%, #fffaf2 100%);
 }
 
-.form-check-input:checked {
-  background-color: #50a571;
-  border-color: #50a571;
+.kpi-customers {
+  background: linear-gradient(180deg, #ffffff 0%, #f7f5ff 100%);
+}
+
+.chart-wrap {
+  height: 320px;
+}
+
+.recent-orders-table thead th {
+  color: #198754;
+  font-weight: 600;
+  white-space: nowrap;
+  background-color: #eefbe7;
+}
+
+.status-badge {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* Match order-management status palette */
+.badge.bg-warning {
+  background-color: #ffc107 !important;
+}
+
+.badge.bg-info {
+  background-color: #0dcaf0 !important;
+}
+
+.badge.bg-success {
+  background-color: #198754 !important;
+}
+
+.badge.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+@media (max-width: 991.98px) {
+  .chart-wrap {
+    height: 260px;
+  }
+
+  .recent-orders-table th,
+  .recent-orders-table td {
+    white-space: nowrap;
+  }
 }

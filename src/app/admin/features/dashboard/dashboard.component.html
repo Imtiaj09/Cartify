@@ -1,119 +1,65 @@
-<div class="container-fluid">
+<div class="container-fluid dashboard-page">
+  <div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6">
+      <div class="card border-0 shadow-sm h-100 kpi-card kpi-revenue">
+        <div class="card-body">
+          <div class="kpi-header">
+            <span class="kpi-title">Total Revenue</span>
+            <i class="bi bi-cash-stack"></i>
+          </div>
+          <h3 class="kpi-value mb-0">{{ totalRevenue | currency:'BDT':'symbol':'1.0-0' }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+      <div class="card border-0 shadow-sm h-100 kpi-card kpi-orders">
+        <div class="card-body">
+          <div class="kpi-header">
+            <span class="kpi-title">Total Orders</span>
+            <i class="bi bi-bag-check"></i>
+          </div>
+          <h3 class="kpi-value mb-0">{{ totalOrders }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+      <div class="card border-0 shadow-sm h-100 kpi-card kpi-pending">
+        <div class="card-body">
+          <div class="kpi-header">
+            <span class="kpi-title">Pending Orders</span>
+            <i class="bi bi-hourglass-split"></i>
+          </div>
+          <h3 class="kpi-value mb-0">{{ pendingOrders }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+      <div class="card border-0 shadow-sm h-100 kpi-card kpi-customers">
+        <div class="card-body">
+          <div class="kpi-header">
+            <span class="kpi-title">Unique Customers</span>
+            <i class="bi bi-people"></i>
+          </div>
+          <h3 class="kpi-value mb-0">{{ uniqueCustomers }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="row g-4">
-    <!-- Top Row Cards -->
-    <div class="col-lg-4 col-md-6">
-      <div class="card h-100">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <h5 class="card-title">Total Sales</h5>
-              <small class="text-muted">Last 7 days</small>
-            </div>
-            <a href="#" class="text-muted"><i class="bi bi-three-dots-vertical"></i></a>
-          </div>
-          <h2 class="display-6 fw-bold my-3"><i class="fa-solid fa-bangladeshi-taka-sign"></i>350K</h2>
-          <div class="d-flex align-items-center mb-3">
-            <span class="badge bg-success-soft text-success me-2">
-              <i class="bi bi-arrow-up-short"></i> 10.4%
-            </span>
-            <small class="text-muted">Previous 7days (<i class="fa-solid fa-bangladeshi-taka-sign"></i>235)</small>
-          </div>
-          <a href="#" class="btn btn-outline-secondary btn-sm">Details</a>
+    <div class="col-xl-7">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-header bg-white border-0 pt-4 px-4">
+          <h5 class="fw-bold mb-1">Revenue Trend</h5>
+          <small class="text-muted">Daily revenue from non-cancelled orders</small>
         </div>
-      </div>
-    </div>
-
-    <div class="col-lg-4 col-md-6">
-      <div class="card h-100">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <h5 class="card-title">Total Orders</h5>
-              <small class="text-muted">Last 7 days</small>
-            </div>
-            <a href="#" class="text-muted"><i class="bi bi-three-dots-vertical"></i></a>
-          </div>
-          <h2 class="display-6 fw-bold my-3">100</h2>
-          <div class="d-flex align-items-center mb-3">
-            <span class="badge bg-success-soft text-success me-2">
-              <i class="bi bi-arrow-up-short"></i> 14.4%
-            </span>
-            <small class="text-muted">Previous 7days (7.6k)</small>
-          </div>
-          <a href="#" class="btn btn-outline-secondary btn-sm">Details</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-4 col-md-12">
-      <div class="card h-100">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start">
-            <div>
-              <h5 class="card-title">Pending & Canceled</h5>
-              <small class="text-muted">Last 7 days</small>
-            </div>
-            <a href="#" class="text-muted"><i class="bi bi-three-dots-vertical"></i></a>
-          </div>
-          <div class="row my-3">
-            <div class="col-6 border-end">
-              <h4 class="fw-bold">509</h4>
-              <small class="text-muted">Pending</small>
-              <div class="text-success small mt-1">
-                <i class="bi bi-person-fill"></i> user 204
-              </div>
-            </div>
-            <div class="col-6">
-              <h4 class="fw-bold text-danger">94</h4>
-              <small class="text-muted">Canceled</small>
-              <div class="text-danger small mt-1">
-                <i class="bi bi-arrow-down-short"></i> 14.4%
-              </div>
-            </div>
-          </div>
-          <a href="#" class="btn btn-outline-secondary btn-sm">Details</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom Row Cards -->
-    <div class="col-lg-8">
-      <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center bg-white">
-          <h5 class="card-title mb-0">Report for this week</h5>
-          <div class="d-flex align-items-center">
-            <div class="form-check form-switch me-3">
-              <input class="form-check-input" type="checkbox" id="weekToggle">
-              <label class="form-check-label" for="weekToggle">Last week</label>
-            </div>
-            <a href="#" class="text-muted"><i class="bi bi-three-dots-vertical"></i></a>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="report-metrics d-flex justify-content-around text-center mb-4">
-            <div class="metric active">
-              <h6>52</h6>
-              <small class="text-muted">Customers</small>
-            </div>
-            <div class="metric">
-              <h6>200</h6>
-              <small class="text-muted">Total Products</small>
-            </div>
-            <div class="metric">
-              <h6>100</h6>
-              <small class="text-muted">Stock Products</small>
-            </div>
-            <div class="metric">
-              <h6>100</h6>
-              <small class="text-muted">Out of Stock</small>
-            </div>
-            <div class="metric">
-              <h6><i class="fa-solid fa-bangladeshi-taka-sign"></i>250k</h6>
-              <small class="text-muted">Revenue</small>
-            </div>
-          </div>
-          <div style="height: 300px;">
-            <canvas baseChart
+        <div class="card-body pt-2">
+          <div class="chart-wrap">
+            <canvas
+              baseChart
               [datasets]="lineChartData"
               [labels]="lineChartLabels"
               [options]="lineChartOptions"
@@ -125,74 +71,44 @@
       </div>
     </div>
 
-    <div class="col-lg-4">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start">
-            <h5 class="card-title text-primary">Users in last 30 minutes</h5>
-            <a href="#" class="text-muted"><i class="bi bi-three-dots-vertical"></i></a>
-          </div>
-          <h2 class="display-6 fw-bold my-3">21</h2>
-          <small class="text-muted">Users per minute</small>
-          <div style="height: 50px;" class="my-3">
-            <canvas baseChart
-              [datasets]="barChartData"
-              [labels]="barChartLabels"
-              [options]="barChartOptions"
-              [legend]="barChartLegend"
-              [chartType]="barChartType">
-            </canvas>
-          </div>
+    <div class="col-xl-5">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-header bg-white border-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+          <h5 class="fw-bold mb-0">Recent Orders</h5>
+          <span class="text-muted small">Latest 5</span>
+        </div>
 
-          <h6 class="mt-4">Sales by Country</h6>
-          <ul class="list-unstyled">
-            <li class="mb-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                  <img src="https://flagcdn.com/w20/us.png" class="me-2" alt="USA Flag">
-                  <span>USA</span>
-                </div>
-                <div class="d-flex align-items-center">
-                  <span class="me-3"><i class="fa-solid fa-bangladeshi-taka-sign"></i>12.5k</span>
-                  <span class="text-success small"><i class="bi bi-arrow-up-short"></i> 12%</span>
-                </div>
-              </div>
-              <div class="progress mt-1" style="height: 8px;">
-                <div class="progress-bar bg-purple" role="progressbar" style="width: 75%"></div>
-              </div>
-            </li>
-            <li class="mb-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                  <img src="https://flagcdn.com/w20/br.png" class="me-2" alt="Brazil Flag">
-                  <span>Brazil</span>
-                </div>
-                <div class="d-flex align-items-center">
-                  <span class="me-3"><i class="fa-solid fa-bangladeshi-taka-sign"></i>10.2k</span>
-                  <span class="text-danger small"><i class="bi bi-arrow-down-short"></i> 8%</span>
-                </div>
-              </div>
-              <div class="progress mt-1" style="height: 8px;">
-                <div class="progress-bar bg-purple" role="progressbar" style="width: 60%"></div>
-              </div>
-            </li>
-            <li class="mb-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                  <img src="https://flagcdn.com/w20/au.png" class="me-2" alt="Australia Flag">
-                  <span>Australia</span>
-                </div>
-                <div class="d-flex align-items-center">
-                  <span class="me-3"><i class="fa-solid fa-bangladeshi-taka-sign"></i>8.1k</span>
-                  <span class="text-success small"><i class="bi bi-arrow-up-short"></i> 15%</span>
-                </div>
-              </div>
-              <div class="progress mt-1" style="height: 8px;">
-                <div class="progress-bar bg-purple" role="progressbar" style="width: 45%"></div>
-              </div>
-            </li>
-          </ul>
-          <a href="#" class="btn btn-outline-secondary w-100 mt-3">View Insight</a>
+        <div class="card-body pt-2">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 recent-orders-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date</th>
+                  <th>Customer</th>
+                  <th class="text-end">Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let order of recentOrders">
+                  <td class="fw-semibold">{{ order.id }}</td>
+                  <td>{{ order.date | date:'mediumDate' }}</td>
+                  <td>{{ order.customerDetails.name }}</td>
+                  <td class="text-end fw-semibold">{{ order.total | currency:'BDT':'symbol':'1.2-2' }}</td>
+                  <td>
+                    <span class="status-badge" [ngClass]="getStatusBadgeClass(order.status)">
+                      {{ order.status }}
+                    </span>
+                  </td>
+                </tr>
+
+                <tr *ngIf="recentOrders.length === 0">
+                  <td colspan="5" class="text-center text-muted py-4">No recent orders found.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
