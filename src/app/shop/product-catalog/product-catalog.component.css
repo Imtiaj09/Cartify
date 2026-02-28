@@ -156,6 +156,7 @@
   width: 100%;
   aspect-ratio: 4 / 5;
   background: linear-gradient(135deg, #f5f8fb 0%, #eaf0f6 100%);
+  cursor: pointer;
 }
 
 .catalog-image {
@@ -188,6 +189,21 @@
   transform: scale(1.03);
 }
 
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.catalog-image-stack:hover .gallery-overlay {
+  opacity: 1;
+}
+
 .catalog-wishlist {
   width: 34px;
   height: 34px;
@@ -197,6 +213,7 @@
   border: 0;
   color: #6c757d;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+  z-index: 5;
 }
 
 .catalog-wishlist:hover {
@@ -210,6 +227,7 @@
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
+  z-index: 5;
 }
 
 .catalog-badge-sale {
@@ -342,6 +360,55 @@
   transform: translateX(0);
 }
 
+/* Lightbox Gallery Modal */
+.gallery-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.gallery-modal-content {
+  width: 100%;
+  max-width: 900px;
+  position: relative;
+}
+
+.gallery-image {
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 0.5rem;
+}
+
+.gallery-close-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1060;
+  filter: invert(1);
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 5%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  background-size: 50%;
+}
+
 @media (max-width: 1199.98px) {
   .catalog-description {
     min-height: 3.3rem;
@@ -379,5 +446,9 @@
 
   .mobile-filter-panel {
     width: 100%;
+  }
+
+  .gallery-image {
+    max-height: 60vh;
   }
 }

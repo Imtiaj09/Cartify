@@ -101,7 +101,7 @@
                       <i class="bi bi-heart" aria-hidden="true"></i>
                     </button>
 
-                    <div class="catalog-image-stack rounded-4 overflow-hidden" [class.has-hover]="product.images.length > 1">
+                    <div class="catalog-image-stack rounded-4 overflow-hidden" [class.has-hover]="product.images.length > 1" (click)="openGallery(product)">
                       <img class="catalog-image catalog-image-primary" [src]="product.images[0]" [alt]="product.name" loading="lazy" />
                       <img
                         *ngIf="product.images.length > 1"
@@ -110,6 +110,10 @@
                         [alt]="product.name + ' alternate view'"
                         loading="lazy"
                       />
+
+                      <div class="gallery-overlay">
+                        <i class="bi bi-arrows-angle-expand fs-4 text-white"></i>
+                      </div>
                     </div>
                   </div>
 
@@ -271,3 +275,26 @@
     <button type="button" class="btn btn-success rounded-pill px-4" (click)="clearAllFilters()">Reset Filters</button>
   </div>
 </ng-template>
+
+<!-- Lightbox Gallery Modal -->
+<div class="gallery-modal-overlay" *ngIf="isGalleryModalOpen" (click)="closeGallery()">
+  <button type="button" class="btn-close btn-close-white gallery-close-btn" aria-label="Close" (click)="closeGallery()"></button>
+
+  <div class="gallery-modal-content" (click)="$event.stopPropagation()">
+    <div id="lightboxCarousel" class="carousel slide" data-bs-ride="false" *ngIf="selectedGalleryProduct">
+      <div class="carousel-inner">
+        <div class="carousel-item" *ngFor="let image of selectedGalleryProduct.images; let i = index" [class.active]="i === 0">
+          <img [src]="image" class="d-block w-100 gallery-image" [alt]="selectedGalleryProduct.name">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#lightboxCarousel" data-bs-slide="prev" *ngIf="selectedGalleryProduct.images.length > 1">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#lightboxCarousel" data-bs-slide="next" *ngIf="selectedGalleryProduct.images.length > 1">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</div>

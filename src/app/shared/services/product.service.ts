@@ -19,6 +19,7 @@ export interface Product {
   rating?: number;
   reviewCount?: number;
   badge?: ProductBadge;
+  salesCount?: number;
 }
 
 export type NewProductInput = Omit<Product, 'id' | 'createdAt'> & Partial<Pick<Product, 'createdAt'>>;
@@ -173,7 +174,8 @@ export class ProductService {
       createdAt: product.createdAt || new Date().toISOString(),
       rating: typeof product.rating === 'number' ? product.rating : 4,
       reviewCount: typeof product.reviewCount === 'number' ? product.reviewCount : 0,
-      badge: this.normalizeBadge(product.badge)
+      badge: this.normalizeBadge(product.badge),
+      salesCount: typeof product.salesCount === 'number' ? product.salesCount : 0
     };
   }
 
@@ -253,7 +255,8 @@ export class ProductService {
         createdAt: '2026-02-15T08:30:00Z',
         rating: 5,
         reviewCount: 182,
-        badge: 'Hot'
+        badge: 'Hot',
+        salesCount: 1200
       },
       {
         id: 2,
@@ -274,7 +277,8 @@ export class ProductService {
         createdAt: '2026-02-10T06:20:00Z',
         rating: 5,
         reviewCount: 264,
-        badge: 'Sale'
+        badge: 'Sale',
+        salesCount: 850
       },
       {
         id: 3,
@@ -295,7 +299,8 @@ export class ProductService {
         createdAt: '2026-01-27T13:00:00Z',
         rating: 4,
         reviewCount: 88,
-        badge: null
+        badge: null,
+        salesCount: 320
       },
       {
         id: 4,
@@ -316,7 +321,8 @@ export class ProductService {
         createdAt: '2026-02-03T10:40:00Z',
         rating: 4,
         reviewCount: 136,
-        badge: 'Sale'
+        badge: 'Sale',
+        salesCount: 540
       },
       {
         id: 5,
@@ -337,7 +343,8 @@ export class ProductService {
         createdAt: '2026-01-22T09:10:00Z',
         rating: 4,
         reviewCount: 74,
-        badge: null
+        badge: null,
+        salesCount: 210
       },
       {
         id: 6,
@@ -358,7 +365,8 @@ export class ProductService {
         createdAt: '2026-02-06T11:55:00Z',
         rating: 4,
         reviewCount: 194,
-        badge: 'Hot'
+        badge: 'Hot',
+        salesCount: 980
       },
       {
         id: 7,
@@ -379,7 +387,8 @@ export class ProductService {
         createdAt: '2026-01-29T07:05:00Z',
         rating: 5,
         reviewCount: 121,
-        badge: 'Sale'
+        badge: 'Sale',
+        salesCount: 450
       },
       {
         id: 8,
@@ -400,7 +409,8 @@ export class ProductService {
         createdAt: '2026-01-18T14:30:00Z',
         rating: 4,
         reviewCount: 83,
-        badge: null
+        badge: null,
+        salesCount: 670
       },
       {
         id: 9,
@@ -421,7 +431,8 @@ export class ProductService {
         createdAt: '2026-02-12T16:45:00Z',
         rating: 5,
         reviewCount: 91,
-        badge: 'Hot'
+        badge: 'Hot',
+        salesCount: 340
       },
       {
         id: 10,
@@ -442,7 +453,8 @@ export class ProductService {
         createdAt: '2026-02-08T12:20:00Z',
         rating: 5,
         reviewCount: 146,
-        badge: 'Sale'
+        badge: 'Sale',
+        salesCount: 760
       }
     ];
   }

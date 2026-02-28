@@ -143,7 +143,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private getBestSellingProducts(products: Product[]): Product[] {
-    const bestSelling = products.filter((p) => p.discountedPrice !== null);
+    const bestSelling = products
+      .filter((p) => (p.salesCount || 0) > 0)
+      .sort((a, b) => (b.salesCount || 0) - (a.salesCount || 0));
+
     return this.fillWithFallback(bestSelling, 4);
   }
 

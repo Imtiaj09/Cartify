@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Product, ProductBadge, ProductService } from '../../shared/services/product.service';
 
-type SortBy = 'newest' | 'priceLowToHigh' | 'priceHighToLow';
+type SortBy = 'newest' | 'priceLowToHigh' | 'priceHighToLow' | 'bestSelling';
 
 interface SortOption {
   value: SortBy;
@@ -24,7 +25,8 @@ export class ProductCatalogComponent implements OnInit {
   readonly sortOptions: SortOption[] = [
     { value: 'newest', label: 'Newest' },
     { value: 'priceLowToHigh', label: 'Price: Low to High' },
-    { value: 'priceHighToLow', label: 'Price: High to Low' }
+    { value: 'priceHighToLow', label: 'Price: High to Low' },
+    { value: 'bestSelling', label: 'Best Selling' }
   ];
   readonly priceMin = 1000;
   readonly priceStep = 500;
@@ -52,6 +54,9 @@ export class ProductCatalogComponent implements OnInit {
   visibleCount = this.loadStep;
   isMobileFiltersOpen = false;
 
+  selectedGalleryProduct: Product | null = null;
+  isGalleryModalOpen = false;
+
   private readonly colorNameMap: Record<string, string> = {
     '#aaddbb': 'Mint',
     '#ffb7b2': 'Rose',
@@ -60,10 +65,30 @@ export class ProductCatalogComponent implements OnInit {
     '#4a4a4a': 'Charcoal'
   };
 
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly productService: ProductService,
+    private readonly route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
+    this.route.queryParams.subscribe((params) => {
+      if (params['category']) {
+        const category = params['category'];
+        if (!this.selectedCategories.includes(category)) {
+          this.selectedCategories = [category];
+        }
+      }
+
+      if (params['sort']) {
+        const sortParam = params['sort'] as SortBy;
+        if (this.sortOptions.some((option) => option.value === sortParam)) {
+          this.sortBy = sortParam;
+        }
+      }
+
+      this.resetVisibleCount();
+    });
   }
 
   get filteredProducts(): Product[] {
@@ -96,6 +121,10 @@ export class ProductCatalogComponent implements OnInit {
 
       if (this.sortBy === 'priceHighToLow') {
         return this.getEffectivePrice(b) - this.getEffectivePrice(a);
+      }
+
+      if (this.sortBy === 'bestSelling') {
+        return (b.salesCount || 0) - (a.salesCount || 0);
       }
 
       return this.getProductCreatedAtTimestamp(b) - this.getProductCreatedAtTimestamp(a);
@@ -260,6 +289,16 @@ export class ProductCatalogComponent implements OnInit {
     }
 
     return null;
+  }
+
+  openGallery(product: Product): void {
+    this.selectedGalleryProduct = product;
+    this.isGalleryModalOpen = true;
+  }
+
+  closeGallery(): void {
+    this.isGalleryModalOpen = false;
+    this.selectedGalleryProduct = null;
   }
 
   trackByProductId(index: number, product: Product): number {
