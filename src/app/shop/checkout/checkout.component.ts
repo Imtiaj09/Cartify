@@ -72,6 +72,11 @@ export class CheckoutComponent implements OnInit {
           userId: this.currentUser.id,
           items: items,
           shippingDetails: this.checkoutForm.value,
+          customerDetails: {
+            name: `${this.checkoutForm.value.firstName} ${this.checkoutForm.value.lastName}`.trim(),
+            email: this.currentUser.email || '',
+            address: `${this.checkoutForm.value.address}, ${this.checkoutForm.value.city}, ${this.checkoutForm.value.postalCode}`
+          },
           paymentMethod: this.checkoutForm.value.paymentMethod,
           subtotal: subtotal,
           shippingFee: this.shippingFee,

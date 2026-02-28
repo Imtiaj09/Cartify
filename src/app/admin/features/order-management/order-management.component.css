@@ -1,495 +1,225 @@
-.summary-card {
-  border: none;
-  border-radius: 0.5rem;
+.order-management-page .summary-card {
+  border-radius: 12px;
 }
 
-.icon-circle {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-}
-
-.bg-primary-soft { background-color: rgba(13, 110, 253, 0.1); }
-.bg-warning-soft { background-color: rgba(255, 193, 7, 0.1); }
-.bg-success-soft { background-color: rgba(25, 135, 84, 0.1); }
-.bg-danger-soft { background-color: rgba(220, 53, 69, 0.1); }
-
-.summary-card .card-title {
+.order-management-page .summary-label {
   color: #6c757d;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
-.card {
-  border-radius: 0.5rem;
+.order-management-page .summary-value {
+  font-weight: 700;
+  color: #212529;
 }
 
-.input-group .form-control {
-  box-shadow: none;
+.order-management-page .bg-primary-soft {
+  background-color: rgba(13, 110, 253, 0.1);
 }
 
-.square-btn {
-  width: 38px;
-  height: 38px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.order-management-page .bg-warning-soft {
+  background-color: rgba(255, 193, 7, 0.12);
 }
 
-.btn-group .btn.active {
+.order-management-page .bg-info-soft {
+  background-color: rgba(13, 202, 240, 0.12);
+}
+
+.order-management-page .bg-indigo-soft {
+  background-color: rgba(111, 66, 193, 0.12);
+}
+
+.order-management-page .bg-success-soft {
+  background-color: rgba(25, 135, 84, 0.12);
+}
+
+.order-management-page .bg-danger-soft {
+  background-color: rgba(220, 53, 69, 0.12);
+}
+
+.order-management-page .btn-group .btn.active {
   background-color: #50a571;
-  color: white;
+  color: #ffffff;
   border-color: #50a571;
 }
 
-.table-hover tbody tr:hover {
-  background-color: #f8f9fa;
+.order-management-page .search-group {
+  max-width: 360px;
+  min-width: 240px;
 }
 
-.table th {
-  font-weight: 500;
-  color: #6c757d;
-}
-
-.product-img {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 0.25rem;
-}
-
-.status-btn {
-  min-width: 110px;
-}
-
-.status-btn:focus {
+.order-management-page .search-group .form-control {
   box-shadow: none;
 }
 
-.dropdown-item {
-  background: transparent;
-  border: 0;
-  width: 100%;
-  text-align: left;
-}
-
-.erp-input {
-  border: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-  border-radius: 0;
-  background-color: transparent;
-  box-shadow: none !important;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.erp-input:hover {
-  border-bottom-color: #ced4da;
-  background-color: #ffffff;
-}
-
-.erp-input:focus {
-  border-color: transparent;
-  border-bottom-color: #50a571;
-  background-color: #ffffff;
-}
-
-.price-input-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.35rem;
-  min-width: 170px;
-}
-
-.price-symbol {
-  color: #6c757d;
-  font-size: 0.875rem;
-}
-
-.price-input {
-  max-width: 120px;
-  min-width: 90px;
-}
-
-.price-input::-webkit-outer-spin-button,
-.price-input::-webkit-inner-spin-button,
-.quantity-input::-webkit-outer-spin-button,
-.quantity-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.price-input[type=number],
-.quantity-input[type=number] {
-  -moz-appearance: textfield;
-}
-
-.manual-order-modal {
-  max-width: 1160px;
-}
-
-.manual-order-left {
-  border-right: 1px solid #e9ecef;
-}
-
-.manual-order-right {
-  background-color: #f8f9fa;
-}
-
-.manual-section {
-  border: 1px solid #e9ecef;
-  border-radius: 0.75rem;
-  padding: 1rem;
-  background-color: #ffffff;
-}
-
-.section-title {
+.order-management-page .order-table th {
   font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: #495057;
+  color: #198754;
+  white-space: nowrap;
+  background-color: #eefbe7;
 }
 
-.manual-product-table thead th {
-  font-weight: 600;
-  color: #6c757d;
-  font-size: 0.85rem;
+.order-management-page .product-cell {
+  min-width: 220px;
 }
 
-.manual-product-table tbody td {
-  vertical-align: middle;
+.order-management-page .product-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 0.35rem;
+  border: 1px solid #e5e7eb;
 }
 
-.quantity-input {
-  max-width: 84px;
+.order-management-page .product-name {
+  max-width: 170px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.totals-list {
-  background-color: #ffffff;
+.order-management-page .status-select {
+  min-width: 145px;
 }
 
-.totals-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid #edf0f2;
-}
-
-.totals-row:last-child {
-  border-bottom: 0;
-}
-
-.payment-terms-dropdown .btn {
-  text-align: left;
-}
-
-.totals-row .text-muted {
-  font-size: 0.8rem;
-}
-
-.meta-card {
-  background-color: #ffffff;
-  border: 1px solid #e9ecef;
-  border-radius: 0.75rem;
-  padding: 0.85rem;
-}
-
-.meta-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: #495057;
-}
-
-.edit-btn {
-  color: #6c757d !important;
-}
-
-.edit-btn:hover {
-  color: #50a571 !important;
-}
-
-.cash-memo-modal {
+.invoice-modal .modal-dialog {
   max-width: 1080px;
 }
 
-.cash-memo-modal-body {
-  background: #f4f6f9;
+.invoice-body {
+  background: #f5f7fa;
 }
 
-.cash-memo-print-area {
-  padding: 0.35rem;
+.tax-invoice {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  color: #212529;
 }
 
-.cash-memo-sheet {
-  background-color: #ffffff;
-  border: 1px solid #dfe4ea;
-  border-radius: 0.9rem;
-  padding: 1.4rem;
-  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
-  color: #2f3542;
-}
-
-.cash-memo-header {
+.invoice-head {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 1rem;
+  border-bottom: 1px dashed #d1d5db;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
-  border-bottom: 1px dashed #d7dde6;
 }
 
-.cash-memo-brand {
-  color: #198754;
-  font-weight: 700;
+.invoice-logo {
   letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 0.8rem;
+  font-weight: 800;
+  color: #198754;
 }
 
-.memo-status-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 108px;
-  padding: 0.3rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
-
-.memo-status-chip.status-delivered {
-  color: #0f5132;
-  background: #d1e7dd;
-}
-
-.memo-status-chip.status-pending {
-  color: #664d03;
-  background: #fff3cd;
-}
-
-.memo-status-chip.status-shipped {
-  color: #055160;
-  background: #cff4fc;
-}
-
-.memo-status-chip.status-cancelled {
-  color: #842029;
-  background: #f8d7da;
-}
-
-.cash-memo-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.9rem;
-  margin-bottom: 1rem;
-}
-
-.cash-memo-block {
-  border: 1px solid #e7ecf2;
-  border-radius: 0.75rem;
-  background: #fbfcfe;
-  padding: 0.85rem 0.95rem;
-}
-
-.cash-memo-block h6 {
-  margin-bottom: 0.6rem;
-  color: #495057;
-}
-
-.cash-memo-block p {
-  margin-bottom: 0.45rem;
-  font-size: 0.9rem;
-  line-height: 1.35;
-  white-space: normal;
-  word-break: break-word;
-}
-
-.cash-memo-block p:last-child {
-  margin-bottom: 0;
-}
-
-.cash-memo-block p span {
-  color: #667085;
-  font-weight: 600;
-  margin-right: 0.25rem;
-}
-
-.cash-memo-section {
-  margin-bottom: 1rem;
-}
-
-.cash-memo-section-title {
-  margin-bottom: 0.65rem;
-  font-weight: 600;
-  color: #495057;
-}
-
-.memo-items-table thead th {
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+.label {
   color: #6b7280;
+  font-weight: 600;
 }
 
-.memo-items-table tbody td {
-  white-space: normal;
+.invoice-block {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.65rem;
+  background: #f9fafb;
+  padding: 0.9rem;
 }
 
-.cash-memo-totals {
-  border: 1px solid #e7ecf2;
-  border-radius: 0.75rem;
-  padding: 0.85rem 0.95rem;
-  margin-bottom: 1rem;
-}
-
-.memo-total-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.45rem 0;
-  border-bottom: 1px dashed #eceff3;
-}
-
-.memo-total-row:last-child {
-  border-bottom: 0;
-}
-
-.memo-total-row.grand-total {
+.invoice-block h6 {
   font-weight: 700;
-  font-size: 1rem;
-  color: #198754;
-  padding-top: 0.6rem;
+  margin-bottom: 0.5rem;
 }
 
-.memo-notes {
-  margin-bottom: 0;
-  white-space: pre-line;
-  color: #4b5563;
+.invoice-items th {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
-.metadata-grid .cash-memo-block {
-  height: 100%;
+.invoice-totals {
+  max-width: 340px;
 }
 
-/* --- Pagination Styles --- */
-.pagination {
-  margin-bottom: 0;
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid #e9ecef;
 }
 
-.page-link {
-  color: #6c757d;
-  border: none;
-  margin: 0 2px;
-  border-radius: 4px;
-  padding: 0.5rem 0.75rem;
-  font-weight: 500;
+.total-row.grand-total {
+  border-bottom: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
-.page-link:hover {
-  color: #198754;
-  background-color: #e9ecef;
-}
-
-.page-item.active .page-link {
-  background-color: #198754;
-  border-color: #198754;
-  color: #fff;
-}
-
-.page-item.disabled .page-link {
-  color: #adb5bd;
-  background-color: transparent;
-}
-
-/* --- Mobile Responsiveness Fixes --- */
 @media (max-width: 991.98px) {
-  /* 1. Fix Modal Stacking */
-  .manual-order-left,
-  .manual-order-right {
-    width: 100% !important;
-    padding: 1rem !important;
-    border-right: none !important;
-    border-bottom: 1px solid #e9ecef;
-  }
-  /* 2. Fix Totals Section Squashing */
-  .totals-row {
-    flex-direction: column; /* Stack label and input on very small screens */
-    align-items: flex-start !important;
-    gap: 0.5rem;
+  .order-management-page .search-group {
+    max-width: 100%;
+    width: 100%;
   }
 
-  .totals-row .price-input-wrap {
-    width: 100%; /* Full width inputs on mobile */
-    justify-content: space-between;
+  .order-management-page .btn-group {
+    width: 100%;
   }
 
-  .erp-input {
-    text-align: left !important; /* Align text left for readability */
+  .order-management-page .btn-group .btn {
+    flex: 1 1 auto;
   }
-
-  .cash-memo-header {
-    flex-direction: column;
-  }
-
-  .cash-memo-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* 3. Fix Main Table Overflow */
-.table-responsive {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
-}
-
-/* Prevent table text from wrapping awkwardly */
-.table th, .table td {
-  white-space: nowrap;
-  vertical-align: middle;
 }
 
 @media print {
-  ::ng-deep body.printing-cash-memo * {
+  body * {
     visibility: hidden !important;
   }
 
-  ::ng-deep body.printing-cash-memo .cash-memo-print-area,
-  ::ng-deep body.printing-cash-memo .cash-memo-print-area * {
+  #invoiceModal,
+  #invoiceModal * {
     visibility: visible !important;
   }
 
-  ::ng-deep body.printing-cash-memo .cash-memo-print-area {
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
-    width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    z-index: 9999 !important;
+  #invoiceModal {
+    position: static !important;
+    display: block !important;
+    background: #ffffff !important;
+    overflow: visible !important;
   }
 
-  ::ng-deep body.printing-cash-memo .cash-memo-sheet {
+  #invoiceModal .modal-dialog {
+    max-width: 100% !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  #invoiceModal .modal-content {
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-    padding: 0.6rem !important;
   }
 
-  .memo-items-table thead th,
-  .memo-items-table tbody td,
-  .cash-memo-block p {
-    white-space: normal !important;
+  .modal-backdrop,
+  .no-print,
+  .sidebar,
+  .header,
+  .sidebar-backdrop {
+    display: none !important;
+  }
+
+  .main-content,
+  .content-area,
+  .invoice-body {
+    background: #ffffff !important;
+    padding: 0 !important;
+  }
+
+  .tax-invoice {
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
   }
 }

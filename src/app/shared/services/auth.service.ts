@@ -77,34 +77,49 @@ export class AuthService {
     this.currentUserSubject.next(null);
   }
 
-  updateProfile(updatedData: Partial<User>): Observable<User> {
+  updateUser(updatedData: Partial<User>): void {
     const currentUser = this.currentUserValue;
-    if (!currentUser) return throwError(() => new Error('No user logged in'));
+
+    if (!currentUser) {
+      throw new Error('No user logged in');
+    }
 
     const users = this.getUsers();
-    const index = users.findIndex(u => u.id === currentUser.id);
+    const index = users.findIndex((user) => user.id === currentUser.id);
 
-    if (index !== -1) {
-      // Merge existing user data with updates
-      // We must preserve the password from the storage as currentUser doesn't have it
-      const existingUser = users[index];
-      const updatedUser = { ...existingUser, ...updatedData };
+    if (index === -1) {
+      throw new Error('User not found');
+    }
 
-      // Update avatar if name changed
-      if (updatedData.firstName || updatedData.lastName) {
-         updatedUser.avatarUrl = `https://ui-avatars.com/api/?name=${updatedUser.firstName}+${updatedUser.lastName}&background=20a04b&color=fff`;
-      }
+    const existingUser = users[index];
+    const updatedUser: User = { ...existingUser, ...updatedData };
+    users[index] = updatedUser;
 
-      users[index] = updatedUser;
+    try {
       localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
 
-      // Update current user state (remove password)
-      const { password, ...userWithoutPassword } = updatedUser;
-      this.setCurrentUser(userWithoutPassword as User);
-
-      return of(userWithoutPassword as User);
+      const { password, ...safeUser } = updatedUser;
+      localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(safeUser));
+      this.currentUserSubject.next(safeUser as User);
+    } catch {
+      throw new Error('Unable to save profile changes. The selected image may be too large.');
     }
-    return throwError(() => new Error('User not found'));
+  }
+
+  updateProfile(updatedData: Partial<User>): Observable<User> {
+    const currentUser = this.currentUserValue;
+    if (!currentUser) {
+      return throwError(() => new Error('No user logged in'));
+    }
+
+    this.updateUser(updatedData);
+    const updatedCurrentUser = this.currentUserValue;
+
+    if (!updatedCurrentUser) {
+      return throwError(() => new Error('User update failed'));
+    }
+
+    return of(updatedCurrentUser);
   }
 
   changePassword(currentPassword: string, newPassword: string): Observable<boolean> {

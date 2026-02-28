@@ -12,6 +12,7 @@ export class ShopLayoutComponent implements OnInit {
   isHeaderScrolled = false;
   cartTotalItems$: Observable<number>;
   currentUser$: Observable<User | null>;
+  readonly defaultAvatarUrl = 'https://ui-avatars.com/api/?name=User&background=e9ecef&color=495057';
 
   constructor(
     private readonly cartService: CartService,

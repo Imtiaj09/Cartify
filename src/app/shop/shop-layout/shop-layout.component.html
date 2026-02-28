@@ -44,16 +44,12 @@
             aria-expanded="false"
           >
             <img
-              *ngIf="user.avatarUrl; else defaultIcon"
-              [src]="user.avatarUrl"
+              [src]="user.avatarUrl || defaultAvatarUrl"
               alt="User Avatar"
-              class="rounded-circle"
+              class="rounded-circle header-avatar"
               width="32"
               height="32"
             />
-            <ng-template #defaultIcon>
-              <i class="bi bi-person-circle fs-4" aria-hidden="true"></i>
-            </ng-template>
           </button>
           <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3" aria-labelledby="userDropdown">
             <li><h6 class="dropdown-header">Hello, {{ user.firstName }}</h6></li>

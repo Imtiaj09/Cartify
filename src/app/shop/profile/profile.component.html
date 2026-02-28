@@ -67,12 +67,12 @@
 
                 <div class="d-flex flex-column">
                   <span class="text-muted small">Total</span>
-                  <span class="fw-bold text-success">{{ order.totalAmount | currency }}</span>
+                  <span class="fw-bold text-success">{{ order.total | currency:'BDT':'symbol':'1.2-2' }}</span>
                 </div>
 
                 <div class="d-flex flex-column">
                   <span class="text-muted small">Items</span>
-                  <span class="fw-semibold">{{ order.itemCount }} items</span>
+                  <span class="fw-semibold">{{ getOrderItemCount(order) }} items</span>
                 </div>
 
                 <div class="d-flex flex-column">
@@ -83,7 +83,7 @@
                 </div>
 
                 <div>
-                  <button class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                  <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" type="button" (click)="openInvoice(order)">
                     View Details
                   </button>
                 </div>
@@ -107,15 +107,30 @@
           <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
           <ng-container *ngIf="currentUser$ | async as user">
-            <!-- View Mode -->
-            <div *ngIf="!isEditing" class="row g-4">
-              <div class="col-12 d-flex align-items-center mb-3">
-                <div class="position-relative me-4">
-                  <img [src]="user.avatarUrl || 'assets/default-avatar.png'"
-                       alt="Profile"
-                       class="rounded-circle shadow-sm"
-                       width="100" height="100"
-                       style="object-fit: cover;">
+            <div class="row g-4">
+              <div class="col-12 d-flex align-items-center gap-3 mb-2">
+                <div class="avatar-upload-wrapper" [class.avatar-upload-wrapper-editing]="isEditing">
+                  <img
+                    [src]="(isEditing ? (editAvatarUrl || user.avatarUrl) : user.avatarUrl) || defaultAvatarUrl"
+                    alt="Profile"
+                    class="profile-avatar rounded-circle"
+                  >
+                  <input
+                    type="file"
+                    #fileInput
+                    class="d-none"
+                    (change)="onFileSelected($event)"
+                    accept="image/*"
+                  >
+                  <button
+                    *ngIf="isEditing"
+                    type="button"
+                    class="avatar-overlay border-0"
+                    (click)="fileInput.click()"
+                    aria-label="Upload avatar"
+                  >
+                    <i class="bi bi-camera"></i>
+                  </button>
                 </div>
                 <div>
                   <h5 class="fw-bold mb-1">{{ user.firstName }} {{ user.lastName }}</h5>
@@ -123,62 +138,69 @@
                 </div>
               </div>
 
-              <div class="col-md-6">
-                <label class="form-label text-muted small text-uppercase fw-bold">First Name</label>
-                <div class="p-3 bg-light rounded-3 border">
-                  {{ user.firstName }}
+              <ng-container *ngIf="!isEditing; else editFields">
+                <div class="col-md-6">
+                  <label class="form-label text-muted small text-uppercase fw-bold">First Name</label>
+                  <div class="profile-info-value">{{ user.firstName }}</div>
                 </div>
-              </div>
 
-              <div class="col-md-6">
-                <label class="form-label text-muted small text-uppercase fw-bold">Last Name</label>
-                <div class="p-3 bg-light rounded-3 border">
-                  {{ user.lastName }}
+                <div class="col-md-6">
+                  <label class="form-label text-muted small text-uppercase fw-bold">Last Name</label>
+                  <div class="profile-info-value">{{ user.lastName }}</div>
                 </div>
-              </div>
 
-              <div class="col-md-6">
-                <label class="form-label text-muted small text-uppercase fw-bold">Email Address</label>
-                <div class="p-3 bg-light rounded-3 border">
-                  {{ user.email }}
+                <div class="col-md-6">
+                  <label class="form-label text-muted small text-uppercase fw-bold">Email Address</label>
+                  <div class="profile-info-value">{{ user.email }}</div>
                 </div>
-              </div>
 
-              <div class="col-md-6">
-                <label class="form-label text-muted small text-uppercase fw-bold">Phone Number</label>
-                <div class="p-3 bg-light rounded-3 border">
-                  {{ user.phone || 'Not provided' }}
+                <div class="col-md-6">
+                  <label class="form-label text-muted small text-uppercase fw-bold">Phone Number</label>
+                  <div class="profile-info-value">{{ user.phone || 'Not provided' }}</div>
                 </div>
-              </div>
-            </div>
+              </ng-container>
 
-            <!-- Edit Mode -->
-            <form *ngIf="isEditing" [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()">
-              <div class="row g-3">
+              <ng-template #editFields>
                 <div class="col-md-6">
                   <label for="firstName" class="form-label">First Name</label>
-                  <input type="text" class="form-control" id="firstName" formControlName="firstName">
+                  <input
+                    id="firstName"
+                    type="text"
+                    class="form-control"
+                    [value]="editFirstName"
+                    (input)="editFirstName = $any($event.target).value"
+                  >
                 </div>
+
                 <div class="col-md-6">
                   <label for="lastName" class="form-label">Last Name</label>
-                  <input type="text" class="form-control" id="lastName" formControlName="lastName">
+                  <input
+                    id="lastName"
+                    type="text"
+                    class="form-control"
+                    [value]="editLastName"
+                    (input)="editLastName = $any($event.target).value"
+                  >
                 </div>
+
                 <div class="col-md-6">
-                  <label for="email" class="form-label">Email Address</label>
-                  <input type="email" class="form-control" id="email" formControlName="email">
+                  <label class="form-label text-muted small text-uppercase fw-bold">Email Address</label>
+                  <div class="profile-info-value">{{ user.email }}</div>
                 </div>
+
                 <div class="col-md-6">
-                  <label for="phone" class="form-label">Phone Number</label>
-                  <input type="tel" class="form-control" id="phone" formControlName="phone">
+                  <label class="form-label text-muted small text-uppercase fw-bold">Phone Number</label>
+                  <div class="profile-info-value">{{ user.phone || 'Not provided' }}</div>
                 </div>
-                <div class="col-12 mt-4">
-                  <button type="submit" class="btn btn-success px-4 rounded-pill" [disabled]="loading">
+
+                <div class="col-12 mt-2">
+                  <button type="button" class="btn btn-success px-4 rounded-pill" [disabled]="loading" (click)="saveChanges()">
                     <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                     Save Changes
                   </button>
                 </div>
-              </div>
-            </form>
+              </ng-template>
+            </div>
           </ng-container>
         </div>
 
@@ -218,3 +240,109 @@
     </div>
   </div>
 </div>
+
+<div
+  id="profileInvoiceModal"
+  class="modal fade profile-invoice-modal"
+  tabindex="-1"
+  [class.show]="isInvoiceModalOpen"
+  [style.display]="isInvoiceModalOpen ? 'block' : 'none'"
+  [attr.aria-hidden]="!isInvoiceModalOpen"
+  (click)="closeInvoice()">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable" (click)="$event.stopPropagation()">
+    <div class="modal-content" *ngIf="selectedOrder as order">
+      <div class="modal-header no-print">
+        <h5 class="modal-title">Digital Cash Memo</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeInvoice()"></button>
+      </div>
+
+      <div class="modal-body profile-invoice-body">
+        <article class="profile-tax-invoice">
+          <header class="profile-invoice-head">
+            <div>
+              <p class="profile-invoice-logo mb-1">CARTIFY</p>
+              <h4 class="mb-0">Tax Invoice</h4>
+            </div>
+            <div class="text-end">
+              <p class="mb-1"><span class="profile-label">Order ID:</span> {{ order.id }}</p>
+              <p class="mb-1"><span class="profile-label">Date:</span> {{ order.date | date:'medium' }}</p>
+              <p class="mb-0"><span class="profile-label">Status:</span> {{ order.status }}</p>
+            </div>
+          </header>
+
+          <section class="row g-3 mb-4">
+            <div class="col-md-6">
+              <div class="profile-invoice-block h-100">
+                <h6>Billing Details</h6>
+                <p class="mb-1 fw-semibold">{{ order.customerDetails.name }}</p>
+                <p class="mb-1">{{ order.customerDetails.email || 'No email provided' }}</p>
+                <p class="mb-0">{{ order.customerDetails.address || order.shippingDetails.address || 'No address provided' }}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="profile-invoice-block h-100">
+                <h6>Shipping Address</h6>
+                <p class="mb-1">{{ order.shippingDetails.address || order.customerDetails.address || 'No shipping address provided' }}</p>
+                <p class="mb-0" *ngIf="order.shippingDetails.city || order.shippingDetails.postalCode">
+                  {{ order.shippingDetails.city }} {{ order.shippingDetails.postalCode }}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section class="mb-4">
+            <div class="table-responsive">
+              <table class="table table-sm profile-invoice-items mb-0">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th class="text-center">Qty</th>
+                    <th class="text-end">Price</th>
+                    <th class="text-end">Line Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of order.items; let itemIndex = index">
+                    <td>{{ item.product.name }}</td>
+                    <td class="text-center">{{ item.quantity }}</td>
+                    <td class="text-end">
+                      {{ (item.product.discountedPrice !== null ? item.product.discountedPrice : item.product.price) | currency:'BDT':'symbol':'1.2-2' }}
+                    </td>
+                    <td class="text-end fw-semibold">
+                      {{ getOrderLineTotal(order, itemIndex) | currency:'BDT':'symbol':'1.2-2' }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="profile-invoice-totals ms-auto">
+            <div class="profile-total-row">
+              <span>Subtotal</span>
+              <span>{{ order.subtotal | currency:'BDT':'symbol':'1.2-2' }}</span>
+            </div>
+            <div class="profile-total-row">
+              <span>Shipping Fee</span>
+              <span>{{ order.shippingFee | currency:'BDT':'symbol':'1.2-2' }}</span>
+            </div>
+            <div class="profile-total-row grand-total">
+              <span>Grand Total</span>
+              <span>{{ order.total | currency:'BDT':'symbol':'1.2-2' }}</span>
+            </div>
+          </section>
+        </article>
+      </div>
+
+      <div class="modal-footer no-print">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeInvoice()">Close</button>
+        <button type="button" class="btn btn-success" (click)="printInvoice()">
+          <i class="bi bi-printer me-1"></i>
+          Print
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isInvoiceModalOpen" class="modal-backdrop fade show"></div>

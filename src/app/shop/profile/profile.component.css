@@ -54,3 +54,165 @@
 .bg-secondary {
   background-color: #6c757d !important;
 }
+
+.profile-info-value {
+  padding: 0.75rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.75rem;
+  background-color: #f8f9fa;
+}
+
+.avatar-upload-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0.35rem 1rem rgba(15, 23, 42, 0.12);
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: rgba(15, 23, 42, 0.5);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.avatar-upload-wrapper-editing .profile-avatar {
+  cursor: pointer;
+}
+
+.profile-invoice-modal .modal-dialog {
+  max-width: 1080px;
+}
+
+.profile-invoice-body {
+  background: #f5f7fa;
+}
+
+.profile-tax-invoice {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  color: #212529;
+}
+
+.profile-invoice-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  border-bottom: 1px dashed #d1d5db;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.profile-invoice-logo {
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  color: #198754;
+}
+
+.profile-label {
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.profile-invoice-block {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.65rem;
+  background: #f9fafb;
+  padding: 0.9rem;
+}
+
+.profile-invoice-block h6 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.profile-invoice-items th {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.profile-invoice-totals {
+  max-width: 340px;
+}
+
+.profile-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.profile-total-row.grand-total {
+  border-bottom: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #profileInvoiceModal,
+  #profileInvoiceModal * {
+    visibility: visible !important;
+  }
+
+  #profileInvoiceModal {
+    position: static !important;
+    display: block !important;
+    background: #ffffff !important;
+    overflow: visible !important;
+  }
+
+  #profileInvoiceModal .modal-dialog {
+    max-width: 100% !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  #profileInvoiceModal .modal-content {
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .modal-backdrop,
+  .no-print,
+  .shop-header,
+  .shop-nav,
+  .shop-footer {
+    display: none !important;
+  }
+
+  .profile-invoice-body {
+    background: #ffffff !important;
+    padding: 0 !important;
+  }
+
+  .profile-tax-invoice {
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+}

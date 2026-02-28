@@ -81,6 +81,11 @@
   transform: translateY(-1px);
 }
 
+.header-avatar {
+  object-fit: cover;
+  border: 1px solid rgba(47, 52, 56, 0.14);
+}
+
 /* Dropdown Styles */
 .dropdown-menu {
   margin-top: 0.5rem !important;
