@@ -22,9 +22,24 @@ const routes: Routes = [
       { path: 'cart', component: CartComponent },
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-      { path: 'checkout', component: CheckoutComponent, canActivate: [AuthGuard] },
-      { path: 'order-success/:id', component: OrderSuccessComponent, canActivate: [AuthGuard] }
+      {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [AuthGuard],
+        data: { expectedRoles: ['CUSTOMER', 'ADMIN'] }
+      },
+      {
+        path: 'checkout',
+        component: CheckoutComponent,
+        canActivate: [AuthGuard],
+        data: { expectedRoles: ['CUSTOMER', 'ADMIN'] }
+      },
+      {
+        path: 'order-success/:id',
+        component: OrderSuccessComponent,
+        canActivate: [AuthGuard],
+        data: { expectedRoles: ['CUSTOMER', 'ADMIN'] }
+      }
     ]
   }
 ];

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
@@ -14,19 +14,28 @@ export class LoginComponent implements OnInit {
   error = '';
   loading = false;
   showPassword = false;
+  private returnUrl: string | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
+    private route: ActivatedRoute,
     private authService: AuthService
   ) {
-    // Redirect to home if already logged in
-    if (this.authService.currentUserValue) {
-      this.router.navigate(['/shop/home']);
+    const currentUser = this.authService.currentUserValue;
+
+    if (currentUser) {
+      const redirectUrl = this.authService.getPostLoginRedirectUrl(
+        currentUser,
+        this.route.snapshot.queryParamMap.get('returnUrl')
+      );
+      this.router.navigateByUrl(redirectUrl);
     }
   }
 
   ngOnInit(): void {
+    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -43,7 +52,6 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
 
-    // Stop here if form is invalid
     if (this.loginForm.invalid) {
       return;
     }
@@ -51,9 +59,9 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.authService.login(this.f.email.value, this.f.password.value)
       .subscribe({
-        next: () => {
-          // Navigate to home page on success
-          this.router.navigate(['/shop/home']);
+        next: (user) => {
+          const redirectUrl = this.authService.getPostLoginRedirectUrl(user, this.returnUrl);
+          this.router.navigateByUrl(redirectUrl);
         },
         error: error => {
           this.error = error.message || 'Login failed';

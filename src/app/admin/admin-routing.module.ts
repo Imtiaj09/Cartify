@@ -10,11 +10,15 @@ import { AddProductComponent } from './features/add-product/add-product.componen
 import { AdminRoleComponent } from './features/admin-role/admin-role.component';
 import { ControlAuthorityComponent } from './features/control-authority/control-authority.component';
 import { UsersComponent } from './features/users/users.component';
+import { AuthGuard } from '../shared/guards/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminLayoutComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    data: { expectedRoles: ['ADMIN'] },
     children: [
       { path: 'dashboard', component: DashboardComponent, data: { title: 'Dashboard' } },
       { path: 'orders', component: OrderManagementComponent, data: { title: 'Order Management' } },

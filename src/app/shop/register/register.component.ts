@@ -20,9 +20,10 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private authService: AuthService
   ) {
-    // Redirect to home if already logged in
-    if (this.authService.currentUserValue) {
-      this.router.navigate(['/shop/home']);
+    const currentUser = this.authService.currentUserValue;
+
+    if (currentUser) {
+      this.router.navigateByUrl(this.authService.getDefaultRouteForRole(currentUser.role));
     }
   }
 
@@ -45,7 +46,6 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
 
-    // Stop here if form is invalid
     if (this.registerForm.invalid) {
       return;
     }
@@ -53,9 +53,8 @@ export class RegisterComponent implements OnInit {
     this.loading = true;
     this.authService.register(this.registerForm.value)
       .subscribe({
-        next: () => {
-          // Navigate to home page on success
-          this.router.navigate(['/shop/home']);
+        next: (user) => {
+          this.router.navigateByUrl(this.authService.getDefaultRouteForRole(user.role));
         },
         error: error => {
           this.error = error.message || 'Registration failed';
