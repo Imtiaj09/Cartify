@@ -134,12 +134,14 @@ public class DataInitializer {
     }
 
     private void seedAdminUser(UserRepository userRepository, UserAuthSupport userAuthSupport) {
-        long adminCount = userRepository.countByRoleIn(Arrays.asList("Super Admin", "Sub Admin"));
-        if (adminCount > 0) {
+        long superAdminCount = userRepository.countByRole("Super Admin");
+        if (superAdminCount > 0) {
             return;
         }
 
-        UserEntity admin = new UserEntity();
+        UserEntity admin = userRepository.findByEmailIgnoreCase("admin@cartify.dev")
+            .orElseGet(UserEntity::new);
+
         admin.setFirstName("System");
         admin.setLastName("Admin");
         admin.setEmail("admin@cartify.dev");
