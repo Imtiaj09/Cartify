@@ -107,8 +107,17 @@ public class UserAuthSupport {
             return rawRole;
         }
 
-        if ("ADMIN".equalsIgnoreCase(rawRole)) {
+        String normalized = safe(rawRole).replace('-', '_').replace(' ', '_').toUpperCase();
+        if ("ADMIN".equals(normalized) || "SUPER_ADMIN".equals(normalized)) {
             return "Super Admin";
+        }
+
+        if ("SUB_ADMIN".equals(normalized)) {
+            return "Sub Admin";
+        }
+
+        if ("CUSTOMER".equals(normalized)) {
+            return "Customer";
         }
 
         return "Customer";

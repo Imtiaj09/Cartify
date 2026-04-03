@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,15 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(originPatterns = {
+    "http://localhost:*",
+    "http://127.0.0.1:*",
+    "http://0.0.0.0:*",
+    "https://localhost:*",
+    "https://127.0.0.1:*",
+    "https://0.0.0.0:*"
+})
+@Transactional
 public class ProductController {
 
     private final ProductRepository productRepository;

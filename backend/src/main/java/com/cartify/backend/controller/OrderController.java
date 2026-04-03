@@ -33,7 +33,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/orders")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(originPatterns = {
+    "http://localhost:*",
+    "http://127.0.0.1:*",
+    "http://0.0.0.0:*",
+    "https://localhost:*",
+    "https://127.0.0.1:*",
+    "https://0.0.0.0:*"
+})
 public class OrderController {
 
     private final OrderRepository orderRepository;

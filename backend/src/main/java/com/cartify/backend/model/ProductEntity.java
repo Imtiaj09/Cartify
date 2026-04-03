@@ -36,7 +36,7 @@ public class ProductEntity {
     @Column(precision = 14, scale = 2)
     private BigDecimal discountedPrice;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 

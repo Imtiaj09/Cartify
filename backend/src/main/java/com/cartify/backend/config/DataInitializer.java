@@ -134,11 +134,6 @@ public class DataInitializer {
     }
 
     private void seedAdminUser(UserRepository userRepository, UserAuthSupport userAuthSupport) {
-        long superAdminCount = userRepository.countByRole("Super Admin");
-        if (superAdminCount > 0) {
-            return;
-        }
-
         UserEntity admin = userRepository.findByEmailIgnoreCase("admin@cartify.dev")
             .orElseGet(UserEntity::new);
 

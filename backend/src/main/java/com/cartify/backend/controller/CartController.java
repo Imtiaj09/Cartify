@@ -8,9 +8,11 @@ import com.cartify.backend.model.ProductEntity;
 import com.cartify.backend.repository.CartItemRepository;
 import com.cartify.backend.repository.ProductRepository;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +28,15 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/cart")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(originPatterns = {
+    "http://localhost:*",
+    "http://127.0.0.1:*",
+    "http://0.0.0.0:*",
+    "https://localhost:*",
+    "https://127.0.0.1:*",
+    "https://0.0.0.0:*"
+})
+@Transactional
 public class CartController {
 
     private final CartItemRepository cartItemRepository;
@@ -136,18 +146,26 @@ public class CartController {
         response.setPrice(entity.getPrice());
         response.setDiscountedPrice(entity.getDiscountedPrice());
         response.setCategory(entity.getCategory() == null ? "General" : entity.getCategory().getName());
-        response.setTags(entity.getTags());
-        response.setColors(entity.getColors());
+        response.setTags(copyList(entity.getTags()));
+        response.setColors(copyList(entity.getColors()));
         response.setStock(entity.getStock());
         response.setHighlighted(entity.isHighlighted());
         response.setMainImage(entity.getMainImage());
-        response.setImages(entity.getImages());
+        response.setImages(copyList(entity.getImages()));
         response.setCreatedAt(entity.getCreatedAt() == null ? Instant.now().toString() : entity.getCreatedAt().toString());
         response.setRating(entity.getRating());
         response.setReviewCount(entity.getReviewCount());
         response.setBadge(entity.getBadge());
         response.setSalesCount(entity.getSalesCount());
         return response;
+    }
+
+    private List<String> copyList(List<String> values) {
+        if (values == null) {
+            return new ArrayList<>();
+        }
+
+        return new ArrayList<>(values);
     }
 
     private String safe(String value) {
